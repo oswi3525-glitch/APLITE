@@ -121,6 +121,7 @@ enum DesktopPages {
             "savedCookies": CookieVault.domains(),
             "wallpaperBlur": Int(m.wallpaperBlur.rounded()),
             "autoHide": m.autoHideTaskbar,
+            "performance": m.performanceMode,
             "dockScale": m.dockScale,
             "dockIcon": m.dockIconScale,
             "dockSpacing": m.dockSpacing,
@@ -150,6 +151,7 @@ enum DesktopPages {
             "natural": InputSettings.naturalScrolling,
             "mouseModeButton": InputSettings.alwaysShowMouseMode,
             "version": APLite.displayVersion,
+            "liveNotice": LiveUpdate.notice ?? "",
             "autoUpdate": UpdateChecker.shared.automatic,
             "update": UpdateChecker.shared.available?.version ?? "",
             "updateResult": UpdateChecker.shared.stepText ?? (UpdateChecker.shared.checking ? String(localized: "Checking…") : (UpdateChecker.shared.lastResult ?? "")),
@@ -330,6 +332,7 @@ enum DesktopPages {
             if let file = CookieVault.exportFile() { ShareSheet.present(file) }
             else { m.showToast(String(localized: "No saved cookies to export.")) }
         case (.settings, "autoHide"): m.autoHideTaskbar.toggle()
+        case (.settings, "performanceMode"): m.performanceMode.toggle()
         case (.settings, "dockScale"):
             m.dockScale = DockSettings.clamp(m.dockScale + (Double(value) ?? 0), to: DockSettings.scaleRange)
         case (.settings, "dockIcon"):
@@ -540,6 +543,7 @@ enum DesktopPages {
             "schedule": String(localized: "21:00–7:00"), "always": String(localized: "Always"),
             "desktop": String(localized: "Desktop"),
             "autoHide": String(localized: "Auto-hide the dock"),
+            "performanceMode": String(localized: "Performance mode (smoother AirPlay / Wi-Fi)"),
             "dock": String(localized: "Dock"),
             "dockSize": String(localized: "Dock size"), "dockIconSize": String(localized: "Icon size"),
             "dockSpacing": String(localized: "Icon spacing"), "dockOpacity": String(localized: "Glass opacity"),
@@ -600,6 +604,7 @@ enum DesktopPages {
             "cookieVaultRemove": String(localized: "Forget"),
             "cookieExport": String(localized: "Export saved…"),
             "aboutTitle": String(localized: "About APLite"),
+            "liveTitle": String(localized: "Live configuration"),
             "attribution": String(localized: "APLite is an independently developed project based on the original iDesk project by itshieuk.\n\nOriginal project:\nhttps://github.com/itshieuk/iDesk\n\nAPLite introduces independent design changes, improvements, modifications and additional features while acknowledging the original project’s author and contributors.\n\nAPLite is not an official release or endorsement of the original iDesk project."),
             "upstream": String(localized: "Original project"), "apliteRepo": String(localized: "APLite repository"),
         ]
@@ -756,6 +761,7 @@ enum DesktopPages {
             `<button class="${s.night === n ? 'on' : ''}" onclick="send('night', ${n})">${esc(l)}</button>`).join('')
         + `</div></div></div>`;
       h += `<h2>${esc(T.desktop)}</h2><div class="card">` + toggle('autoHide', s.autoHide, T.autoHide)
+        + toggle('performanceMode', s.performance, T.performanceMode)
         + toggle('widgets', s.widgets, T.widgets) + toggle('dnd', s.dnd, T.dnd)
         + `<div class="row"><div class="label">${esc(T.iconSize)}</div><div class="seg">`
         + [[0, T.small], [1, T.medium], [2, T.large]].map(([n, l]) =>
@@ -827,6 +833,7 @@ enum DesktopPages {
       h += `<h2>${esc(T.aboutTitle)}</h2><div class="card">`
         + `<div class="row"><div class="label"><b>APLite</b> · AirPlayLite<br><span class="note">${esc(T.about)} ${esc(s.version)}</span></div></div>`
         + `<div class="row"><div class="label note" style="white-space:pre-line;padding:10px 0;line-height:1.5">${esc(T.attribution)}</div></div>`
+        + (s.liveNotice ? `<div class="row"><div class="label note" style="white-space:normal;padding:10px 0">${esc(T.liveTitle)}: ${esc(s.liveNotice)}</div></div>` : ``)
         + `<div class="row"><div class="label"></div><button onclick="send('upstream')">${esc(T.upstream)}</button>`
         + `<button onclick="send('aplite')">${esc(T.apliteRepo)}</button></div></div>`;
       document.getElementById('root').innerHTML = h;

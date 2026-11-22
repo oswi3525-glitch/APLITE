@@ -18,6 +18,7 @@
 | Signing | Automatic in Xcode; CI builds **unsigned** |
 | Frameworks | UIKit, SwiftUI, WebKit, PhotosUI, UniformTypeIdentifiers, GameController, QuartzCore |
 | Info.plist | `iDesk/Info.plist` |
+| Live config | `aplite-live.json` (data only; native code still needs a signed IPA) |
 | Bridging header | `iDesk/iDesk-Bridging-Header.h` |
 
 The bundle identifier is intentionally the upstream one. Changing it would break existing signed
@@ -90,3 +91,10 @@ Compilation and IPA packaging are performed by the macOS GitHub Actions runner. 
 development container used to prepare APLite has no Xcode, Swift compiler or UIKit, so no local
 build, simulator run or on-device test is claimed here. See [CHANGELOG.md](CHANGELOG.md) for the
 verification performed in each environment.
+
+## Live configuration
+
+`aplite-live.json` at the repository root is fetched at launch by `LiveUpdate.swift`. It can
+refresh wallpaper palettes and a short announcement without rebuilding or re-signing. It contains
+**data, never executable code**. iOS forbids swapping native code inside a running app; real code
+updates still come through `UpdateChecker` as a signed IPA and must be signed by you.

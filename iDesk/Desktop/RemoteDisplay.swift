@@ -222,7 +222,10 @@ final class RemoteDisplay: ObservableObject {
         encoding = true
         let size = view.bounds.size
         let format = UIGraphicsImageRendererFormat()
-        format.scale = frameScale
+        // Performance mode trades a little sharpness for fewer pixels and a faster JPEG:
+        // noticeably smoother on AirPlay and on congested Wi-Fi.
+        let budget: CGFloat = DesktopModel.shared.performanceMode ? 2_000_000 : 4_000_000
+        format.scale = min(frameScale, (budget / max(1, size.width * size.height)).squareRoot())
         let image = autoreleasepool {
             UIGraphicsImageRenderer(size: size, format: format).image { _ in
                 view.drawHierarchy(in: CGRect(origin: .zero, size: size), afterScreenUpdates: false)
@@ -231,7 +234,8 @@ final class RemoteDisplay: ObservableObject {
         queue.async {
             let waiting = self.clients.values.filter { $0.sent.count < 2 }
             let slowest = waiting.map(\.roundTrip).max() ?? 0.05
-            let quality: CGFloat = slowest > 0.25 ? 0.55 : slowest > 0.12 ? 0.68 : 0.8
+            var quality: CGFloat = slowest > 0.25 ? 0.55 : slowest > 0.12 ? 0.68 : 0.8
+            if DesktopModel.shared.performanceMode { quality = min(quality, 0.66) }
             if !waiting.isEmpty, let jpeg = image.jpegData(compressionQuality: quality) {
                 let context = NWConnection.ContentContext(identifier: "frame",
                                                           metadata: [NWProtocolWebSocket.Metadata(opcode: .binary)])

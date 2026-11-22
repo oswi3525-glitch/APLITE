@@ -320,6 +320,8 @@ final class DesktopModel: ObservableObject {
     @Published var emojiIndex = 0
     /// The Downloads panel (Downloads.swift), opened from its button on the taskbar.
     @Published var showDownloads = false
+    /// Task Manager: running windows, memory pressure and close controls.
+    @Published var showTaskManager = false
     /// Presentation mode (MediaModes.swift): the window being presented, and the laser pointer on it.
     @Published var presentation: PresentationState?
     @Published var laser: CGPoint?
@@ -348,6 +350,10 @@ final class DesktopModel: ObservableObject {
     }
     @Published private(set) var customWallpaper: UIImage? = UIImage(contentsOfFile: DesktopModel.wallpaperFile.path)
     /// Softens a photo wallpaper (0 = sharp, 20 = heavily blurred). Gradients ignore it.
+    /// Lower-resolution frames, lighter shadows and no magnification: useful over AirPlay or a slow Wi-Fi.
+    @Published var performanceMode: Bool = UserDefaults.standard.bool(forKey: Keys.performanceMode) {
+        didSet { UserDefaults.standard.set(performanceMode, forKey: Keys.performanceMode) }
+    }
     @Published var wallpaperBlur: Double = DockSettings.clamp(
         UserDefaults.standard.object(forKey: Keys.wallpaperBlur) as? Double ?? 0, to: 0...20) {
         didSet { UserDefaults.standard.set(wallpaperBlur, forKey: Keys.wallpaperBlur) }
@@ -389,6 +395,9 @@ final class DesktopModel: ObservableObject {
     /// A picture of the window under the pointer on the taskbar.
     @Published private(set) var taskPreview: TaskPreview?
     private var taskPreviewWork: DispatchWorkItem?
+    /// A short-lived visual of a window flying back to its dock icon while it closes.
+    @Published private(set) var closingWindow: ClosingWindow?
+    private var closingWork: DispatchWorkItem?
     /// Quick panel (click the clock): quick toggles, brightness, notifications.
     @Published var showQuickPanel = false {
         didSet { if showQuickPanel { showLauncher = false; contextMenu = nil; banner = nil } }
@@ -476,6 +485,7 @@ final class DesktopModel: ObservableObject {
     enum Keys {
         static let wallpaper = "iDesk.wallpaper"
         static let wallpaperBlur = "APLite.wallpaperBlur"
+        static let performanceMode = "APLite.performanceMode"
         static let brightness = "iDesk.externalBrightness"
         static let session = "iDesk.session.v1"
         static let pinned = "iDesk.pinned"
@@ -518,6 +528,15 @@ final class DesktopModel: ObservableObject {
         let title: String
         let image: UIImage?
         let anchor: CGRect
+    }
+
+    struct ClosingWindow: Identifiable {
+        let id = UUID()
+        let title: String
+        let icon: UIImage?
+        let symbol: String
+        let from: CGRect
+        let to: CGRect
     }
     enum NavButton: CaseIterable { case search, recents, home, back }
 
@@ -1319,8 +1338,18 @@ final class DesktopModel: ObservableObject {
         rememberFrame(of: w)
         w.webView?.stopLoading()
         if w.isApp, isGuestDrag { Self.guestInput { GuestTouch.cancel() }; drag = .none }
-        // Shrink the window away before the guest app is suspended.
-        withAnimation(.easeIn(duration: 0.18)) { windows.removeAll { $0.id == w.id } }
+        // Where its icon sits in the dock right now: the ghost window flies back there.
+        let target = taskLayout.first(where: { $0.entry.window === w })?.rect
+            ?? CGRect(x: screenSize.width / 2, y: screenSize.height - 30, width: 1, height: 1)
+        closingWork?.cancel()
+        let ghost = ClosingWindow(title: w.title, icon: w.icon, symbol: w.symbol, from: w.frame, to: target)
+        closingWindow = ghost
+        withAnimation(.easeIn(duration: 0.22)) { windows.removeAll { $0.id == w.id } }
+        let cleanup = DispatchWorkItem { [weak self] in
+            withAnimation(.easeOut(duration: 0.12)) { self?.closingWindow = nil }
+        }
+        closingWork = cleanup
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: cleanup)
         // Closing an app: it gets the "went to the background" events, so it stops playing and pauses.
         if let guest = w.guestWindow { GuestRuntime.suspendApp(with: guest) }
         focusedID = windows.last(where: { $0.isShown })?.id
@@ -1661,6 +1690,12 @@ final class DesktopModel: ObservableObject {
                y: dockY, width: Layout.showDesktopWidth, height: dockHeight)
     }
 
+    var taskManagerButtonRect: CGRect {
+        let h = min(38, dockHeight - 10)
+        return CGRect(x: showDesktopRect.minX - Layout.trayWidth - 40, y: dockY + (dockHeight - h) / 2,
+                      width: 36, height: h)
+    }
+
     var trayRect: CGRect {
         CGRect(x: showDesktopRect.minX - Layout.trayWidth, y: dockY,
                width: Layout.trayWidth, height: dockHeight)
@@ -1668,7 +1703,7 @@ final class DesktopModel: ObservableObject {
 
     /// The right glass pill: recording / downloads when shown, the system tray and Show desktop.
     var rightDockRect: CGRect {
-        let left = (recordButtonRect?.minX ?? downloadsButtonRect?.minX ?? trayRect.minX) - Layout.dockPadding
+        let left = (recordButtonRect?.minX ?? downloadsButtonRect?.minX ?? taskManagerButtonRect.minX) - Layout.dockPadding
         return CGRect(x: left, y: dockY, width: screenSize.width - Layout.dockMargin - left, height: dockHeight)
     }
 
@@ -2054,6 +2089,7 @@ final class DesktopModel: ObservableObject {
         if showSpotlight { clickSpotlight(at: p); return }
         if showClipboard { clickClipboard(at: p); return }
         if showDownloads { clickDownloads(at: p); return }
+        if showTaskManager { clickTaskManager(at: p); return }
         if showEmoji { clickEmoji(at: p); return }
         if let f = fillSuggestion {
             if let i = f.ids.indices.first(where: { fillCardRect($0, of: f).contains(p) }), let w = window(f.ids[i]) {
@@ -2185,6 +2221,7 @@ final class DesktopModel: ObservableObject {
         if navButtonRect(.recents).contains(p) { toggleRecents(); return }
         if let r = recordButtonRect, r.contains(p) { ScreenRecorder.shared.stop(); return }
         if let r = downloadsButtonRect, r.contains(p) { let open = !showDownloads; closePanels(); showDownloads = open; return }
+        if taskManagerButtonRect.contains(p) { let open = !showTaskManager; closePanels(); showTaskManager = open; return }
         if trayRect.contains(p) { showQuickPanel = true; return }
         if navButtonRect(.home).contains(p) { goHome(); return }
         if navButtonRect(.back).contains(p) { goBack(); return }
@@ -2884,6 +2921,7 @@ final class DesktopModel: ObservableObject {
         showShortcuts = false
         showDownloads = false
         showEmoji = false
+        showTaskManager = false
     }
     func minimizeFocused() { if let w = focused { minimize(w) } }
     func sendKey(_ key: String, _ code: Int, _ shift: Bool) {

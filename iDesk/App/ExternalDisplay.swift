@@ -7,23 +7,28 @@ import UIKit
 /// crop the edges of the picture (overscan): iOS can shrink the picture to fit inside them.
 enum ExternalDisplay {
     private static weak var screen: UIScreen?
+    private static var cachedResolutions: [CGSize]?
     private static let modeKey = "iDesk.displayMode"        // "1920x1080", or absent for the display's own choice
     private static let overscanKey = "iDesk.overscan"       // true: shrink the picture to fit a TV's visible area
 
     static func connected(_ screen: UIScreen) {
         self.screen = screen
+        cachedResolutions = nil
         apply()
     }
 
-    static func disconnected() { screen = nil }
+    static func disconnected() { screen = nil; cachedResolutions = nil }
 
     /// The resolutions the display offers, largest first (each size once).
     static var resolutions: [CGSize] {
+        if let cachedResolutions { return cachedResolutions }
         guard let screen else { return [] }
         var seen = Set<String>()
-        return screen.availableModes.map(\.size)
+        let result = screen.availableModes.map(\.size)
             .filter { seen.insert(name(of: $0)).inserted }
             .sorted { $0.width * $0.height > $1.width * $1.height }
+        cachedResolutions = result
+        return result
     }
 
     static var resolution: CGSize? {

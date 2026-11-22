@@ -4,7 +4,7 @@ import WebKit
 enum Wallpapers {
     /// APLite's default set. The first six are new; the original iDesk gradients stay at the end
     /// so a wallpaper saved by an earlier version still points at a sensible colour scheme.
-    static let all: [[Color]] = [
+    static let builtIn: [[Color]] = [
         // Midnight glass: APLite's signature blue-green.
         [Color(red: 0.03, green: 0.06, blue: 0.14), Color(red: 0.06, green: 0.24, blue: 0.36), Color(red: 0.10, green: 0.46, blue: 0.48)],
         // Aurora.
@@ -24,6 +24,8 @@ enum Wallpapers {
         [Color(red: 0.20, green: 0.45, blue: 0.85), Color(red: 0.45, green: 0.30, blue: 0.85), Color(red: 0.10, green: 0.20, blue: 0.50)],
         [Color(red: 0.12, green: 0.12, blue: 0.14), Color(red: 0.22, green: 0.22, blue: 0.26), Color(red: 0.08, green: 0.08, blue: 0.10)],
     ]
+    /// A live manifest can replace the palettes with data, without shipping new native code.
+    static var all: [[Color]] { LiveUpdate.wallpaperColors ?? builtIn }
     static var count: Int { all.count }
 }
 
@@ -34,7 +36,8 @@ struct DesktopView: View {
     var body: some View {
         GeometryReader { geo in
             ZStack(alignment: .topLeading) {
-                WallpaperView(index: model.wallpaper, image: model.customWallpaper, blur: CGFloat(model.wallpaperBlur))
+                WallpaperView(index: model.wallpaper, image: model.customWallpaper,
+                              blur: CGFloat(model.wallpaperBlur), performance: model.performanceMode)
                     .frame(width: geo.size.width, height: geo.size.height)
 
                 DesktopIconsView(model: model, cursor: model.cursor)
@@ -48,6 +51,10 @@ struct DesktopView: View {
 
                 ForEach(model.windows) { w in
                     WindowView(window: w, focused: w.id == model.focusedID, cursor: model.cursor)
+                }
+
+                if let ghost = model.closingWindow {
+                    ClosingWindowView(ghost: ghost)
                 }
 
                 StickiesView(model: model, cursor: model.cursor, floating: true)
@@ -83,6 +90,10 @@ struct DesktopView: View {
 
                 if model.showDownloads {
                     DownloadsPanelView(model: model, cursor: model.cursor)
+                }
+
+                if model.showTaskManager {
+                    TaskManagerView(model: model, cursor: model.cursor)
                 }
 
                 if model.showEmoji {
@@ -171,7 +182,8 @@ struct DesktopView: View {
 
                 if model.showScreenSaver {
                     ScreenSaverView(size: geo.size, wallpaperIndex: model.wallpaper,
-                                    wallpaper: model.customWallpaper, wallpaperBlur: model.wallpaperBlur)
+                                    wallpaper: model.customWallpaper, wallpaperBlur: model.wallpaperBlur,
+                                    performance: model.performanceMode)
                         .transition(.opacity)
                 }
 
@@ -208,6 +220,7 @@ struct DesktopView: View {
 struct WallpaperView: View {
     let index: Int
     var image: UIImage?
+    var performance = false
     /// Softens a photo (Settings → Wallpaper → Blur). Gradients ignore it.
     var blur: CGFloat = 0
     var watermark = true
@@ -231,12 +244,14 @@ struct WallpaperView: View {
             ZStack {
                 LinearGradient(colors: colors, startPoint: .topLeading, endPoint: .bottomTrailing)
                 // Soft light blobs give the flat gradients a mesh-glass depth without image assets.
-                RadialGradient(colors: [colors[min(2, colors.count - 1)].opacity(0.55), .clear],
-                               center: .topTrailing, startRadius: 40, endRadius: 900)
-                    .blendMode(.screen)
-                RadialGradient(colors: [colors[min(1, colors.count - 1)].opacity(0.35), .clear],
-                               center: .bottomLeading, startRadius: 20, endRadius: 760)
-                    .blendMode(.screen)
+                if !performance {
+                    RadialGradient(colors: [colors[min(2, colors.count - 1)].opacity(0.55), .clear],
+                                   center: .topTrailing, startRadius: 40, endRadius: 900)
+                        .blendMode(.screen)
+                    RadialGradient(colors: [colors[min(1, colors.count - 1)].opacity(0.35), .clear],
+                                   center: .bottomLeading, startRadius: 20, endRadius: 760)
+                        .blendMode(.screen)
+                }
                 if watermark {
                     Text(verbatim: APLite.name)
                         .font(.system(size: 96, weight: .black, design: .rounded))
@@ -348,9 +363,53 @@ private struct DraggedIconView: View {
     }
 }
 
+/// A lightweight stand-in for a window that is closing: it flies from the window's frame back
+/// to its dock icon while the real window (and its web view / guest app) is already gone.
+private struct ClosingWindowView: View {
+    let ghost: DesktopModel.ClosingWindow
+    @State private var collapsed = false
+
+    var body: some View {
+        let w = collapsed ? 52 : ghost.from.width
+        let h = collapsed ? 52 : ghost.from.height
+        let iconSide: CGFloat = collapsed ? 30 : min(64, w * 0.32)
+        ZStack {
+            RoundedRectangle(cornerRadius: collapsed ? 16 : 10, style: .continuous)
+                .fill(.regularMaterial)
+                .overlay(RoundedRectangle(cornerRadius: collapsed ? 16 : 10, style: .continuous)
+                    .stroke(Color.accentColor.opacity(0.4), lineWidth: 1))
+            if let icon = ghost.icon {
+                Image(uiImage: icon).resizable().frame(width: iconSide, height: iconSide)
+                    .clipShape(RoundedRectangle(cornerRadius: iconSide * 0.24, style: .continuous))
+            } else {
+                Image(systemName: ghost.symbol)
+                    .font(.system(size: collapsed ? 20 : 34, weight: .semibold))
+                    .foregroundStyle(Color.accentColor)
+            }
+            if !collapsed {
+                Text(ghost.title)
+                    .font(.system(size: 13, weight: .medium))
+                    .foregroundStyle(.primary)
+                    .offset(y: h / 2 - 26)
+            }
+        }
+        .frame(width: w, height: h)
+        .position(x: collapsed ? ghost.to.midX : ghost.from.midX,
+                  y: collapsed ? ghost.to.midY : ghost.from.midY)
+        .scaleEffect(collapsed ? 0.92 : 1)
+        .opacity(collapsed ? 0 : 0.96)
+        .allowsHitTesting(false)
+        .onAppear { withAnimation(.easeIn(duration: 0.24)) { collapsed = true } }
+    }
+}
+
 // MARK: - Windows
 
 private struct WindowView: View {
+    static func shadowRadius(focused: Bool) -> CGFloat {
+        DesktopModel.shared.performanceMode ? (focused ? 8 : 3) : (focused ? 24 : 10)
+    }
+
     @ObservedObject var window: DeskWindow
     @ObservedObject private var browsing = Browsing.shared      // the bookmarks bar comes and goes with bookmarks
     let focused: Bool
@@ -391,7 +450,8 @@ private struct WindowView: View {
                 .stroke(focused ? Color.accentColor.opacity(0.7) : Color.white.opacity(0.12),
                         lineWidth: window.isFullscreen ? 0 : 1)
         )
-        .shadow(color: .black.opacity(focused ? 0.5 : 0.25), radius: focused ? 24 : 10, y: 8)
+        .shadow(color: .black.opacity(focused ? 0.5 : 0.25),
+                radius: WindowView.shadowRadius(focused: focused), y: 8)
         .offset(x: f.minX, y: f.minY)
         .opacity(window.isShown ? 1 : 0)   // keep the web view alive while minimized or on another workspace
         .transition(.scale(scale: 0.88, anchor: .center).combined(with: .opacity))
@@ -903,6 +963,16 @@ private struct TaskbarView: View {
                             .frame(width: r.width, height: r.height)
                             .offset(x: r.minX - right.minX, y: r.minY - right.minY)
                     }
+                    let tm = model.taskManagerButtonRect
+                    Image(systemName: "gauge.with.dots.needle.33percent")
+                        .font(.system(size: 14, weight: .semibold))
+                        .foregroundStyle(model.showTaskManager ? palette.active : palette.primary)
+                        .frame(width: tm.width, height: tm.height)
+                        .background(RoundedRectangle(cornerRadius: 9, style: .continuous)
+                            .fill(model.showTaskManager ? palette.active.opacity(0.22)
+                                  : tm.contains(p) ? palette.hover : .clear))
+                        .offset(x: tm.minX - right.minX, y: tm.minY - right.minY)
+
                     TrayView(palette: palette)
                         .frame(width: model.trayRect.width, height: model.trayRect.height)
                         .offset(x: model.trayRect.minX - right.minX, y: model.trayRect.minY - right.minY)
@@ -923,7 +993,7 @@ private struct TaskbarView: View {
 
     /// Apple-style magnification: icons near the pointer grow, the ones further away stay put.
     private func magnification(for rect: CGRect, at p: CGPoint) -> CGFloat {
-        guard model.dockMagnification, p.y >= model.dockY - 24 else { return 1 }
+        guard model.dockMagnification, !model.performanceMode, p.y >= model.dockY - 24 else { return 1 }
         let reach = max(96, rect.width * 2.6)
         let amount = max(0, 1 - abs(p.x - rect.midX) / reach)
         return 1 + 0.28 * amount
@@ -995,7 +1065,7 @@ private struct DockGlass<Content: View>: View {
     }
 
     var body: some View {
-        let shape = RoundedRectangle(cornerRadius: rect.height * 0.34, style: .continuous)
+        let shape = RoundedRectangle(cornerRadius: rect.height * 0.42, style: .continuous)
         ZStack(alignment: .topLeading) { content }
             .frame(width: rect.width, height: rect.height, alignment: .topLeading)
             .background {
@@ -1047,8 +1117,10 @@ private struct DockItem: View {
                     .allowsHitTesting(false)
             }
             ZStack(alignment: .bottom) {
-                RoundedRectangle(cornerRadius: rect.width * 0.24, style: .continuous)
+                RoundedRectangle(cornerRadius: rect.width * 0.28, style: .continuous)
                     .fill(hovered ? palette.hover : .clear)
+                    .overlay(RoundedRectangle(cornerRadius: rect.width * 0.28, style: .continuous)
+                        .stroke(palette.primary.opacity(hovered ? 0.16 : 0), lineWidth: 1))
                     .frame(width: rect.width * 0.96, height: rect.width * 0.96)
                 if let window {
                     windowIcon(window)
@@ -1064,7 +1136,6 @@ private struct DockItem: View {
             }
             .frame(width: rect.width, height: rect.height, alignment: .bottom)
             .scaleEffect(magnification, anchor: .bottom)
-            .animation(.easeOut(duration: 0.12), value: magnification)
         }
         .frame(width: rect.width, height: rect.height, alignment: .bottom)
         .offset(x: rect.minX - container.minX, y: rect.minY - container.minY)

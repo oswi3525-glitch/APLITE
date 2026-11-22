@@ -6990,6 +6990,116 @@
           }
         }
       }
+    },
+    "Task Manager": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quản lý tác vụ"
+          }
+        }
+      }
+    },
+    "windows": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "cửa sổ"
+          }
+        }
+      }
+    },
+    "in use": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "đang dùng"
+          }
+        }
+      }
+    },
+    "No open windows": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Không có cửa sổ nào"
+          }
+        }
+      }
+    },
+    "Minimized": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đã thu nhỏ"
+          }
+        }
+      }
+    },
+    "Running": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đang chạy"
+          }
+        }
+      }
+    },
+    "Minimize all": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thu nhỏ tất cả"
+          }
+        }
+      }
+    },
+    "All windows minimized": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đã thu nhỏ tất cả cửa sổ"
+          }
+        }
+      }
+    },
+    "All windows closed": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đã đóng tất cả cửa sổ"
+          }
+        }
+      }
+    },
+    "Live configuration": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cấu hình trực tuyến"
+          }
+        }
+      }
+    },
+    "Performance mode (smoother AirPlay / Wi-Fi)": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chế độ hiệu năng (AirPlay / Wi-Fi mượt hơn)"
+          }
+        }
+      }
     }
   },
   "version": "1.0"

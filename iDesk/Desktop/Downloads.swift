@@ -188,7 +188,7 @@ extension DesktopModel {
     var downloadsButtonRect: CGRect? {
         guard !Downloads.shared.items.isEmpty else { return nil }
         let h = min(38, dockHeight - 10)
-        return CGRect(x: trayRect.minX - 44, y: dockY + (dockHeight - h) / 2, width: 40, height: h)
+        return CGRect(x: taskManagerButtonRect.minX - 44, y: dockY + (dockHeight - h) / 2, width: 40, height: h)
     }
 
     var downloadsRect: CGRect {

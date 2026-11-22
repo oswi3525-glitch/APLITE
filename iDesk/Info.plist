@@ -37,8 +37,6 @@
 	<string>oswi3525-glitch/APLITE</string>
 	<key>APLiteUpstreamRepository</key>
 	<string>itshieuk/iDesk</string>
-	<key>APLiteReleaseChannel</key>
-	<string>beta 1</string>
 	<key>LSSupportsOpeningDocumentsInPlace</key>
 	<false/>
 	<key>NFCReaderUsageDescription</key>

@@ -104,6 +104,7 @@ struct ScreenSaverView: View {
     var wallpaperIndex: Int = 0
     var wallpaper: UIImage?
     var wallpaperBlur: Double = 0
+    var performance = false
 
     var body: some View {
         TimelineView(.periodic(from: .now, by: 1)) { ctx in
@@ -158,7 +159,8 @@ struct LockScreenView: View {
             ZStack {
                 Color.black          // nothing of the desktop shows through the blur's edges
                 WallpaperView(index: model.wallpaper, image: model.customWallpaper,
-                              blur: CGFloat(model.wallpaperBlur) + 18, watermark: false)
+                              blur: CGFloat(model.wallpaperBlur) + 18,
+                              performance: model.performanceMode, watermark: false)
                     .blur(radius: 40, opaque: true)
                     .overlay(Color.black.opacity(0.35))
                 VStack(spacing: 10) {

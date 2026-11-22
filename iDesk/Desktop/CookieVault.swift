@@ -44,6 +44,9 @@ enum CookieVault {
         return dir.appendingPathComponent("cookies.json")
     }()
 
+    private static var cachedDomains: [[String: Any]]?
+    private static var cachedModification: Date?
+
     static func load() -> [SavedCookie] {
         guard let data = try? Data(contentsOf: file),
               let items = try? JSONDecoder().decode([SavedCookie].self, from: data) else { return [] }
@@ -53,6 +56,7 @@ enum CookieVault {
     private static func write(_ items: [SavedCookie]) {
         guard let data = try? JSONEncoder().encode(items) else { return }
         try? data.write(to: file, options: .atomic)
+        cachedDomains = nil
     }
 
     /// Merges cookies into the vault (same name/domain/path is overwritten) and returns the count.
@@ -84,8 +88,13 @@ enum CookieVault {
 
     /// Domains and how many cookies are stored for each, for the Settings page.
     static func domains() -> [[String: Any]] {
+        let modification = (try? FileManager.default.attributesOfItem(atPath: file.path))?[.modificationDate] as? Date
+        if let cachedDomains, cachedModification == modification { return cachedDomains }
         let grouped = Dictionary(grouping: load()) { $0.domain }
-        return grouped.keys.sorted().map { ["domain": $0, "count": grouped[$0]?.count ?? 0] }
+        let result = grouped.keys.sorted().map { ["domain": $0, "count": grouped[$0]?.count ?? 0] }
+        cachedDomains = result
+        cachedModification = modification
+        return result
     }
 
     /// Puts every saved cookie back into WebKit. Called at launch; completion is on the main queue.

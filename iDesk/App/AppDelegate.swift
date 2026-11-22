@@ -11,6 +11,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         ControllerInput.shared.start()
         MediaControl.shared.start()
         UpdateChecker.shared.startChecking()
+        LiveUpdate.check()          // data-only refresh; native code still requires a signed IPA
         UIDevice.current.isBatteryMonitoringEnabled = true   // battery level in the taskbar
         return true
     }

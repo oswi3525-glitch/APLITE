@@ -3,6 +3,30 @@
 All notable changes to APLite are documented here. APLite is based on iDesk v0.6.3
 (upstream commit `2179dbd`); the original upstream history is not rewritten.
 
+## 1.1.0 (stable)
+
+### Added
+
+- Task Manager panel: running windows, memory pressure, per-window close, minimize-all / close-all.
+- Window close animation flies the window back to its dock icon.
+- Live configuration manifest (`aplite-live.json`): data-only refresh of wallpapers and a notice,
+  no IPA download and no re-signing. Native code updates still require a signed IPA.
+- Performance mode: cheaper frames for AirPlay / Wi-Fi display, lighter shadows, no magnification.
+
+### Changed / removed
+
+- The experimental camera window from beta was removed after review (permission, session lifecycle
+  and extra UI were judged not worth the complexity for this release). Its code, asset and strings
+  were reverted and verified absent in three passes (source, docs, asset catalog).
+- Deeper optimisation: cached shortcut list, cached task layout, cached display modes and cookie
+  domains, no per-frame magnification animation.
+- Dock refined with more rounded glass, subtle highlight and softer running indicators.
+- Release channel metadata cleared: this is the stable 1.1.0, not a beta.
+
+### Verification
+
+- macOS CI build and packaging; see workflow run attached to the v1.1.0 tag.
+
 ## 1.1.0 (beta 1) — aplite-dev
 
 ### Added

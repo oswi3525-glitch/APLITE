@@ -6,7 +6,7 @@ windows, a floating Liquid-Glass dock, a browser, files, widgets and iOS apps in
 becomes the trackpad and keyboard.
 
 > Experimental: APLite uses private UIKit APIs, is meant to be sideloaded, and a future iOS may
-> break parts of it. Current development build: **1.1.0 (beta 1)**.
+> break parts of it. Current stable build: **1.1.0**.
 
 ## Attribution — original project
 
@@ -39,6 +39,13 @@ The original MIT license and copyright notice are preserved in [LICENSE](LICENSE
   to other apps, so the values are copied by you and stay on the device.
 - **Screen saver:** choose the delay (1–60 min or off), style (drifting clock, APLite gradient or
   blurred wallpaper), drift on/off and fade duration in Settings → Security.
+- **Task Manager:** a dock-button panel listing open windows with memory pressure and per-window
+  close controls, plus minimize-all / close-all.
+- **Window close animation:** windows fly back to their dock icon when closed.
+- **Live configuration:** a small JSON manifest refreshes wallpaper palettes and an announcement
+  without downloading or re-signing an IPA. Native code still requires a signed rebuild.
+- **Performance mode:** lower-resolution frames, lighter shadows and no magnification for AirPlay
+  or slow Wi-Fi.
 - **Build/CI:** the unsigned artifact is named for what it is (`APLite-unsigned.ipa`) and is built
   from the `aplite-dev` branch.
 
@@ -83,6 +90,14 @@ Or open `APLite.xcodeproj` and Run. The generated project and `build/` are ignor
   `Guest/` IPA loading (Mach-O patching, lifecycle, UIKit shims, synthetic touches, crash reports).
 - The bundle identifier is intentionally kept as `com.hieuk.idesk` so signing, entitlements and the
   existing settings/guest-app storage keep working. Changing it requires a separate migration.
+
+## About a mouse plugged into the TV
+
+APLite does not support a mouse connected to the TV or monitor as an input device. A USB-C/HDMI
+display connection carries video from the iPhone, and the TV's own USB port is controlled by the
+TV's OS — neither delivers mouse HID events into APLite. Use the iPhone trackpad / a keyboard paired
+to the iPhone, or *Use a laptop as the display*, where the laptop's own mouse and keyboard are sent
+over Wi-Fi. The earlier draft mentioned TV USB mice; that claim has been removed.
 
 ## Known limitations
 
