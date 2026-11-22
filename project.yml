@@ -88,7 +88,7 @@ targets:
   # Standalone unit tests: they compile the pure diagnostics model directly, so they need no
   # host app and can run on any iOS Simulator in CI.
   APLiteTests:
-    type: unitTestBundle
+    type: bundle.unit-test
     platform: iOS
     sources:
       - Tests
