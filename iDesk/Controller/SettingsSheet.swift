@@ -54,6 +54,14 @@ struct SettingsSheet: View {
         NavigationStack {
             List {
                 Section {
+                    NavigationLink {
+                        SystemSettingsView(model: model)
+                    } label: {
+                        Label("System settings", systemImage: "gearshape.2")
+                    }
+                }
+
+                Section {
                     labeled("Pointer", systemImage: "cursorarrow.motionlines") {
                         Slider(value: $pointerSpeed, in: 0.6...4)
                     }

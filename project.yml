@@ -99,6 +99,7 @@ targets:
       - iDesk/System/CertificateRules.swift
       - iDesk/System/FileSorting.swift
       - iDesk/System/WindowLayout.swift
+      - iDesk/System/ProjectAnalyzer.swift
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.hieuk.aplite.tests
