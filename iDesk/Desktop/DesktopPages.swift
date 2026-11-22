@@ -122,6 +122,7 @@ enum DesktopPages {
             "wallpaperBlur": Int(m.wallpaperBlur.rounded()),
             "autoHide": m.autoHideTaskbar,
             "performance": m.performanceMode,
+            "reduceMotion": m.reduceMotion,
             "dockScale": m.dockScale,
             "dockIcon": m.dockIconScale,
             "dockSpacing": m.dockSpacing,
@@ -333,6 +334,7 @@ enum DesktopPages {
             else { m.showToast(String(localized: "No saved cookies to export.")) }
         case (.settings, "autoHide"): m.autoHideTaskbar.toggle()
         case (.settings, "performanceMode"): m.performanceMode.toggle()
+        case (.settings, "reduceMotion"): m.reduceMotion.toggle()
         case (.settings, "dockScale"):
             m.dockScale = DockSettings.clamp(m.dockScale + (Double(value) ?? 0), to: DockSettings.scaleRange)
         case (.settings, "dockIcon"):
@@ -544,6 +546,7 @@ enum DesktopPages {
             "desktop": String(localized: "Desktop"),
             "autoHide": String(localized: "Auto-hide the dock"),
             "performanceMode": String(localized: "Performance mode (smoother AirPlay / Wi-Fi)"),
+            "reduceMotion": String(localized: "Reduce motion (follows iPhone setting)"),
             "dock": String(localized: "Dock"),
             "dockSize": String(localized: "Dock size"), "dockIconSize": String(localized: "Icon size"),
             "dockSpacing": String(localized: "Icon spacing"), "dockOpacity": String(localized: "Glass opacity"),
@@ -762,6 +765,7 @@ enum DesktopPages {
         + `</div></div></div>`;
       h += `<h2>${esc(T.desktop)}</h2><div class="card">` + toggle('autoHide', s.autoHide, T.autoHide)
         + toggle('performanceMode', s.performance, T.performanceMode)
+        + toggle('reduceMotion', s.reduceMotion, T.reduceMotion)
         + toggle('widgets', s.widgets, T.widgets) + toggle('dnd', s.dnd, T.dnd)
         + `<div class="row"><div class="label">${esc(T.iconSize)}</div><div class="seg">`
         + [[0, T.small], [1, T.medium], [2, T.large]].map(([n, l]) =>

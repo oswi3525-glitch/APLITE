@@ -39,6 +39,7 @@ struct DesktopView: View {
                 WallpaperView(index: model.wallpaper, image: model.customWallpaper,
                               blur: CGFloat(model.wallpaperBlur), performance: model.performanceMode)
                     .frame(width: geo.size.width, height: geo.size.height)
+                    .animation(APLiteAnimation.gentle, value: model.wallpaper)
 
                 DesktopIconsView(model: model, cursor: model.cursor)
 
@@ -112,7 +113,8 @@ struct DesktopView: View {
                     TaskbarView(model: model, cursor: model.cursor)
                         .frame(width: geo.size.width, height: Layout.taskbar)
                         .offset(y: geo.size.height - Layout.taskbar)
-                        .transition(.move(edge: .bottom))
+                        .transition(.move(edge: .bottom).combined(with: .opacity))
+                        .animation(APLiteAnimation.dock, value: model.taskbarVisible)
                 }
 
                 if let preview = model.taskPreview, model.taskbarVisible {
@@ -131,6 +133,8 @@ struct DesktopView: View {
 
                 if model.showQuickPanel {
                     QuickPanelView(model: model, cursor: model.cursor)
+                        .transition(.scale(scale: 0.92, anchor: .topTrailing).combined(with: .opacity))
+                        .animation(APLiteAnimation.spring, value: model.showQuickPanel)
                 }
 
                 if let banner = model.banner {
@@ -140,6 +144,7 @@ struct DesktopView: View {
                         .shadow(color: .black.opacity(0.4), radius: 14, y: 4)
                         .offset(x: model.bannerRect.minX, y: model.bannerRect.minY)
                         .transition(.move(edge: .trailing).combined(with: .opacity))
+                        .animation(APLiteAnimation.spring, value: model.banner?.id)
                 }
 
                 if model.showShortcuts {
@@ -149,6 +154,8 @@ struct DesktopView: View {
 
                 if let menu = model.contextMenu {
                     ContextMenuView(menu: menu, cursor: model.cursor)
+                        .transition(.scale(scale: 0.9, anchor: .topLeading).combined(with: .opacity))
+                        .animation(APLiteAnimation.snappy, value: model.contextMenu != nil)
                 }
 
                 if let url = model.quickLook {
@@ -197,6 +204,15 @@ struct DesktopView: View {
 
                 if model.isLocked {
                     LockScreenView(model: model, size: geo.size).transition(.opacity)
+                }
+
+                if model.workspacePulse {
+                    WorkspacePulseView(size: geo.size)
+                }
+
+                ForEach(model.ripples) { ripple in
+                    PressRippleView(ripple: ripple)
+                        .allowsHitTesting(false)
                 }
 
                 CursorView(cursor: model.cursor)
@@ -268,6 +284,40 @@ struct WallpaperView: View {
             }
             .animation(.easeInOut(duration: 0.4), value: index)
         }
+    }
+}
+
+/// A liquid ripple at the last press point. Purely visual: hit testing stays in DesktopModel.
+private struct PressRippleView: View {
+    let ripple: DesktopModel.PressRipple
+    @State private var expanded = false
+
+    var body: some View {
+        Circle()
+            .strokeBorder(Color.white.opacity(expanded ? 0 : 0.5), lineWidth: expanded ? 0.6 : 2)
+            .background(Circle().fill(Color.accentColor.opacity(expanded ? 0 : 0.12)))
+            .frame(width: 26, height: 26)
+            .scaleEffect(expanded ? 3.4 : 0.5)
+            .position(ripple.point)
+            .onAppear { withAnimation(.easeOut(duration: 0.55)) { expanded = true } }
+    }
+}
+
+/// A brief glass sweep when switching workspaces: depth without hiding the windows.
+private struct WorkspacePulseView: View {
+    let size: CGSize
+    @State private var moved = false
+
+    var body: some View {
+        GeometryReader { _ in
+            LinearGradient(colors: [.clear, Color.accentColor.opacity(0.16), .clear],
+                           startPoint: .leading, endPoint: .trailing)
+                .frame(width: size.width * 0.5, height: size.height)
+                .offset(x: moved ? size.width * 0.55 : -size.width * 0.55)
+        }
+        .frame(width: size.width, height: size.height)
+        .allowsHitTesting(false)
+        .onAppear { withAnimation(APLiteAnimation.gentle) { moved = true } }
     }
 }
 
@@ -923,10 +973,11 @@ private struct TaskbarView: View {
         // taskLayout walks the pinned apps and every open window. Compute it once per redraw
         // instead of once for the empty check, once for the ForEach and once inside dockRect.
         let items = model.taskLayout
+        let dockItems = items.map { (key: model.taskKey($0.entry), entry: $0.entry, rect: $0.rect) }
         let dock = Self.dockRect(from: items, height: model.dockHeight, y: model.dockY)
 
         ZStack(alignment: .topLeading) {
-            DockGlass(rect: left, y0: y0, palette: palette, opacity: model.dockOpacity) {
+            DockGlass(rect: left, y0: y0, pointer: p, palette: palette, opacity: model.dockOpacity) {
                 ZStack(alignment: .topLeading) {
                     control("circle.grid.3x3.fill", rect: model.startButtonRect, in: left, palette: palette,
                             active: model.showLauncher, hovered: model.startButtonRect.contains(p), size: 17)
@@ -947,19 +998,22 @@ private struct TaskbarView: View {
             }
 
             if !items.isEmpty {
-                DockGlass(rect: dock, y0: y0, palette: palette, opacity: model.dockOpacity) {
+                DockGlass(rect: dock, y0: y0, pointer: p, palette: palette, opacity: model.dockOpacity) {
                     ZStack(alignment: .topLeading) {
-                        ForEach(Array(items.enumerated()), id: \.offset) { _, item in
+                        ForEach(dockItems, id: \.key) { item in
                             DockItem(entry: item.entry, rect: item.rect, container: dock,
                                      hovered: item.rect.contains(p),
                                      magnification: magnification(for: item.rect, at: p),
+                                     bouncing: model.bounceKey == item.key,
+                                     pressed: cursor.isPressed,
                                      palette: palette, focusedID: model.focusedID)
                         }
                     }
+                    .animation(APLiteAnimation.dock, value: dockItems.map(\.key))
                 }
             }
 
-            DockGlass(rect: right, y0: y0, palette: palette, opacity: model.dockOpacity) {
+            DockGlass(rect: right, y0: y0, pointer: p, palette: palette, opacity: model.dockOpacity) {
                 ZStack(alignment: .topLeading) {
                     if let r = model.recordButtonRect {
                         RecordButton(hovered: r.contains(p))
@@ -1059,14 +1113,16 @@ private struct TaskbarView: View {
 private struct DockGlass<Content: View>: View {
     let rect: CGRect
     let y0: CGFloat
+    let pointer: CGPoint
     let palette: DockPalette
     let opacity: Double
     let content: Content
 
-    init(rect: CGRect, y0: CGFloat, palette: DockPalette, opacity: Double,
+    init(rect: CGRect, y0: CGFloat, pointer: CGPoint, palette: DockPalette, opacity: Double,
          @ViewBuilder content: () -> Content) {
         self.rect = rect
         self.y0 = y0
+        self.pointer = pointer
         self.palette = palette
         self.opacity = opacity
         self.content = content()
@@ -1089,6 +1145,14 @@ private struct DockGlass<Content: View>: View {
                     .frame(width: rect.width * 0.55, height: 1)
                     .padding(.top, 1)
             }
+            .overlay {
+                // A small soft reflection follows the pointer across the glass.
+                RadialGradient(colors: [palette.primary.opacity(0.12), .clear],
+                               center: UnitPoint(x: min(max(0, (pointer.x - rect.minX) / max(1, rect.width)), 1),
+                                                 y: min(max(0, (pointer.y - rect.minY) / max(1, rect.height)), 1)),
+                               startRadius: 0, endRadius: rect.width * 0.42)
+                    .clipShape(shape)
+            }
             .shadow(color: .black.opacity(0.35), radius: 18, y: 8)
             .offset(x: rect.minX, y: rect.minY - y0)
             .allowsHitTesting(false)
@@ -1103,6 +1167,8 @@ private struct DockItem: View {
     let container: CGRect
     let hovered: Bool
     let magnification: CGFloat
+    let bouncing: Bool
+    let pressed: Bool
     let palette: DockPalette
     let focusedID: UUID?
 
@@ -1143,7 +1209,9 @@ private struct DockItem: View {
                 }
             }
             .frame(width: rect.width, height: rect.height, alignment: .bottom)
-            .scaleEffect(magnification, anchor: .bottom)
+            .scaleEffect(bouncing ? 1.28 : (pressed && hovered ? 0.9 : magnification), anchor: .bottom)
+            .animation(APLiteAnimation.snappy, value: bouncing)
+            .animation(APLiteAnimation.dock, value: Int(max(0, (magnification - 1) * 50)))
         }
         .frame(width: rect.width, height: rect.height, alignment: .bottom)
         .offset(x: rect.minX - container.minX, y: rect.minY - container.minY)

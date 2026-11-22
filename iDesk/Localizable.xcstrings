@@ -7140,6 +7140,16 @@
           }
         }
       }
+    },
+    "Reduce motion (follows iPhone setting)": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Giảm hiệu ứng (theo cài đặt iPhone)"
+          }
+        }
+      }
     }
   },
   "version": "1.0"

@@ -50,6 +50,10 @@ The original MIT license and copyright notice are preserved in [LICENSE](LICENSE
   battery level and colour-coded warnings (no private API, no °C claim).
 - **Redrawn assets:** app icon, launch mark, lock mark and all built-in app icons regenerated in a
   single navy/teal glass style; the lock screen now uses one blur pass instead of two.
+- **Animation system:** liquid-glass dock with hover magnification, open bounce, press feedback and
+  stable insertion/removal transitions; spring window open/close/minimize/restore/snap; wallpaper
+  fade, glass control centre, animated context menus and notifications, workspace sweep, press
+  ripples and cursor-following glass reflection. All respect Reduce Motion (system or APLite switch).
 - **Build/CI:** the unsigned artifact is named for what it is (`APLite-unsigned.ipa`) and is built
   from the `aplite-dev` branch.
 

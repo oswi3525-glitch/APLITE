@@ -26,6 +26,11 @@ All notable changes to APLite are documented here. APLite is based on iDesk v0.6
 - Dock refined with more rounded glass, subtle highlight and softer running indicators.
 - Spring transitions for launcher, Spotlight, Downloads and Task Manager panels; smoother close
   and minimize animations.
+- Full animation upgrade: stable dock item identity with add/remove/reorder transitions, icon bounce
+  on launch, press ripple, cursor-following glass reflection, spring snap/minimize/restore, wallpaper
+  fade, glass control centre, context menu and notification transitions, workspace sweep.
+- `APLiteAnimation` centralises timing and honours system Reduce Motion plus an APLite switch;
+  ripple count is capped and every effect clears itself (no leaks).
 - Release channel metadata cleared: this is the stable 1.1.0, not a beta.
 
 ### Verification

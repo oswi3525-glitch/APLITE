@@ -398,6 +398,16 @@ final class DesktopModel: ObservableObject {
     /// A short-lived visual of a window flying back to its dock icon while it closes.
     @Published private(set) var closingWindow: ClosingWindow?
     private var closingWork: DispatchWorkItem?
+    /// Short-lived press ripples and dock bounce, driven by real pointer/touch input.
+    @Published private(set) var ripples: [PressRipple] = []
+    @Published private(set) var bounceKey: String?
+    @Published private(set) var workspacePulse = false
+    private var bounceWork: DispatchWorkItem?
+    private var pulseWork: DispatchWorkItem?
+    /// Users on slow devices can switch every animation off (also follows system Reduce Motion).
+    @Published var reduceMotion: Bool = UserDefaults.standard.bool(forKey: APLiteAnimation.reduceMotionKey) {
+        didSet { UserDefaults.standard.set(reduceMotion, forKey: APLiteAnimation.reduceMotionKey) }
+    }
     /// Quick panel (click the clock): quick toggles, brightness, notifications.
     @Published var showQuickPanel = false {
         didSet { if showQuickPanel { showLauncher = false; contextMenu = nil; banner = nil } }
@@ -537,6 +547,11 @@ final class DesktopModel: ObservableObject {
         let symbol: String
         let from: CGRect
         let to: CGRect
+    }
+
+    struct PressRipple: Identifiable {
+        let id = UUID()
+        let point: CGPoint
     }
     enum NavButton: CaseIterable { case search, recents, home, back }
 
@@ -1271,16 +1286,21 @@ final class DesktopModel: ObservableObject {
             self.setFullscreen(w, on)
         }
         // Spring the new window in: it grows from the dock/taskbar click instead of blinking in.
-        withAnimation(.spring(response: 0.38, dampingFraction: 0.78)) { windows.append(w) }
+        APLiteAnimation.perform(APLiteAnimation.spring) { windows.append(w) }
+        bounceDock(key: "win:" + w.id.uuidString)
         restack()
         scheduleSave()
     }
 
     func focus(_ w: DeskWindow) {
         if w.workspace != workspace { setWorkspace(w.workspace) }
-        w.isMinimized = false
+        let wasMinimized = w.isMinimized
+        APLiteAnimation.perform(APLiteAnimation.spring) { w.isMinimized = false }
+        if wasMinimized { bounceDock(key: "win:" + w.id.uuidString) }
         if let i = windows.firstIndex(where: { $0.id == w.id }), i != windows.count - 1 {
-            windows.append(windows.remove(at: i))
+            APLiteAnimation.perform(APLiteAnimation.gentle) {
+                windows.append(windows.remove(at: i))
+            }
         }
         restack()
         focusedID = w.id
@@ -1358,7 +1378,7 @@ final class DesktopModel: ObservableObject {
     }
 
     func minimize(_ w: DeskWindow) {
-        withAnimation(.easeInOut(duration: 0.2)) { w.isMinimized = true }
+        APLiteAnimation.perform(APLiteAnimation.gentle) { w.isMinimized = true }
         if focusedID == w.id { focusedID = windows.last(where: { $0.isShown })?.id }
         scheduleSave()
     }
@@ -1366,7 +1386,7 @@ final class DesktopModel: ObservableObject {
     /// The window covers the whole external display (taskbar included) when the page requests fullscreen.
     func setFullscreen(_ w: DeskWindow, _ on: Bool) {
         guard on != w.isFullscreen else { return }
-        objectWillChange.send()   // the desktop must redraw to hide/show the taskbar
+        APLiteAnimation.perform(APLiteAnimation.gentle) { objectWillChange.send() }
         if on {
             w.fullscreenRestore = (w.frame, w.isMaximized, w.isSnapped)
             w.isFullscreen = true
@@ -1544,8 +1564,11 @@ final class DesktopModel: ObservableObject {
         showLauncher = false
         closeRecents()
         hiddenByShowDesktop = []
-        workspace = n
-        if let w = workspaceWallpapers[String(n)], w != wallpaper { wallpaper = w }
+        APLiteAnimation.perform(APLiteAnimation.gentle) { workspace = n }
+        pulseWorkspace()
+        if let w = workspaceWallpapers[String(n)], w != wallpaper {
+            APLiteAnimation.perform(APLiteAnimation.gentle) { wallpaper = w }
+        }
         for w in windows { w.isOffDesk = w.workspace != n }
         focusedID = windows.last(where: { $0.isShown })?.id
         showToast(String(localized: "Workspace \(n + 1)"))
@@ -2017,7 +2040,7 @@ final class DesktopModel: ObservableObject {
         if isGuestDrag { Self.guestInput { GuestTouch.end() } }
         if showTilePicker || tileHover != nil { withAnimation(.easeOut(duration: 0.15)) { showTilePicker = false }; tileHover = nil }
         if case let .move(id, _) = drag, let s = snapTarget, let w = window(id) {
-            snap(w, s)
+            APLiteAnimation.perform(APLiteAnimation.spring) { snap(w, s) }
             suggestFill(after: w, s)
         }
         if case let .icon(item, _) = drag, iconDrag != nil {
@@ -2057,6 +2080,7 @@ final class DesktopModel: ObservableObject {
         noteInput()
         let p = cursor.position
         flashPress()
+        addRipple(at: p)
         Self.typingTargetChanged()        // a click may put the caret in another field
         if capture != nil {
             finishCapture(topWindow(at: p)?.frame ?? CGRect(origin: .zero, size: screenSize))
@@ -2602,6 +2626,52 @@ final class DesktopModel: ObservableObject {
             guard let self, !self.isDragging else { return }
             self.cursor.isPressed = false
         }
+    }
+
+    /// A glass ripple at the press point. At most a few live at once; each removes itself.
+    func addRipple(at point: CGPoint) {
+        guard !APLiteAnimation.reduced else { return }
+        let ripple = PressRipple(point: point)
+        APLiteAnimation.perform(APLiteAnimation.snappy) {
+            if ripples.count >= 6 { ripples.removeFirst() }
+            ripples.append(ripple)
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.65) { [weak self] in
+            guard let self else { return }
+            APLiteAnimation.perform(.easeOut(duration: 0.18)) {
+                self.ripples.removeAll { $0.id == ripple.id }
+            }
+        }
+    }
+
+    /// Makes a dock icon bounce once when its app/window opens.
+    func bounceDock(key: String) {
+        guard !APLiteAnimation.reduced else { return }
+        bounceWork?.cancel()
+        bounceKey = key
+        let work = DispatchWorkItem { [weak self] in
+            APLiteAnimation.perform(APLiteAnimation.snappy) { self?.bounceKey = nil }
+        }
+        bounceWork = work
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.42, execute: work)
+    }
+
+    func taskKey(_ entry: TaskEntry) -> String {
+        switch entry {
+        case let .pinned(item, _): return "pin:" + Self.key(of: item)
+        case let .window(w): return "win:" + w.id.uuidString
+        }
+    }
+
+    private func pulseWorkspace() {
+        guard !APLiteAnimation.reduced else { return }
+        pulseWork?.cancel()
+        APLiteAnimation.perform(APLiteAnimation.gentle) { workspacePulse = true }
+        let work = DispatchWorkItem { [weak self] in
+            APLiteAnimation.perform(APLiteAnimation.gentle) { self?.workspacePulse = false }
+        }
+        pulseWork = work
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.28, execute: work)
     }
 
     // MARK: Address bar
