@@ -3048,18 +3048,6 @@ final class DesktopModel: ObservableObject {
         }
     }
 
-    /// Shows a picture (a camera shot) in the corner for a moment. Shared with the camera window
-    /// so the private preview state stays inside the model.
-    func showPhotoPreview(_ image: UIImage, path: String) {
-        withAnimation(.easeOut(duration: 0.25)) { screenshotPreview = ScreenshotPreview(image: image, path: path) }
-        screenshotPreviewWork?.cancel()
-        let work = DispatchWorkItem { [weak self] in
-            withAnimation(.easeIn(duration: 0.25)) { self?.screenshotPreview = nil }
-        }
-        screenshotPreviewWork = work
-        DispatchQueue.main.asyncAfter(deadline: .now() + 6, execute: work)
-    }
-
     static func saveToPhotos(_ image: UIImage, completion: @escaping (Bool) -> Void) {
         PHPhotoLibrary.requestAuthorization(for: .addOnly) { status in
             guard status == .authorized || status == .limited else { DispatchQueue.main.async { completion(false) }; return }

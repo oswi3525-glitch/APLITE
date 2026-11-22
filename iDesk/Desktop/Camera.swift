@@ -128,7 +128,15 @@ final class CameraModel: ObservableObject {
         try? image.jpegData(compressionQuality: 0.9)?.write(to: url)
 
         let model = DesktopModel.shared
-        if let path = FileStore.relativePath(of: url) { model.showPhotoPreview(image, path: path) }
+        if let path = FileStore.relativePath(of: url) {
+            withAnimation(.easeOut(duration: 0.25)) { model.screenshotPreview = ScreenshotPreview(image: image, path: path) }
+            model.screenshotPreviewWork?.cancel()
+            let work = DispatchWorkItem { [weak model] in
+                withAnimation(.easeIn(duration: 0.25)) { model?.screenshotPreview = nil }
+            }
+            model.screenshotPreviewWork = work
+            DispatchQueue.main.asyncAfter(deadline: .now() + 6, execute: work)
+        }
         model.showToast(String(localized: "Photo saved to Files"))
         DesktopModel.saveToPhotos(image) { saved in
             if saved { model.showToast(String(localized: "Photo saved to Photos and Files")) }
@@ -154,7 +162,7 @@ private final class CaptureDelegate: NSObject, AVCapturePhotoCaptureDelegate {
 
 /// Hosts the shared AVCaptureVideoPreviewLayer. The layer is never recreated, so rotating or
 /// resizing the window does not interrupt the camera session.
-final class CameraPreviewUIView: UIView {
+private final class CameraPreviewUIView: UIView {
     let layerView = AVCaptureVideoPreviewLayer()
 
     override init(frame: CGRect) {

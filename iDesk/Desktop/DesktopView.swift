@@ -375,7 +375,7 @@ private struct WindowView: View {
                 }
             }
             if window.kind == .camera {
-                CameraView(cursor: cursor, frame: f)
+                CameraView(frame: f, cursor: cursor)
             } else if let guest = window.guestWindow {
                 GuestWindowHost(guest: guest, hidden: !window.isShown, area: window.guestRect) { on in window.onFullscreen?(on) }
             } else if let web = window.webView {
