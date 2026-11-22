@@ -16,10 +16,12 @@ struct AppCreatorView: View {
                 detailsSection
                 actionSection
                 if let result {
-                    Section("Created") {
+                    Section {
                         Text(result.lastPathComponent).font(.footnote)
                         Button("Share project ZIP") { ShareSheet.present(result) }
                         Button("Analyse in Build Center") { analyse(result) }
+                    } header: {
+                        Text("Created")
                     }
                 }
                 if let error {
@@ -38,7 +40,7 @@ struct AppCreatorView: View {
     }
 
     private var templateSection: some View {
-        Section("Template") {
+        Section {
             ForEach(AppTemplate.allCases, id: \.self) { item in
                 Button {
                     template = item
@@ -53,16 +55,20 @@ struct AppCreatorView: View {
                         if item == template { Image(systemName: "checkmark").foregroundStyle(.tint) }
                     }
                 }
+            } header: {
+                Text("Template")
             }
         }
     }
 
     private var detailsSection: some View {
-        Section("App details") {
+        Section {
             TextField("Display name", text: $name)
             TextField("Bundle ID", text: $bundleID)
                 .textInputAutocapitalization(.never)
                 .autocorrectionType(.no)
+        } header: {
+            Text("App details")
         }
     }
 
