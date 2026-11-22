@@ -333,6 +333,7 @@ enum DesktopPages {
         case (.settings, "cookieExport"):
             if let file = CookieVault.exportFile() { ShareSheet.present(file) }
             else { m.showToast(String(localized: "No saved cookies to export.")) }
+        case (.settings, "systemSettings"): m.phoneSheet = .settings
         case (.settings, "sleep"): PowerManager.shared.sleep()
         case (.settings, "wake"): PowerManager.shared.wake()
         case (.settings, "shutdown"):
@@ -581,6 +582,7 @@ enum DesktopPages {
             "sleep": String(localized: "Sleep"), "wake": String(localized: "Wake"),
             "shutdown": String(localized: "Shut down APLite"),
             "powerNote": String(localized: "These control the APLite environment. iOS does not let an app switch the iPhone or iPad off or on."),
+            "systemSettings": String(localized: "Open system settings on iPhone"),
             "sound": String(localized: "Sound"),
             "audioNote": String(localized: "Sound from guest apps, web pages and files follows the iPhone's audio route. Use the Sound button on the iPhone screen to pick AirPods, the speaker or the display."),
             "audioDiagnostics": String(localized: "Copy audio diagnostics"),
@@ -862,7 +864,8 @@ enum DesktopPages {
         + `<div class="row"><div class="label note" style="white-space:pre-line;padding:10px 0;line-height:1.5">${esc(T.attribution)}</div></div>`
         + (s.liveNotice ? `<div class="row"><div class="label note" style="white-space:normal;padding:10px 0">${esc(T.liveTitle)}: ${esc(s.liveNotice)}</div></div>` : ``)
         + `<div class="row"><div class="label"></div><button onclick="send('upstream')">${esc(T.upstream)}</button>`
-        + `<button onclick="send('aplite')">${esc(T.apliteRepo)}</button></div></div>`;
+        + `<button onclick="send('aplite')">${esc(T.apliteRepo)}</button>`
+        + `<button class="primary" onclick="send('systemSettings')">${esc(T.systemSettings)}</button></div></div>`;
       document.getElementById('root').innerHTML = h;
     }
     """#
