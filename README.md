@@ -1,109 +1,92 @@
-# iDesk
+# APLite (AirPlayLite)
 
-**Desktop mode for iPhone and iPad.** Plug it into a monitor or TV (or mirror to an Apple TV over AirPlay): the big
-screen gets a desktop with windows, a taskbar, an app menu, desktop websites and iOS apps in windows. The iPhone or
-iPad becomes the trackpad and keyboard.
+**A lightweight desktop for iPhone and iPad.** Connect your phone or tablet to a monitor or TV
+(USB-C → HDMI/DisplayPort, or AirPlay to an Apple TV) and APLite gives the big screen desktop
+windows, a floating Liquid-Glass dock, a browser, files, widgets and iOS apps in windows. The phone
+becomes the trackpad and keyboard.
 
-[Tiếng Việt](README.vi.md)
+> Experimental: APLite uses private UIKit APIs, is meant to be sideloaded, and a future iOS may
+> break parts of it.
 
-> **Experimental.** iDesk uses private UIKit APIs, is meant to be sideloaded, and a future iOS may break parts of it.
+## Attribution — original project
 
-## Features
+APLite is an independently developed project based on the original iDesk project by itshieuk.
 
-- **Spotlight** (⌘ + Space or the magnifier on the taskbar): apps, open windows, files, bookmarks and history in one
-  search, plus sums (`(12+3)*4`, `15% of 80`) and unit conversions (`5 km to mi`, `100 f to c`).
-- **App windows** you move, resize, minimize and maximize. Drag one to the top edge to pick a layout (halves, thirds,
-  quarters); once a window takes one side, iDesk offers the other windows for the rest. ⌘ + arrows snap too. Keep a
-  window on top from its title bar menu. A taskbar with Recent apps, Home and Back; an app menu with search and a
-  Recent row; ⌥ + Tab, ⌘ + Q / H / `; workspaces and hot corners (optional). Open windows come back next time.
-- **Clipboard history** (⌘ + Shift + V): what you copied on the desktop, pinned items first.
-- **Screenshots** of the whole screen (⌘ + Shift + 3) or of an area or a window (⌘ + Shift + 4), saved to Photos and
-  Files, copied, and shown in the corner. **Sticky notes** on the desktop (right-click the desktop).
-- **Browser** with tabs, desktop sites, sign-in popups, fullscreen video, find in page, zoom, a bookmarks bar and history,
-  ad and tracker blocking with your own block and allow lists, a volume slider that works on web videos, a text size for every page, dark pages, translate, reader view and read aloud. Install a
-  site as an app (its own window and icon), pop a video out into a small floating player, move a tab to a window
-  beside, and present slides or a PDF with the iPhone as the remote and laser pointer.
-- **Downloads** panel on the taskbar: progress, pause, resume, cancel. Drag a file from Files onto a web page to
-  upload it.
-- **Screen recording** of the desktop (⌘ + Shift + 5) to Photos and Files.
-- **Files**: downloads and screenshots, folders, rename, move, search (names and text inside files), sort, new text
-  file, zip and unzip, a Trash to put files back from, import from the iPhone, Quick Look (Space). Text files open in an editor with autosave, find and replace, and Save as.
-- **iOS apps from decrypted IPA files**, running in windows, several at once. They reopen next time, unless iDesk
-  quit unexpectedly: the Apps page then marks the app that was in use.
-- **The iPhone as input**: trackpad gestures, typing in any language (Telex, VNI…), voice typing, a Bluetooth
-  keyboard (volume and play/pause keys too), a mouse through AssistiveTouch, a game controller, emoji (⌃⌘Space), text
-  replacement, and a paste button for what you copied on the iPhone (a password, say).
-- **Desktop**: icons you arrange and size, files on the desktop, wallpapers (one per workspace, or one that follows
-  the time of day), widgets you drag anywhere (clock, month, weather, events, reminders, focus timer), a night filter,
-  shake the pointer to find it, a lock with Face ID and a screen saver, quick panel and notifications, battery, heat
-  and memory in the tray, display resolution and TV overscan.
-- **A laptop as the display**: no cable needed. iDesk shows the desktop in the laptop's browser over Wi-Fi, and the
-  laptop's mouse and keyboard (with its input methods, Vietnamese included) control it. Macs can also take the desktop
-  over AirPlay.
-- **Check setup** on the iPhone: the display, keyboard, mouse, free space and apps, each with a plain fix. The Apps
-  page lists apps others got working (compat.json, grows with reports) and has a **Report** button per app.
-- **TV mode** in one click (720p, larger text and icons); tabs nobody is looking at are set aside when memory runs low;
-  leftovers of interrupted installs and updates are removed, and the apps' caches can be cleared.
-- Update checks on GitHub Releases: **Update** downloads the new iDesk and puts your iOS apps into it, so one
-  signing with ESign updates iDesk and keeps the apps.
-- A first-run guide, crash and freeze reports with a **Copy error** button, English and Vietnamese.
+Original project:
+https://github.com/itshieuk/iDesk
+
+APLite introduces independent design changes, improvements, modifications and additional features while acknowledging the original project’s author and contributors.
+
+APLite is not an official release or endorsement of the original iDesk project.
+
+The original MIT license and copyright notice are preserved in [LICENSE](LICENSE) and
+[NOTICE.md](NOTICE.md).
+
+## What APLite changes
+
+- **Rebrand:** new name, app icon, launch screen, accent colour, built-in icons, wallpapers and
+  in-app About with the upstream attribution above.
+- **Floating dock:** app icons centred in a glass pill, separate glass pills for controls and the
+  system tray, hover magnification, running/active indicators, dark/light/auto appearance. All
+  buttons use the existing desktop logic — nothing is decorative.
+- **Dock settings:** size, icon size, spacing, glass opacity, magnification, appearance and
+  auto-hide, all live in Settings → Dock.
+- **Wallpapers:** a new APLite default set, photo import from Photos **or Files**, blur, persistence
+  and per-workspace choices.
+- **Build/CI:** the unsigned artifact is named for what it is (`APLite-unsigned.ipa`) and is built
+  from the `aplite-dev` branch.
+
+Inherited from iDesk: window management, browser with tabs, Files, Spotlight, clipboard history,
+screenshots, widgets, workspaces, iPhone trackpad/keyboard/mouse handling, the laptop-as-display
+mode and the Guest Engine that runs decrypted IPA files in windows.
 
 ## Install
 
-You need an iPhone on **iOS 17+** and a USB-C → HDMI/DisplayPort cable (or Apple's Lightning AV adapter).
+You need an iPhone or iPad on **iOS 17+** and a display (USB-C → HDMI/DisplayPort or an Apple
+Lightning AV adapter). APLite is sideloaded:
 
-Download `iDesk-<version>.ipa` from [Releases](https://github.com/itshieuk/iDesk/releases), then sign and install it
-with ESign, Feather or Scarlet. To build it yourself (Xcode 15+ and [XcodeGen](https://github.com/yonaskolb/XcodeGen)):
+1. Build or download an `APLite-unsigned.ipa`.
+2. Sign it with your own certificate using ESign, Feather, Scarlet, SideStore or similar.
+3. Install the signed app on the device. An **unsigned** IPA cannot be installed directly.
+4. Open APLite, then connect the display.
+
+To run iOS apps inside APLite, add **decrypted** IPA files on the Apps page and follow the
+"Install new apps into APLite" step. App Store copies are encrypted and cannot run.
+
+## Build
+
+See [BUILD.md](BUILD.md). In short (macOS, Xcode 15+, XcodeGen):
 
 ```bash
 brew install xcodegen
-git clone https://github.com/itshieuk/iDesk.git && cd iDesk
-xcodegen
-scripts/build-ipa.sh      # → build/iDesk.ipa (or open iDesk.xcodeproj and Run)
+git clone -b aplite-dev https://github.com/oswi3525-glitch/APLITE.git
+cd APLITE
+xcodegen generate
+scripts/build-ipa.sh            # → build/APLite.ipa (unsigned)
 ```
 
-## Using iDesk
-
-Open iDesk, then connect the display.
-
-| On the iPhone           | Does                          | Keyboard (⌘ or Ctrl)  | Does                            |
-| ----------------------- | ----------------------------- | --------------------- | ------------------------------- |
-| One finger              | Move the pointer              | T / N / W             | New tab / window, close         |
-| Tap / two-finger tap    | Click / right-click           | Shift + T             | Reopen what you closed          |
-| Two-finger drag         | Scroll                        | L / R                 | Address bar / reload            |
-| Hold, then drag         | Move or resize a window       | F / G                 | Find / next match               |
-| Three fingers ↑ / ↓ / • | Recent apps / Home / Back     | = / − / 0             | Zoom                            |
-| Four-finger tap         | App menu                      | ⌘ alone / Tab         | App menu, Recent apps           |
-| Turn it sideways        | The whole screen is the pad   | /                     | Every shortcut                  |
-
-On a keyboard without ⌘, the logo key does the same. A mouse works through *Settings → Accessibility → Touch → AssistiveTouch*: the iPhone
-then shows a copy of the desktop to point at (the **Mouse check** shows what reaches iDesk). Settings are on the
-desktop; with no display, the gear on the iPhone keeps the trackpad and mouse settings.
-
-## iOS apps from IPA files
-
-1. Tap **Apps** (the box button) on the iPhone and add decrypted `.ipa` files.
-2. Tap **Install new apps into iDesk** and pick ESign: it signs iDesk again with the apps inside and installs it.
-3. Open iDesk again: the apps are in the app menu.
-
-iOS only runs code that ships inside an installed app, hence the reinstall (with a development certificate, the
-**Advanced** section signs apps on the iPhone instead). Apps installed from the App Store can't be shown: iOS keeps
-every app in its own sandbox.
-
-Most apps work: screens, touches, typing, network, sign-in, saved data. Push notifications, iCloud, background tasks
-and extensions don't. Apps that check for tampering may quit, and all apps share iDesk's memory. If one crashes
-iDesk, the next launch shows **Copy error**: please send that text.
+Or open `APLite.xcodeproj` and Run. The generated project and `build/` are ignored by Git.
 
 ## Development
 
-- `-iDeskPreview` shows the desktop on the iPhone screen (touch it; hold for a right-click). Add
-  `-iDeskInstall <ipa…>` or `-iDeskOpen <url>`. `scripts/sim-ipa.sh App.ipa` makes an IPA run in the Simulator.
-- Code: `App/` scenes, `Desktop/` the desktop and browser, `Controller/` the iPhone screen, `Input/` mouse,
-  `Guest/` loading apps (Mach-O patching, lifecycle, shims for bundle, keychain and process-wide hooks, synthetic
-  touches, crash reports).
-- Texts: `iDesk/Localizable.xcstrings`. Releases: push a tag such as `v0.5.2`.
+- `-iDeskPreview` shows the desktop on the iPhone screen; `-iDeskInstall <ipa…>` and
+  `-iDeskOpen <url>` are also supported. `scripts/sim-ipa.sh App.ipa` prepares an IPA for the
+  Simulator.
+- `python3 scripts/generate_assets.py` regenerates the bundled raster assets (needs Pillow).
+- Layout: `App/` scenes, `Desktop/` desktop and browser, `Controller/` iPhone input, `Input/` mouse,
+  `Guest/` IPA loading (Mach-O patching, lifecycle, UIKit shims, synthetic touches, crash reports).
+- The bundle identifier is intentionally kept as `com.hieuk.idesk` so signing, entitlements and the
+  existing settings/guest-app storage keep working. Changing it requires a separate migration.
 
-**Known issues:** pages get mouse events from JavaScript, so CSS `:hover` doesn't apply and some canvas pages
-ignore clicks. Without a display, only app management works.
+## Known limitations
 
-[MIT](LICENSE) · Only load apps you have the right to use. iDesk is not affiliated with Apple or any app developer.
+- Pages get synthetic mouse events, so CSS `:hover` does not always apply and some canvas pages
+  ignore clicks (inherited from iDesk).
+- Without an external display, only app management and the iPhone-side settings are available.
+- Push notifications, iCloud, background tasks and extensions do not work for guest apps.
+- No signed IPA is produced by CI unless you configure signing secrets and a provisioning profile.
+
+## Documentation
+
+[APLite_AUDIT.md](APLite_AUDIT.md) · [BUILD.md](BUILD.md) · [CHANGELOG.md](CHANGELOG.md) ·
+[NOTICE.md](NOTICE.md)

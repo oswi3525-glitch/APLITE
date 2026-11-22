@@ -1,4 +1,6 @@
-# iDesk
+> **APLite (AirPlayLite)** là dự án phát triển độc lập dựa trên iDesk gốc của itshieuk: https://github.com/itshieuk/iDesk. APLite không phải bản phát hành chính thức hay được xác nhận bởi dự án iDesk gốc. Xem [README.md](README.md) để biết các thay đổi và hướng dẫn build của APLite.
+
+# iDesk — tài liệu gốc (xem phần ghi nhận APLite ở đầu)
 
 **Chế độ máy tính cho iPhone và iPad.** Cắm vào màn hình hoặc TV (hoặc phản chiếu lên Apple TV qua AirPlay): màn hình
 lớn có desktop với cửa sổ, thanh tác vụ, menu ứng dụng, trang web bản máy tính và app iOS chạy trong cửa sổ. iPhone
