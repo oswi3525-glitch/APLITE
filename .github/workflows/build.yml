@@ -46,7 +46,7 @@ jobs:
         id: build
         run: BUILD_NUMBER=${{ github.run_number }} scripts/build-ipa.sh
 
-      - name: Unit tests (audio diagnostics)
+      - name: Unit tests (all APLite modules)
         id: test
         run: |
           # Pick any available iPhone simulator on the runner instead of hardcoding a model.
