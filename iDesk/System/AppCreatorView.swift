@@ -11,26 +11,10 @@ struct AppCreatorView: View {
 
     var body: some View {
         NavigationStack {
-            Form {
-                Section("Template") {
-                    Picker("Template", selection: $template) {
-                        ForEach(AppTemplate.allCases) { Text($0.title).tag($0) }
-                    }
-                    .pickerStyle(.inline)
-                    Text(template.detail).font(.footnote).foregroundStyle(.secondary)
-                }
-                Section("App details") {
-                    TextField("Display name", text: $name)
-                    TextField("Bundle ID", text: $bundleID)
-                        .textInputAutocapitalization(.never)
-                        .autocorrectionType(.no)
-                }
-                Section {
-                    Button("Generate project ZIP") { generate() }
-                        .buttonStyle(APLiteGlassButtonStyle())
-                    Text("Creates real Swift sources and a project.yml in APLite's file area. A macOS worker is still required to compile it.")
-                        .font(.footnote).foregroundStyle(.secondary)
-                }
+            List {
+                templateSection
+                detailsSection
+                actionSection
                 if let result {
                     Section("Created") {
                         Text(result.lastPathComponent).font(.footnote)
@@ -38,7 +22,11 @@ struct AppCreatorView: View {
                         Button("Analyse in Build Center") { analyse(result) }
                     }
                 }
-                if let error { Section { Text(error).foregroundStyle(.red).font(.footnote) } }
+                if let error {
+                    Section {
+                        Text(error).foregroundStyle(.red).font(.footnote)
+                    }
+                }
             }
             .navigationTitle("App Creator")
             .navigationBarTitleDisplayMode(.inline)
@@ -47,6 +35,44 @@ struct AppCreatorView: View {
             }
         }
         .preferredColorScheme(.dark)
+    }
+
+    private var templateSection: some View {
+        Section("Template") {
+            ForEach(AppTemplate.allCases, id: \.self) { item in
+                Button {
+                    template = item
+                } label: {
+                    HStack {
+                        Image(systemName: item.symbol).foregroundStyle(.tint)
+                        VStack(alignment: .leading) {
+                            Text(item.title)
+                            Text(item.detail).font(.caption).foregroundStyle(.secondary)
+                        }
+                        Spacer()
+                        if item == template { Image(systemName: "checkmark").foregroundStyle(.tint) }
+                    }
+                }
+            }
+        }
+    }
+
+    private var detailsSection: some View {
+        Section("App details") {
+            TextField("Display name", text: $name)
+            TextField("Bundle ID", text: $bundleID)
+                .textInputAutocapitalization(.never)
+                .autocorrectionType(.no)
+        }
+    }
+
+    private var actionSection: some View {
+        Section {
+            Button("Generate project ZIP") { generate() }
+                .buttonStyle(APLiteGlassButtonStyle())
+            Text("Creates real Swift sources and a project.yml in APLite's file area. A macOS worker is still required to compile it.")
+                .font(.footnote).foregroundStyle(.secondary)
+        }
     }
 
     private func generate() {
@@ -63,7 +89,7 @@ struct AppCreatorView: View {
             let destination = FileManager.default.temporaryDirectory
                 .appendingPathComponent("aplite-generated-\(UUID().uuidString)", isDirectory: true)
             try Unzip.extract(zip, to: destination)
-            let files = (try FileManager.default.contentsOfDirectory(at: destination, includingPropertiesForKeys: nil))
+            let files = try FileManager.default.contentsOfDirectory(at: destination, includingPropertiesForKeys: nil)
             _ = try center.analyze(files)
             error = nil
             dismiss()
