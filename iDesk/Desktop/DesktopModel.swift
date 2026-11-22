@@ -1286,7 +1286,7 @@ final class DesktopModel: ObservableObject {
             self.setFullscreen(w, on)
         }
         // Spring the new window in: it grows from the dock/taskbar click instead of blinking in.
-        APLiteAnimation.perform(APLiteAnimation.spring) { windows.append(w) }
+        APLiteAnimation.perform(APLiteAnimation.spring) { self.windows.append(w) }
         bounceDock(key: "win:" + w.id.uuidString)
         restack()
         scheduleSave()
@@ -1299,7 +1299,7 @@ final class DesktopModel: ObservableObject {
         if wasMinimized { bounceDock(key: "win:" + w.id.uuidString) }
         if let i = windows.firstIndex(where: { $0.id == w.id }), i != windows.count - 1 {
             APLiteAnimation.perform(APLiteAnimation.gentle) {
-                windows.append(windows.remove(at: i))
+                self.windows.append(self.windows.remove(at: i))
             }
         }
         restack()
@@ -1386,7 +1386,7 @@ final class DesktopModel: ObservableObject {
     /// The window covers the whole external display (taskbar included) when the page requests fullscreen.
     func setFullscreen(_ w: DeskWindow, _ on: Bool) {
         guard on != w.isFullscreen else { return }
-        APLiteAnimation.perform(APLiteAnimation.gentle) { objectWillChange.send() }
+        APLiteAnimation.perform(APLiteAnimation.gentle) { self.objectWillChange.send() }
         if on {
             w.fullscreenRestore = (w.frame, w.isMaximized, w.isSnapped)
             w.isFullscreen = true
@@ -1564,10 +1564,10 @@ final class DesktopModel: ObservableObject {
         showLauncher = false
         closeRecents()
         hiddenByShowDesktop = []
-        APLiteAnimation.perform(APLiteAnimation.gentle) { workspace = n }
+        APLiteAnimation.perform(APLiteAnimation.gentle) { self.workspace = n }
         pulseWorkspace()
         if let w = workspaceWallpapers[String(n)], w != wallpaper {
-            APLiteAnimation.perform(APLiteAnimation.gentle) { wallpaper = w }
+            APLiteAnimation.perform(APLiteAnimation.gentle) { self.wallpaper = w }
         }
         for w in windows { w.isOffDesk = w.workspace != n }
         focusedID = windows.last(where: { $0.isShown })?.id
@@ -2040,7 +2040,7 @@ final class DesktopModel: ObservableObject {
         if isGuestDrag { Self.guestInput { GuestTouch.end() } }
         if showTilePicker || tileHover != nil { withAnimation(.easeOut(duration: 0.15)) { showTilePicker = false }; tileHover = nil }
         if case let .move(id, _) = drag, let s = snapTarget, let w = window(id) {
-            APLiteAnimation.perform(APLiteAnimation.spring) { snap(w, s) }
+            APLiteAnimation.perform(APLiteAnimation.spring) { self.snap(w, s) }
             suggestFill(after: w, s)
         }
         if case let .icon(item, _) = drag, iconDrag != nil {
@@ -2633,8 +2633,8 @@ final class DesktopModel: ObservableObject {
         guard !APLiteAnimation.reduced else { return }
         let ripple = PressRipple(point: point)
         APLiteAnimation.perform(APLiteAnimation.snappy) {
-            if ripples.count >= 6 { ripples.removeFirst() }
-            ripples.append(ripple)
+            if self.ripples.count >= 6 { self.ripples.removeFirst() }
+            self.ripples.append(ripple)
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.65) { [weak self] in
             guard let self else { return }
@@ -2666,7 +2666,7 @@ final class DesktopModel: ObservableObject {
     private func pulseWorkspace() {
         guard !APLiteAnimation.reduced else { return }
         pulseWork?.cancel()
-        APLiteAnimation.perform(APLiteAnimation.gentle) { workspacePulse = true }
+        APLiteAnimation.perform(APLiteAnimation.gentle) { self.workspacePulse = true }
         let work = DispatchWorkItem { [weak self] in
             APLiteAnimation.perform(APLiteAnimation.gentle) { self?.workspacePulse = false }
         }
