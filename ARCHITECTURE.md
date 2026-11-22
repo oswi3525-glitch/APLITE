@@ -36,7 +36,7 @@ rewriting the app or breaking the Guest Engine.
 ## 3. Target module layout (additive; nothing deleted)
 
 ```
-iDesk/System/                 ← NEW: APLite-owned, independent of iDesk UI
+APLite/System/                 ← NEW: APLite-owned, independent of iDesk UI
   APLiteSettings.swift        typed settings, 10 groups, persisted, migration-safe
   SecurityManager.swift       passcode (Keychain), throttle, biometrics, lock policy
   PowerManager.swift          shutdown / sleep / wake state machine + persistence
@@ -45,8 +45,8 @@ iDesk/System/                 ← NEW: APLite-owned, independent of iDesk UI
   APLiteFileManager.swift     APLite file area, metadata, sorting, folder totals
   WindowCoordinator.swift     internal API façade over DesktopModel windows
   BuildCenter.swift           project analysis + GitHub Actions worker client
-iDesk/App/                     existing app lifecycle, audio, icons
-iDesk/Desktop/, Controller/    existing UI, gradually calling System/
+APLite/App/                     existing app lifecycle, audio, icons
+APLite/Desktop/, Controller/    existing UI, gradually calling System/
 Guest/                         UNCHANGED (compatibility preserved)
 ```
 

@@ -5,7 +5,7 @@ APLite is based on iDesk by itshieuk. The attribution stays in `APLite.swift`, `
 
 ## Done
 
-- All new APLite subsystems live in `iDesk/System/` with a one-way dependency:
+- All new APLite subsystems live in `APLite/System/` with a one-way dependency:
   Settings, Security, Power, Memory, Certificates, Files, Windows, Build Center, App Creator.
 - `APLiteSettings` owns the ten user-facing setting groups under `APLite.*` keys; legacy `iDesk.*`
   keys are read-only compatibility for old installations.
@@ -16,8 +16,8 @@ APLite is based on iDesk by itshieuk. The attribution stays in `APLite.swift`, `
 
 ## Still shared during transition (deliberate)
 
-- `iDesk/` remains the source folder so the ObjC bridging header, bundle paths and guest bundle
-  prefixes keep working. Renaming the folder is a separate migration.
+- The source folder was renamed `iDesk/` → `APLite/` in 1.2.5. The ObjC bridging header was renamed
+  with it; bundle paths, guest bundle prefixes and persistence keys are intentionally unchanged.
 - `DesktopModel` still owns legacy desktop state; new features call it through facades instead of
   writing its internals directly.
 - UserDefaults keys starting with `iDesk.` are preserved so upgrades keep settings.

@@ -50,8 +50,8 @@ Key files:
 
 - no Swift Package dependencies; no submodules; no Git LFS.
 - SwiftUI + UIKit + WebKit, PhotosUI, UniformTypeIdentifiers, GameController, QuartzCore.
-- Objective-C guest code is exposed through `iDesk-Bridging-Header.h` (kept under the original
-  `iDesk/` source folder so the bridge and bundle paths stay valid).
+- Objective-C guest code is exposed through `APLite-Bridging-Header.h` (kept under the source
+  folder so the bridge and bundle paths stay valid; renamed from `iDesk-Bridging-Header.h` in 1.2.5).
 - `DesktopModel` observes `GuestStore`, `Browsing`, `ContentBlocker`, `UpdateChecker` and several
   observers/DispatchWorkItems. `Bundle.iDesk` resolves the real app bundle because `Bundle.main`
   is temporarily swapped while a guest app runs.
@@ -85,7 +85,7 @@ Key files:
    the app itself.
 6. `taskLayout` silently dropped items that did not fit; the model and the SwiftUI view used the
    same `Layout` constants, so a future change to only one side could desynchronise them.
-7. CI built `iDesk.ipa` on pushes to `main` only, with no clear unsigned-artifact name.
+7. CI built `APLite.ipa` on pushes to `main` only, with no clear unsigned-artifact name.
 
 ## 6. Crash / instability risks (assessed, not "fixed blindly")
 
@@ -103,17 +103,17 @@ Key files:
 
 ## 7. Files expected to change (and changed)
 
-- `project.yml`, `iDesk/Info.plist`, `InfoPlist.xcstrings`, `Localizable.xcstrings` — product name,
+- `project.yml`, `APLite/Info.plist`, `InfoPlist.xcstrings`, `Localizable.xcstrings` — product name,
   version, launch screen, repository configuration, user-visible strings.
-- `iDesk/Desktop/DesktopModel.swift`, `DesktopView.swift`, `DockSettings.swift` — dock geometry,
+- `APLite/Desktop/DesktopModel.swift`, `DesktopView.swift`, `DockSettings.swift` — dock geometry,
   floating glass taskbar, wallpaper blur and Files import.
-- `iDesk/Desktop/DesktopPages.swift`, `Downloads.swift`, `ScreenRecorder.swift` — dock settings UI,
+- `APLite/Desktop/DesktopPages.swift`, `Downloads.swift`, `ScreenRecorder.swift` — dock settings UI,
   rects inside the right pill.
-- `iDesk/Controller/SystemSheets.swift`, `SettingsSheet.swift`, `AboutView.swift` — typed document
+- `APLite/Controller/SystemSheets.swift`, `SettingsSheet.swift`, `AboutView.swift` — typed document
   picker, About screen.
-- `iDesk/App/APLite.swift`, `UpdateChecker.swift`, `Guest/Compatibility.swift`,
+- `APLite/App/APLite.swift`, `UpdateChecker.swift`, `Guest/Compatibility.swift`,
   `Desktop/DesktopModel.swift` — attribution and update/repo links.
-- `iDesk/Assets.xcassets/` — new app icon, launch mark/background, accent colour, built-in icons.
+- `APLite/Assets.xcassets/` — new app icon, launch mark/background, accent colour, built-in icons.
 - `scripts/build-ipa.sh`, `.github/workflows/build.yml`, `release.yml` — APLite build and artifacts.
 - `README.md`, `BUILD.md`, `CHANGELOG.md`, `NOTICE.md` — documentation.
 

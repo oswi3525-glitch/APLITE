@@ -10,7 +10,7 @@ iPhone/iPad before any item is marked complete. Status today: **not tested on ha
 - [ ] `xcodebuild test -scheme APLiteTests` passes: audio diagnostics, security backoff, memory
       heuristics, certificate rules, file sorting, window layout, project analysis.
 - [ ] `scripts/build-ipa.sh` produces `APLite-unsigned.ipa` and it is uploaded as an artifact.
-- [ ] The IPA contains `iDesk/System/*.swift` compiled into the app (symbol check in the build log).
+- [ ] The IPA contains `APLite/System/*.swift` compiled into the app (symbol check in the build log).
 
 ## Security
 

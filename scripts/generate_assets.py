@@ -9,7 +9,7 @@ from pathlib import Path
 from PIL import Image, ImageDraw, ImageFilter, ImageFont
 import json, math
 
-ROOT = Path(__file__).resolve().parent.parent / "iDesk" / "Assets.xcassets"
+ROOT = Path(__file__).resolve().parent.parent / "APLite" / "Assets.xcassets"
 S = 4
 
 
@@ -205,8 +205,40 @@ def trash():
     return finish(img, 192)
 
 
+# --------------------------------------------------- built-in web app icons
+def zalo():
+    img = tile(192, [(0, (44, 156, 240)), (1, (12, 78, 168))])
+    d = ImageDraw.Draw(img)
+    centered_text(d, (44, 30, 148, 138), "Z", font(126), (255, 255, 255, 250))
+    # small chat bubble tail
+    d.polygon([(60 * S, 126 * S), (92 * S, 126 * S), (60 * S, 152 * S)],
+              fill=(255, 255, 255, 240))
+    return finish(img, 192)
+
+
+def facebook():
+    img = tile(192, [(0, (72, 150, 255)), (1, (24, 92, 222))])
+    d = ImageDraw.Draw(img)
+    centered_text(d, (54, 18, 138, 150), "f", font(152), (255, 255, 255, 252))
+    return finish(img, 192)
+
+
+def telegram():
+    img = tile(192, [(0, (56, 202, 244)), (1, (16, 126, 196))])
+    d = ImageDraw.Draw(img)
+    # paper plane: nose, two swept wings and the folded centre
+    d.polygon([(38 * S, 96 * S), (158 * S, 46 * S), (128 * S, 150 * S),
+               (96 * S, 118 * S), (78 * S, 138 * S), (80 * S, 106 * S)],
+              fill=(255, 255, 255, 248))
+    d.polygon([(80 * S, 106 * S), (158 * S, 46 * S), (96 * S, 118 * S)],
+              fill=(214, 238, 252, 220))
+    return finish(img, 192)
+
+
 for name, fn in (("BrowserIcon", browser), ("FilesIcon", files),
-                 ("SettingsIcon", settings), ("TrashIcon", trash)):
+                 ("SettingsIcon", settings), ("TrashIcon", trash),
+                 ("ZaloIcon", zalo), ("FacebookIcon", facebook),
+                 ("TelegramIcon", telegram)):
     big = fn()
     imageset(name, big, big.resize((64, 64), Image.Resampling.LANCZOS))
 

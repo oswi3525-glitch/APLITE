@@ -1,5 +1,5 @@
 name: Bug report / Báo lỗi
-description: Something does not work, or an app crashes inside iDesk. / Có gì đó không chạy, hoặc app bị crash trong iDesk.
+description: Something does not work, or an app crashes inside APLite. / Có gì đó không chạy, hoặc app bị crash trong iDesk.
 labels: [bug]
 body:
   - type: textarea
@@ -19,8 +19,8 @@ body:
     attributes:
       label: Error report / Báo cáo lỗi
       description: |
-        If iDesk quit, open it again and tap **Copy error** (**Sao chép lỗi**), then paste it here.
-        Nếu iDesk bị thoát, mở lại iDesk, bấm **Sao chép lỗi** rồi dán vào đây.
+        If APLite quit, open it again and tap **Copy error** (**Sao chép lỗi**), then paste it here.
+        Nếu APLite bị thoát, mở lại iDesk, bấm **Sao chép lỗi** rồi dán vào đây.
       render: text
   - type: input
     id: device
@@ -32,7 +32,7 @@ body:
   - type: dropdown
     id: install
     attributes:
-      label: How iDesk was installed / Cách cài iDesk
+      label: How APLite was installed / Cách cài APLite
       options:
         - Signing app (ESign, Feather, Scarlet…)
         - Development certificate (SideStore, AltStore, Xcode)

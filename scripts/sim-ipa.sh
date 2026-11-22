@@ -1,5 +1,5 @@
 #!/bin/bash
-# Convert a decrypted device IPA so it can be loaded by iDesk in the iOS Simulator (Apple silicon Macs).
+# Convert a decrypted device IPA so it can be loaded by APLite in the iOS Simulator (Apple silicon Macs).
 # The arm64 code is the same; only the platform in each Mach-O is changed, then everything is ad-hoc signed.
 # Usage: scripts/sim-ipa.sh App.ipa      → App-sim.ipa next to it
 set -euo pipefail

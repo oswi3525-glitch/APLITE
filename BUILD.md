@@ -11,15 +11,15 @@
 | Item | Value |
 | --- | --- |
 | Project / scheme / target | `APLite.xcodeproj` / `APLite` / `APLite` (unit tests: `APLiteTests`) |
-| Source folder | `iDesk/` (kept so the ObjC bridging header and guest prefixes stay valid) |
+| Source folder | `APLite/` (renamed from `iDesk/`; guest identifiers and persistence keys are intentionally unchanged) |
 | Bundle identifier | `com.hieuk.idesk` (deliberately unchanged — see below) |
 | Deployment target | iOS 17.0 |
 | Device family | 1,2 (iPhone and iPad) |
 | Signing | Automatic in Xcode; CI builds **unsigned** |
 | Frameworks | UIKit, SwiftUI, WebKit, PhotosUI, UniformTypeIdentifiers, GameController, QuartzCore |
-| Info.plist | `iDesk/Info.plist` |
+| Info.plist | `APLite/Info.plist` |
 | Live config | `aplite-live.json` (data only; native code still needs a signed IPA) |
-| Bridging header | `iDesk/iDesk-Bridging-Header.h` |
+| Bridging header | `APLite/APLite-Bridging-Header.h` |
 
 The bundle identifier is intentionally the upstream one. Changing it would break existing signed
 installations, guest-app storage and any App Group/entitlement configuration. APLite preserves
@@ -84,7 +84,7 @@ python3 -m pip install pillow
 python3 scripts/generate_assets.py
 ```
 
-The script writes `iDesk/Assets.xcassets/` deterministically (app icon, launch mark, launch
+The script writes `APLite/Assets.xcassets/` deterministically (app icon, launch mark, launch
 background, accent colour and the four built-in app icons).
 
 ## Audio diagnostics

@@ -6,7 +6,7 @@ windows, a floating Liquid-Glass dock, a browser, files, widgets and iOS apps in
 becomes the trackpad and keyboard.
 
 > Experimental: APLite uses private UIKit APIs, is meant to be sideloaded, and a future iOS may
-> break parts of it. Latest unsigned build: **1.2.4** (CI build + unit tests passed; on-device
+> break parts of it. Latest unsigned build: **1.2.5** (CI build + unit tests passed; on-device
 > verification is still pending).
 
 ## Attribution — original project
@@ -32,8 +32,12 @@ The original MIT license and copyright notice are preserved in [LICENSE](LICENSE
   buttons use the existing desktop logic — nothing is decorative.
 - **Dock settings:** size, icon size, spacing, glass opacity, magnification, appearance and
   auto-hide, all live in Settings → Dock.
-- **Wallpapers:** a new APLite default set, photo import from Photos **or Files**, blur, persistence
-  and per-workspace choices.
+- **Wallpapers:** a new APLite default set, the bundled **Đồng cỏ** (meadow) and **Biển** (ocean)
+  photos, photo import from Photos **or Files**, blur, persistence and per-workspace choices.
+- **Analogue clock:** the desktop widget, lock screen, screen saver and quick panel show a drawn
+  analogue clock (with a digital readout alongside).
+- **Web apps:** Zalo, Facebook, Telegram, Chrome, YouTube and Gmail with branded icons are installed
+  on first launch; native versions still require a decrypted IPA.
 - **Cookies & saved logins:** paste a `Cookie:` header for a domain or import a Netscape
   `cookies.txt` from Files into APLite's shared WebKit cookie store; APLite also keeps a local
   cookie vault, restores it at launch, and can export it as JSON. iOS does not expose Safari's jar
@@ -96,7 +100,10 @@ Or open `APLite.xcodeproj` and Run. The generated project and `build/` are ignor
   Simulator.
 - `python3 scripts/generate_assets.py` regenerates the bundled raster assets (needs Pillow).
 - Layout: `App/` scenes, `Desktop/` desktop and browser, `Controller/` iPhone input, `Input/` mouse,
-  `Guest/` IPA loading (Mach-O patching, lifecycle, UIKit shims, synthetic touches, crash reports).
+  `System/` APLite-owned modules (settings, security, power, memory, built-in web apps), `Guest/`
+  IPA loading (Mach-O patching, lifecycle, UIKit shims, synthetic touches, crash reports).
+- `python3 scripts/generate_meadow.py` and `python3 scripts/generate_ocean.py` regenerate the two
+  bundled photo wallpapers locally; no network fetch is needed.
 - The bundle identifier is intentionally kept as `com.hieuk.idesk` so signing, entitlements and the
   existing settings/guest-app storage keep working. Changing it requires a separate migration.
 
@@ -118,6 +125,6 @@ over Wi-Fi. The earlier draft mentioned TV USB mice; that claim has been removed
 
 ## Documentation
 
-[APLite_AUDIT.md](APLite_AUDIT.md) · [ARCHITECTURE.md](ARCHITECTURE.md) · [INDEPENDENCE.md](INDEPENDENCE.md) ·
+[AUDIT_2026-11-22.md](AUDIT_2026-11-22.md) · [APLite_AUDIT.md](APLite_AUDIT.md) · [ARCHITECTURE.md](ARCHITECTURE.md) · [INDEPENDENCE.md](INDEPENDENCE.md) ·
 [AUDIO_DIAGNOSTICS.md](AUDIO_DIAGNOSTICS.md) · [BUILD.md](BUILD.md) ·
 [CHANGELOG.md](CHANGELOG.md) · [NOTICE.md](NOTICE.md) · [SYSTEM_TEST_PLAN.md](SYSTEM_TEST_PLAN.md)

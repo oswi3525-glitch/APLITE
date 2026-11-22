@@ -3,6 +3,28 @@
 All notable changes to APLite are documented here. APLite is based on iDesk v0.6.3
 (upstream commit `2179dbd`); the original upstream history is not rewritten.
 
+## 1.2.5 (unsigned development release)
+
+- **Source renamed:** the `iDesk/` source folder and bridging header are now `APLite/`. Bundle ID,
+  UserDefaults keys and the Guest Engine stay unchanged, so existing installs keep their settings
+  and guest apps. Legacy `-iDeskPreview` / `-iDeskInstall` / `-iDeskOpen` arguments still work.
+- **Analogue clock:** the desktop widget, lock screen, screen saver and quick panel now show a
+  drawn analogue clock (with a digital readout alongside) instead of a plain digital one.
+- **New "Biển" wallpaper** bundled alongside "Đồng cỏ"; both are selectable in desktop Settings and
+  the native System settings sheet. All raster assets regenerated, including branded Zalo,
+  Facebook and Telegram icons.
+- **Apps:** Zalo, Facebook, Telegram, Chrome, YouTube and Gmail are installed automatically on the
+  first launch (web shortcuts; native versions still need a decrypted IPA). Existing installs get
+  them from Settings → Applications.
+- **Performance:** widgets now tick at their own cadence (clock/timer 1 s, the rest 30 s) instead of
+  redrawing every widget every second; the lock screen clock is isolated so the blurred wallpaper
+  is not re-rendered on every tick; the screen saver honours Performance mode.
+- **Performance / stability:** sticky-note writes are debounced; file drops and wallpaper imports
+  no longer block the main thread; Quick Look decodes images off-thread; unbounded icon/favicon,
+  download, game-page and command-target caches are now capped or released. Session restore now
+  waits for the external display instead of silently discarding the saved session.
+- Full audit of all 169 files with the fix list is in [AUDIT_2026-11-22.md](AUDIT_2026-11-22.md).
+
 ## 1.2.4 (unsigned development release)
 
 - **Heat / battery**: the audio session is no longer held active forever. A new activity tracker
@@ -73,7 +95,7 @@ unsigned IPA produced and all `APLiteTests` groups passed. The sections below de
 
 ### Architecture
 
-- Added `iDesk/System/` with APLite-owned modules and a one-way internal API: `APLiteSettings`,
+- Added `APLite/System/` with APLite-owned modules and a one-way internal API: `APLiteSettings`,
   `SecurityManager`, `PowerManager`, `MemoryManager`, `CertificateManager`, `APLiteFileManager`,
   `WindowCoordinator`, `BuildCenter`. APLiteSettings groups are Personalization, Security, Power,
   Performance, Applications, Storage, Display, Input, Certificates and System.
@@ -247,7 +269,7 @@ unsigned IPA produced and all `APLiteTests` groups passed. The sections below de
 - All user-visible "iDesk" text, permission descriptions, update messages and localised strings now
   say APLite; `Localizable.xcstrings` and `InfoPlist.xcstrings` were updated in step.
 - Target, scheme, display name and marketing version updated in `project.yml`; the generated
-  Xcode project remains `APLite.xcodeproj` with source folder `iDesk/`.
+  Xcode project remains `APLite.xcodeproj` with source folder `APLite/`.
 - Update checker and compatibility list now use the APLite repository from Info.plist instead of
   the upstream repository.
 - Guest Engine files were not modified.
@@ -271,4 +293,4 @@ unsigned IPA produced and all `APLiteTests` groups passed. The sections below de
 
 ## Upstream
 
-Upstream release notes live at https://github.com/itshieuk/iDesk/releases.
+Upstream release notes live at https://github.com/itshieuk/APLite/releases.
