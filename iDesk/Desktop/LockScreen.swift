@@ -157,14 +157,23 @@ struct LockScreenView: View {
     var body: some View {
         TimelineView(.periodic(from: .now, by: 15)) { ctx in
             ZStack {
-                Color.black          // nothing of the desktop shows through the blur's edges
+                Color.black
+                // One blur, applied by WallpaperView with an over-scale so no transparent edges
+                // appear on a photo. The old extra .blur(40) cost a second full-screen pass.
                 WallpaperView(index: model.wallpaper, image: model.customWallpaper,
-                              blur: CGFloat(model.wallpaperBlur) + 18,
+                              blur: CGFloat(model.wallpaperBlur) + 30,
                               performance: model.performanceMode, watermark: false)
-                    .blur(radius: 40, opaque: true)
-                    .overlay(Color.black.opacity(0.35))
+                LinearGradient(colors: [Color.black.opacity(0.18), Color.black.opacity(0.58)],
+                               startPoint: .top, endPoint: .bottom)
                 VStack(spacing: 10) {
-                    Image(systemName: "lock.fill").font(.system(size: 34))
+                    Group {
+                        if let mark = UIImage(named: "LockMark") {
+                            Image(uiImage: mark).resizable().frame(width: 44, height: 44)
+                        } else {
+                            Image(systemName: "lock.fill").font(.system(size: 34))
+                        }
+                    }
+                    .shadow(color: .black.opacity(0.5), radius: 8, y: 3)
                     Text(ctx.date.formatted(date: .omitted, time: .shortened))
                         .font(.system(size: 110, weight: .semibold, design: .rounded).monospacedDigit())
                     Text(ctx.date.formatted(.dateTime.weekday(.wide).day().month(.wide)))

@@ -78,10 +78,14 @@ struct DesktopView: View {
 
                 if model.showLauncher {
                     LauncherView(model: model, cursor: model.cursor)
+                        .transition(.scale(scale: 0.96).combined(with: .opacity))
+                        .animation(.spring(response: 0.34, dampingFraction: 0.84), value: model.showLauncher)
                 }
 
                 if model.showSpotlight {
                     SpotlightView(model: model, cursor: model.cursor)
+                        .transition(.scale(scale: 0.97).combined(with: .opacity))
+                        .animation(.spring(response: 0.3, dampingFraction: 0.86), value: model.showSpotlight)
                 }
 
                 if model.showClipboard {
@@ -90,10 +94,14 @@ struct DesktopView: View {
 
                 if model.showDownloads {
                     DownloadsPanelView(model: model, cursor: model.cursor)
+                        .transition(.move(edge: .top).combined(with: .opacity))
+                        .animation(.spring(response: 0.32, dampingFraction: 0.85), value: model.showDownloads)
                 }
 
                 if model.showTaskManager {
                     TaskManagerView(model: model, cursor: model.cursor)
+                        .transition(.scale(scale: 0.94, anchor: .topTrailing).combined(with: .opacity))
+                        .animation(.spring(response: 0.34, dampingFraction: 0.82), value: model.showTaskManager)
                 }
 
                 if model.showEmoji {
@@ -1174,6 +1182,7 @@ private struct DockItem: View {
 /// System tray: memory, network, battery, time and date.
 private struct TrayView: View {
     @ObservedObject private var network = NetworkStatus.shared
+    @ObservedObject private var thermal = ThermalMonitor.shared
     let palette: DockPalette
 
     var body: some View {
@@ -1189,12 +1198,10 @@ private struct TrayView: View {
                 Image(systemName: network.symbol)
                     .font(.system(size: 13, weight: .medium))
                     .foregroundStyle(network.kind == .offline ? palette.secondary : palette.primary)
-                // Heat: shown only when the iPhone is hot enough to slow down.
-                let heat = ProcessInfo.processInfo.thermalState
-                if heat == .serious || heat == .critical {
-                    Image(systemName: "thermometer.high")
-                        .foregroundStyle(heat == .critical ? Color.red : Color.orange)
-                }
+                // Thermal pressure from the public API: always visible, coloured by state.
+                Image(systemName: thermal.symbol)
+                    .font(.system(size: 13, weight: .medium))
+                    .foregroundStyle(Color(thermal.color))
                 let level = UIDevice.current.batteryLevel
                 if level >= 0 {
                     HStack(spacing: 4) {
@@ -1357,6 +1364,25 @@ private struct SwitcherView: View {
 // MARK: - Quick panel
 
 /// Opened from the clock: quick toggles, external display brightness and the apps' notifications.
+private struct ThermalBadge: View {
+    @ObservedObject private var thermal = ThermalMonitor.shared
+
+    var body: some View {
+        HStack(spacing: 6) {
+            Image(systemName: thermal.symbol)
+                .font(.system(size: 13, weight: .semibold))
+            Text(thermal.label)
+                .font(.system(size: 10.5, weight: .medium))
+                .lineLimit(1)
+        }
+        .foregroundStyle(Color(thermal.color))
+        .padding(.horizontal, 9)
+        .padding(.vertical, 6)
+        .background(.regularMaterial, in: Capsule())
+        .overlay(Capsule().stroke(Color.white.opacity(0.12), lineWidth: 1))
+    }
+}
+
 private struct QuickPanelView: View {
     @ObservedObject var model: DesktopModel
     @ObservedObject var cursor: CursorModel
@@ -1373,6 +1399,9 @@ private struct QuickPanelView: View {
                 }
             }
             .offset(x: 14, y: 12)
+
+            ThermalBadge()
+                .offset(x: r.width - 126, y: 12)
 
             ForEach(0..<DesktopModel.quickTileCount, id: \.self) { i in
                 let t = model.quickTileRect(i)

@@ -1,6 +1,6 @@
 {
-  "version": 1,
-  "notice": "APLite 1.1.0 — task manager, dock animations and live configuration are available.",
+  "version": 2,
+  "notice": "APLite 1.1.0 stable: redrawn assets, thermal monitor and smoother animations.",
   "wallpapers": null,
   "accent": null
 }

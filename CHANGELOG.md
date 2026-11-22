@@ -12,6 +12,9 @@ All notable changes to APLite are documented here. APLite is based on iDesk v0.6
 - Live configuration manifest (`aplite-live.json`): data-only refresh of wallpapers and a notice,
   no IPA download and no re-signing. Native code updates still require a signed IPA.
 - Performance mode: cheaper frames for AirPlay / Wi-Fi display, lighter shadows, no magnification.
+- Thermal monitor (public iOS thermal-pressure API) in tray and quick panel.
+- All raster assets redrawn at 4x supersampling: app icon, launch mark, lock mark, Browser/Files/
+  Settings/Trash icons. Lock screen uses a dedicated LockMark and a single blur pass.
 
 ### Changed / removed
 
@@ -21,6 +24,8 @@ All notable changes to APLite are documented here. APLite is based on iDesk v0.6
 - Deeper optimisation: cached shortcut list, cached task layout, cached display modes and cookie
   domains, no per-frame magnification animation.
 - Dock refined with more rounded glass, subtle highlight and softer running indicators.
+- Spring transitions for launcher, Spotlight, Downloads and Task Manager panels; smoother close
+  and minimize animations.
 - Release channel metadata cleared: this is the stable 1.1.0, not a beta.
 
 ### Verification

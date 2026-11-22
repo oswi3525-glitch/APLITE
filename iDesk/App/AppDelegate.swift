@@ -13,6 +13,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         UpdateChecker.shared.startChecking()
         LiveUpdate.check()          // data-only refresh; native code still requires a signed IPA
         UIDevice.current.isBatteryMonitoringEnabled = true   // battery level in the taskbar
+        ThermalMonitor.shared.start()       // thermal pressure (public API), shown in tray + quick panel
         return true
     }
 

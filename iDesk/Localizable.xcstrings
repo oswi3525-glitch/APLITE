@@ -7100,6 +7100,46 @@
           }
         }
       }
+    },
+    "Critical heat": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nóng nghiêm trọng"
+          }
+        }
+      }
+    },
+    "Device is hot": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thiết bị đang nóng"
+          }
+        }
+      }
+    },
+    "Warm": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ấm"
+          }
+        }
+      }
+    },
+    "Normal temperature": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nhiệt độ bình thường"
+          }
+        }
+      }
     }
   },
   "version": "1.0"

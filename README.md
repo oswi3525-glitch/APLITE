@@ -46,6 +46,10 @@ The original MIT license and copyright notice are preserved in [LICENSE](LICENSE
   without downloading or re-signing an IPA. Native code still requires a signed rebuild.
 - **Performance mode:** lower-resolution frames, lighter shadows and no magnification for AirPlay
   or slow Wi-Fi.
+- **Thermal monitor:** public iOS thermal-pressure API shown in the tray and quick panel, with
+  battery level and colour-coded warnings (no private API, no °C claim).
+- **Redrawn assets:** app icon, launch mark, lock mark and all built-in app icons regenerated in a
+  single navy/teal glass style; the lock screen now uses one blur pass instead of two.
 - **Build/CI:** the unsigned artifact is named for what it is (`APLite-unsigned.ipa`) and is built
   from the `aplite-dev` branch.
 
