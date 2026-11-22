@@ -64,7 +64,7 @@ enum ProjectAnalyzer {
 
     /// Recognises `PRODUCT_BUNDLE_IDENTIFIER = com.example.app;` and `"CFBundleIdentifier": "..."`.
     static func extractBundleID(_ text: String) -> String? {
-        let patterns = ["PRODUCT_BUNDLE_IDENTIFIER\\s*=\\s*([A-Za-z0-9.]+)",
+        let patterns = ["PRODUCT_BUNDLE_IDENTIFIER\\s*[:=]\\s*\"?([A-Za-z0-9.]+)",
                         "CFBundleIdentifier\"?\\s*[:=]\\s*\"?([A-Za-z0-9.]+)"]
         for pattern in patterns {
             guard let regex = try? NSRegularExpression(pattern: pattern) else { continue }
@@ -80,7 +80,9 @@ enum ProjectAnalyzer {
     /// Recognises Swift Package Manager `.package(url: "…")` and CocoaPods `pod '…'`.
     static func extractDependencies(_ text: String) -> [String] {
         var result: [String] = []
-        for pattern in [#".package\(\s*url\s*:\s*"([^"]+)""#, #"pod\s+'([^']+)'"#] {
+        // SwiftPM manifest, CocoaPods, and the `url:` lines of an XcodeGen project.yml.
+        for pattern in [#".package\(\s*url\s*:\s*"([^"]+)""#, #"pod\s+'([^']+)'"#,
+                        #"(?m)^\s*url:\s*(https?://[^\s"']+)"#] {
             guard let regex = try? NSRegularExpression(pattern: pattern) else { continue }
             let range = NSRange(text.startIndex..., in: text)
             for match in regex.matches(in: text, range: range) {
