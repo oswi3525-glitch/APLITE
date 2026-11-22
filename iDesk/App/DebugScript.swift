@@ -3,7 +3,8 @@ import UIKit
 /// Test steps for the Simulator, from the launch argument `-iDeskScript "app:YouTube; wait:8; focus:Settings"`:
 /// `app:<name>` opens an installed iOS app, `focus:<title>` raises the window whose title starts with it,
 /// `page:apps|settings|files` opens one of iDesk's pages, `wait:<seconds>` pauses; also `open:<url>`, `spotlight`,
-/// `clipboard`, `area`, `shot`, `sticky`, `ontop`, `hot:on`, `type:<text>`, `copy:<text>`, `key:enter|esc|back|up|down`,
+/// `clipboard`, `audio` / `audio:copy` (session diagnostics), `area`, `shot`, `sticky`, `ontop`, `hot:on`,
+/// `type:<text>`, `copy:<text>`, `key:enter|esc|back|up|down`,
 /// `snapkey:left|right|up|down`, `move:x,y`, `click:x,y`, `rclick:x,y`, `press:x,y`, `release`, `max`, `scroll:<dy>`. Each step is logged with "[APLite-script]".
 enum DebugScript {
     private static var started = false
@@ -104,6 +105,16 @@ enum DebugScript {
             case "unlock": model.isLocked = false
             case "saver": model.showScreenSaver = true
             case "playpause": MediaControl.shared.playPause()
+            case "audio":
+                // `audio` logs the full report; `audio:copy` also puts it on the clipboard.
+                let report = AudioSessionManager.shared.report()
+                NSLog("[APLite-audio] %@", report)
+                if arg == "copy" {
+                    AudioSessionManager.shared.copyReportToPasteboard()
+                    model.showToast(String(localized: "Audio diagnostics copied"))
+                } else {
+                    model.showToast(String(localized: "Audio diagnostics written to the console"))
+                }
             case "repl":
                 let kv = arg.split(separator: "=", maxSplits: 1).map(String.init)
                 if kv.count == 2 { TextReplacements.add(kv[0], kv[1]) }

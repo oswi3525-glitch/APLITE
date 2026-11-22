@@ -3,6 +3,46 @@
 All notable changes to APLite are documented here. APLite is based on iDesk v0.6.3
 (upstream commit `2179dbd`); the original upstream history is not rewritten.
 
+## Unreleased — audio repair and hardening (branch `fix/audio-and-hardening`)
+
+### Fixed — audio (highest priority)
+
+- One `AudioSessionManager` now owns the process-wide `AVAudioSession`: an active `.playback`
+  baseline from launch, `.playAndRecord` only while voice typing listens, and **playback restored
+  afterwards**. The old code deactivated the whole session when voice typing stopped, which silenced
+  web videos, Quick Look media and guest apps until the app was restarted.
+- Read Aloud now activates the shared session instead of only setting a category that was never
+  activated; Quick Look media activates playback before creating its `AVPlayer`.
+- Added interruption handling (call / Siri / other apps) and route-change handling (AirPods,
+  Bluetooth, HDMI, AirPlay, headphones unplugged): the correct session mode is reactivated.
+- Added foreground/background handling and restoration after the last guest app closes, so a guest
+  app that changes the category cannot leave the desktop silent. Quick Look media resumes when the
+  session comes back.
+- Removed the direct `setActive(true)` from `MediaControl.start()`; it now only observes volume and
+  media keys. No dummy/placeholder audio player was added — the real audio path was repaired.
+
+### Added — audio diagnostics
+
+- Bounded event log, snapshot of category/mode/options/route/devices, `os_log` events under
+  `com.hieuk.aplite` / `Audio`, and a report available from Desktop Settings → Sound and from
+  `-iDeskScript "audio"` (`audio:copy` copies it). See `AUDIO_DIAGNOSTICS.md`.
+- `APLiteTests` unit target covering the diagnostics model; CI runs it on an iOS Simulator.
+
+### Changed — Control Center / stability / performance
+
+- Control Center (quick panel) has a fifth tile: mute, driven by the existing system volume HUD.
+- Fixed Alt+Tab / Recent Apps crashes when all windows are closed while the switcher is open
+  (empty-list modulo and unchecked index).
+- Fixed a leaked 20 Hz key-repeat timer: it is now invalidated when the phone window is deallocated
+  and no longer fires for a released window.
+- File Manager: a failed "paste" no longer clears the cut items (they stay on the clipboard).
+- Attributions and the Guest Engine are unchanged.
+
+### Verification
+
+- **Pending**: build + `APLiteTests` on the macOS CI runner for this branch, and the on-device audio
+  checklist in `AUDIO_DIAGNOSTICS.md`. Nothing in this section is claimed as tested yet.
+
 ## 1.1.0 (stable)
 
 ### Added

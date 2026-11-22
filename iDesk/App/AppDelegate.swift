@@ -9,6 +9,13 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         CookieVault.restore()        // saved login cookies back into WebKit before any page loads
         MouseInput.shared.start()
         ControllerInput.shared.start()
+        // One owner for the process-wide audio session. Guest apps, WebKit, Quick Look and speech all
+        // share it; starting it before MediaControl also fixes the silent-switch-sensitive default
+        // category that made the desktop silent over HDMI / AirPlay.
+        AudioSessionManager.shared.guestAppsActive = {
+            DesktopModel.shared.windows.contains { $0.guestWindow != nil && $0.isShown }
+        }
+        AudioSessionManager.shared.start()
         MediaControl.shared.start()
         UpdateChecker.shared.startChecking()
         LiveUpdate.check()          // data-only refresh; native code still requires a signed IPA

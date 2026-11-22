@@ -158,14 +158,17 @@ struct RecordButton: View {
 final class MediaControl: NSObject, ObservableObject {
     static let shared = MediaControl()
     @Published private(set) var hud: (symbol: String, level: Float?)?
+    /// Current system mute state (the Control Center tile and the HUD both read this).
+    var isMuted: Bool { AVAudioSession.sharedInstance().outputVolume <= 0.001 }
     private var hudWork: DispatchWorkItem?
     private var volumeObservation: NSKeyValueObservation?
     private let volumeView = MPVolumeView(frame: CGRect(x: -2000, y: -2000, width: 10, height: 10))
     private var mutedLevel: Float?
 
     func start() {
+        // The session category and activation belong to AudioSessionManager (it also handles
+        // interruptions and route changes). We only observe the system volume here.
         let session = AVAudioSession.sharedInstance()
-        try? session.setActive(true)
         volumeObservation = session.observe(\.outputVolume, options: [.new]) { [weak self] _, change in
             guard let v = change.newValue else { return }
             DispatchQueue.main.async { self?.show(volume: v) }

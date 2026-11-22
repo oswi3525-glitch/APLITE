@@ -38,6 +38,15 @@ enum QuickLook {
         player = nil
     }
 
+    /// The audio session came back after an interruption or a route change: resume a preview that
+    /// was still visible (the preview has no pause control, so it was meant to be playing).
+    static func resume() {
+        guard let player, player.rate == 0,
+              let duration = player.currentItem?.duration, duration.isValid,
+              player.currentTime() < duration else { return }
+        player.play()
+    }
+
     fileprivate static func image(at url: URL) -> UIImage? {
         if cached?.url == url { return cached?.image }
         let image = UIImage(contentsOfFile: url.path)
@@ -75,6 +84,7 @@ struct QuickLookView: View {
         .shadow(color: .black.opacity(0.5), radius: 30, y: 10)
         .offset(x: rect.minX, y: rect.minY)
         .environment(\.colorScheme, .dark)
+        .onReceive(NotificationCenter.default.publisher(for: .apliteAudioDidResume)) { _ in QuickLook.resume() }
     }
 
     @ViewBuilder private var content: some View {
@@ -174,6 +184,7 @@ private struct MediaPreview: UIViewRepresentable {
         guard view.url != url else { return }
         view.url = url
         QuickLook.stop()
+        AudioSessionManager.shared.activatePlayback(reason: "Quick Look media")
         let player = AVPlayer(url: url)
         QuickLook.player = player
         view.playerLayer.player = player

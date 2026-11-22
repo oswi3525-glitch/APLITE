@@ -605,6 +605,7 @@ final class FilesBridge: NSObject, WKScriptMessageHandler {
         case "paste":
             guard let folder = FileStore.resolve(body["folder"] as? String ?? "") else { return }
             var moved = 0
+            var remaining: [String] = []
             for old in FileStore.clipboard {
                 guard let file = FileStore.resolve(old), FileManager.default.fileExists(atPath: file.path),
                       file.deletingLastPathComponent() != folder,
@@ -613,9 +614,11 @@ final class FilesBridge: NSObject, WKScriptMessageHandler {
                 if (try? FileManager.default.moveItem(at: file, to: target)) != nil {
                     moved += 1
                     model.fileMoved(from: old, to: FileStore.relativePath(of: target) ?? target.lastPathComponent)
+                } else {
+                    remaining.append(old)   // a failed move must not silently lose the cut items
                 }
             }
-            FileStore.clipboard = []
+            FileStore.clipboard = remaining
             if moved > 0 { model.showToast(String(localized: "Moved \(moved) items.")) }
             model.refreshFilesPages()
         default:

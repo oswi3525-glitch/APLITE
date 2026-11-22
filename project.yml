@@ -85,3 +85,15 @@ targets:
             UIWindowSceneSessionRoleExternalDisplayNonInteractive:
               - UISceneConfigurationName: External
                 UISceneDelegateClassName: $(PRODUCT_MODULE_NAME).ExternalSceneDelegate
+  # Standalone unit tests: they compile the pure diagnostics model directly, so they need no
+  # host app and can run on any iOS Simulator in CI.
+  APLiteTests:
+    type: unit-test-bundle
+    platform: iOS
+    sources:
+      - Tests
+      - iDesk/App/AudioDiagnostics.swift
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.hieuk.aplite.tests
+        SWIFT_VERSION: "5.0"

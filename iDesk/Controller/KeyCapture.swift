@@ -172,6 +172,11 @@ final class PhoneWindow: UIWindow {
     private let model = DesktopModel.shared
     private var repeatTimer: Timer?
     private var repeatKey: UIKeyboardHIDUsage?
+
+    deinit {
+        stopRepeat()   // a held key must not leave a 20 Hz timer running after the window is gone
+    }
+
     /// The ⌘ key went down and nothing else has been pressed since: releasing it opens the app menu.
     private var winKeyAlone = false
 
@@ -364,7 +369,11 @@ final class PhoneWindow: UIWindow {
         stopRepeat()
         repeatKey = key.keyCode
         repeatTimer = Timer.scheduledTimer(withTimeInterval: 0.45, repeats: false) { [weak self] _ in
-            self?.repeatTimer = Timer.scheduledTimer(withTimeInterval: 0.05, repeats: true) { _ in action() }
+            guard let self else { return }
+            self.repeatTimer = Timer.scheduledTimer(withTimeInterval: 0.05, repeats: true) { [weak self] _ in
+                guard self != nil else { return }
+                action()
+            }
         }
     }
 

@@ -10,7 +10,7 @@
 
 | Item | Value |
 | --- | --- |
-| Project / scheme / target | `APLite.xcodeproj` / `APLite` / `APLite` |
+| Project / scheme / target | `APLite.xcodeproj` / `APLite` / `APLite` (unit tests: `APLiteTests`) |
 | Source folder | `iDesk/` (kept so the ObjC bridging header and guest prefixes stay valid) |
 | Bundle identifier | `com.hieuk.idesk` (deliberately unchanged — see below) |
 | Deployment target | iOS 17.0 |
@@ -62,13 +62,15 @@ the CI workflow does not claim to sign. To add signed builds later:
 
 ## GitHub Actions
 
-`.github/workflows/build.yml` runs on every push to `aplite-dev` and on `workflow_dispatch`:
+`.github/workflows/build.yml` runs on every push to `aplite-dev` or a `fix/*` branch, and on `workflow_dispatch`:
 
 1. Checkout, select Xcode, install XcodeGen.
 2. Resolve Swift Package dependencies if any are declared (currently none).
 3. `scripts/build-ipa.sh` → `build/APLite.ipa`.
-4. Rename to `APLite-unsigned.ipa` and upload as an artifact.
-5. Upload `build/xcodebuild.log` when the build fails and print a build summary.
+4. Run `xcodebuild test` for the `APLiteTests` target on an available iPhone Simulator
+   (currently the audio-diagnostics unit tests).
+5. Rename to `APLite-unsigned.ipa` and upload as an artifact.
+6. Upload the build and test logs on failure and print a build summary.
 
 `.github/workflows/release.yml` builds `APLite-unsigned-<version>.ipa` when a `v*` tag is pushed
 or the workflow is dispatched manually. No release is created automatically by development pushes.
@@ -85,12 +87,20 @@ python3 scripts/generate_assets.py
 The script writes `iDesk/Assets.xcassets/` deterministically (app icon, launch mark, launch
 background, accent colour and the four built-in app icons).
 
+## Audio diagnostics
+
+Audio from guest apps, web pages, Quick Look and speech shares one `AVAudioSession`. It is now owned
+by `App/AudioSessionManager.swift`. See [AUDIO_DIAGNOSTICS.md](AUDIO_DIAGNOSTICS.md) for the root
+cause analysis, the repair, the on-device test checklist and how to export a diagnostics report
+(Settings → Sound → Copy audio diagnostics, or `-iDeskScript "audio"` in a Debug build).
+
 ## Testing status
 
-Compilation and IPA packaging are performed by the macOS GitHub Actions runner. The Linux
-development container used to prepare APLite has no Xcode, Swift compiler or UIKit, so no local
-build, simulator run or on-device test is claimed here. See [CHANGELOG.md](CHANGELOG.md) for the
-verification performed in each environment.
+Compilation, IPA packaging and the `APLiteTests` unit tests are performed by the macOS GitHub
+Actions runner. The Linux development container used to prepare APLite has no Xcode, Swift compiler
+or UIKit, so no local build, simulator run or on-device test is claimed here. CI outcomes are reported
+in the workflow summary and linked from [CHANGELOG.md](CHANGELOG.md); audio behaviour on real
+hardware is listed as unverified until the checklist in AUDIO_DIAGNOSTICS.md is completed.
 
 ## Live configuration
 

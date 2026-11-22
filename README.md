@@ -117,5 +117,5 @@ over Wi-Fi. The earlier draft mentioned TV USB mice; that claim has been removed
 
 ## Documentation
 
-[APLite_AUDIT.md](APLite_AUDIT.md) · [BUILD.md](BUILD.md) · [CHANGELOG.md](CHANGELOG.md) ·
-[NOTICE.md](NOTICE.md)
+[APLite_AUDIT.md](APLite_AUDIT.md) · [AUDIO_DIAGNOSTICS.md](AUDIO_DIAGNOSTICS.md) ·
+[BUILD.md](BUILD.md) · [CHANGELOG.md](CHANGELOG.md) · [NOTICE.md](NOTICE.md)

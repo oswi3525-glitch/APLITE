@@ -332,6 +332,9 @@ enum DesktopPages {
         case (.settings, "cookieExport"):
             if let file = CookieVault.exportFile() { ShareSheet.present(file) }
             else { m.showToast(String(localized: "No saved cookies to export.")) }
+        case (.settings, "audioDiagnostics"):
+            AudioSessionManager.shared.copyReportToPasteboard()
+            m.showToast(String(localized: "Audio diagnostics copied to the iPhone clipboard"))
         case (.settings, "autoHide"): m.autoHideTaskbar.toggle()
         case (.settings, "performanceMode"): m.performanceMode.toggle()
         case (.settings, "reduceMotion"): m.reduceMotion.toggle()
@@ -568,6 +571,9 @@ enum DesktopPages {
             "builtInList": String(localized: "APLite's list of ad and tracking servers"),
             "blockedSites": String(localized: "Always block"), "allowedSites": String(localized: "Never block on"),
             "sitePlaceholder": String(localized: "example.com"),
+            "sound": String(localized: "Sound"),
+            "audioNote": String(localized: "Sound from guest apps, web pages and files follows the iPhone's audio route. Use the Sound button on the iPhone screen to pick AirPods, the speaker or the display."),
+            "audioDiagnostics": String(localized: "Copy audio diagnostics"),
             "help": String(localized: "Help"), "guide": String(localized: "Show the guide on the iPhone"),
             "autoUpdateLabel": String(localized: "Check for new versions on GitHub"), "checkNow": String(localized: "Check now"),
             "downloadUpdate": String(localized: "Update to"),
@@ -813,6 +819,8 @@ enum DesktopPages {
         + `<div class="row"><div class="label"></div><button onclick="send('resetSpeeds')">${esc(T.reset)}</button></div></div>`;
       h += `<h2>${esc(T.accessibility)}</h2><div class="card">` + toggle('mouseModeButton', s.mouseModeButton, T.mouseModeButton)
         + `</div>`;
+      h += `<h2>${esc(T.sound)}</h2><div class="card"><div class="row"><div class="label note" style="white-space:normal;padding:10px 0;line-height:1.5">${esc(T.audioNote)}</div></div>`
+        + `<div class="row"><div class="label"></div><button onclick="send('audioDiagnostics')">${esc(T.audioDiagnostics)}</button></div></div>`;
       h += `<h2>${esc(T.help)}</h2><div class="card"><div class="row"><div class="label">${esc(T.guideNote)}</div>`
         + `<button onclick="send('guide')">${esc(T.guide)}</button></div></div>`;
       h += `<div class="card">` + toggle('autoUpdate', s.autoUpdate, T.autoUpdateLabel)

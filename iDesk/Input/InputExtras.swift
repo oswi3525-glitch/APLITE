@@ -40,9 +40,9 @@ final class VoiceTyping: ObservableObject {
         guard let recognizer, recognizer.isAvailable else {
             problem = String(localized: "Voice typing is not available for this language right now."); return
         }
-        let session = AVAudioSession.sharedInstance()
-        try? session.setCategory(.playAndRecord, mode: .measurement, options: [.duckOthers, .defaultToSpeaker, .allowBluetooth])
-        try? session.setActive(true, options: .notifyOthersOnDeactivation)
+        // The shared manager switches the category and, crucially, restores playback when we stop.
+        // Setting the category here directly used to leave the whole desktop silent after voice typing.
+        AudioSessionManager.shared.beginRecording()
         let request = SFSpeechAudioBufferRecognitionRequest()
         request.shouldReportPartialResults = true
         request.addsPunctuation = true
@@ -74,7 +74,7 @@ final class VoiceTyping: ObservableObject {
         task?.cancel()
         task = nil
         request = nil
-        try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+        AudioSessionManager.shared.endRecording()
         let text = heard.trimmingCharacters(in: .whitespacesAndNewlines)
         heard = ""
         if send, !text.isEmpty { DesktopModel.shared.typeText(text + " ") }

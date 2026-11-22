@@ -1454,6 +1454,7 @@ private struct ThermalBadge: View {
 private struct QuickPanelView: View {
     @ObservedObject var model: DesktopModel
     @ObservedObject var cursor: CursorModel
+    @ObservedObject private var media = MediaControl.shared   // mute tile follows the system volume
 
     var body: some View {
         let r = model.quickPanelRect, p = cursor.position
@@ -1538,6 +1539,8 @@ private struct QuickPanelView: View {
         case 0: return ("moon.fill", "Do not disturb", model.doNotDisturb)
         case 1: return ("dock.arrow.down.rectangle", "Hide taskbar", model.autoHideTaskbar)
         case 2: return ("camera.viewfinder", "Screenshot", false)
+        case 3: return ("gearshape", "Settings", false)
+        case 4: return (media.isMuted ? "speaker.slash.fill" : "speaker.wave.2.fill", "Mute", media.isMuted)
         default: return ("gearshape", "Settings", false)
         }
     }

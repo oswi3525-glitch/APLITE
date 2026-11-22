@@ -3170,7 +3170,7 @@ final class DesktopModel: ObservableObject {
 
     var bannerRect: CGRect { CGRect(x: screenSize.width - 340, y: 12, width: 328, height: 72) }
 
-    static let quickTileCount = 4
+    static let quickTileCount = 5   // DND, dock, screenshot, settings, mute
     private static let quickPad: CGFloat = 14, quickHeader: CGFloat = 52, quickTile: CGFloat = 64,
                        quickSlider: CGFloat = 36, quickGap: CGFloat = 12, quickListHeader: CGFloat = 30,
                        quickRow: CGFloat = 62
@@ -3214,6 +3214,7 @@ final class DesktopModel: ObservableObject {
         case 1?: autoHideTaskbar.toggle()
         case 2?: takeScreenshot()
         case 3?: showQuickPanel = false; openPage(.settings)
+        case 4?: MediaControl.shared.toggleMute()
         default:
             if brightnessDownRect.contains(p) { externalBrightness = max(0.2, externalBrightness - 0.1) }
             else if brightnessUpRect.contains(p) { externalBrightness = min(1, externalBrightness + 0.1) }
@@ -3229,6 +3230,8 @@ final class DesktopModel: ObservableObject {
     /// Releasing the key (or a short pause) switches to it.
     func cycleWindows() {
         if var s = switcher {
+            // Every window can be closed while Alt+Tab is open: an empty list used to divide by zero.
+            guard !s.ids.isEmpty else { switcher = nil; switcherCommit?.cancel(); return }
             s.index = (s.index + 1) % s.ids.count
             switcher = s
         } else {
@@ -3248,6 +3251,7 @@ final class DesktopModel: ObservableObject {
         switcherCommit?.cancel()
         guard let s = switcher else { return }
         switcher = nil
+        guard s.ids.indices.contains(s.index) else { return }
         if let w = window(s.ids[s.index]) { focus(w) }
     }
 
@@ -3259,6 +3263,7 @@ final class DesktopModel: ObservableObject {
     func showRecents() {
         guard isExternalConnected else { return }
         if var r = recents {
+            guard !r.ids.isEmpty else { closeRecents(); return }
             r.index = (r.index + 1) % r.ids.count
             recents = r
             return

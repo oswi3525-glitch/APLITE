@@ -1,9 +1,9 @@
 name: Build APLite
 
-# Every push to aplite-dev (and manual runs) must produce a buildable unsigned IPA.
+# Every push to aplite-dev or a fix/* branch (and manual runs) must produce a buildable unsigned IPA.
 on:
   push:
-    branches: [aplite-dev]
+    branches: [aplite-dev, "fix/**"]
   workflow_dispatch:
 
 concurrency:
@@ -46,6 +46,17 @@ jobs:
         id: build
         run: BUILD_NUMBER=${{ github.run_number }} scripts/build-ipa.sh
 
+      - name: Unit tests (audio diagnostics)
+        id: test
+        run: |
+          # Pick any available iPhone simulator on the runner instead of hardcoding a model.
+          SIM=$(xcrun simctl list devices available | grep -E '^    iPhone .* \(' | head -1 | sed -E 's/^    ([^()]+).*/\1/' | xargs)
+          test -n "$SIM" || { echo "No iPhone simulator available"; exit 1; }
+          echo "Using simulator: $SIM"
+          set -o pipefail
+          xcodebuild test -project APLite.xcodeproj -scheme APLiteTests \
+            -destination "platform=iOS Simulator,name=$SIM" -quiet 2>&1 | tee build/xcodebuild-test.log
+
       - name: Rename artifact for its actual signing state
         run: mv build/APLite.ipa build/APLite-unsigned.ipa
 
@@ -62,7 +73,8 @@ jobs:
         run: |
           {
             echo "## APLite build"
-            echo "- Status: ${{ steps.build.outcome }}"
+            echo "- Build: ${{ steps.build.outcome }}"
+            echo "- Unit tests: ${{ steps.test.outcome }}"
             echo "- Artifact: APLite-unsigned.ipa (unsigned — sign it before installing)"
             echo "- Commit: ${{ github.sha }}"
           } >> "$GITHUB_STEP_SUMMARY"
@@ -71,7 +83,9 @@ jobs:
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: xcodebuild-log
-          path: build/xcodebuild.log
+          name: xcodebuild-logs
+          path: |
+            build/xcodebuild.log
+            build/xcodebuild-test.log
           if-no-files-found: warn
           retention-days: 7

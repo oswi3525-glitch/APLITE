@@ -179,7 +179,9 @@ final class ReadAloud: NSObject, AVSpeechSynthesizerDelegate, @unchecked Sendabl
         let recognizer = NLLanguageRecognizer()
         recognizer.processString(String(text.prefix(2000)))
         let language = recognizer.dominantLanguage?.rawValue ?? Locale.current.language.languageCode?.identifier ?? "en"
-        try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .spokenAudio)
+        // Reuse the shared playback session. Setting a category here without ever activating it (the
+        // old behaviour) left speech silent whenever another component had deactivated the session.
+        AudioSessionManager.shared.activatePlayback(reason: "read aloud")
         for paragraph in text.components(separatedBy: "\n") where !paragraph.trimmingCharacters(in: .whitespaces).isEmpty {
             let u = AVSpeechUtterance(string: paragraph)
             u.voice = AVSpeechSynthesisVoice(language: language)
