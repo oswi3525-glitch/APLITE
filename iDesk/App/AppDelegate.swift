@@ -5,7 +5,8 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         CrashReporter.install()      // guest apps share this process: record it if one takes iDesk down
-        _ = OwnSignature.signature   // read iDesk's own signature now, before Bundle.main may be swapped
+        _ = OwnSignature.signature   // read APLite's own signature now, before Bundle.main may be swapped
+        CookieVault.restore()        // saved login cookies back into WebKit before any page loads
         MouseInput.shared.start()
         ControllerInput.shared.start()
         MediaControl.shared.start()

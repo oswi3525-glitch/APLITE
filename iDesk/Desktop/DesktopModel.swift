@@ -553,7 +553,13 @@ final class DesktopModel: ObservableObject {
     private var appsSubscription: AnyCancellable?
     private var pagesSubscription: AnyCancellable?
     private var browsingSubscription: AnyCancellable?
+    private var webAppsSubscription: AnyCancellable?
     private var updatesSubscription: AnyCancellable?
+    /// `items` walks guest apps, bookmarks, web apps and built-ins; the dock and the launcher ask for it
+    /// on every pointer move and every redraw. Cache it and invalidate only when a source changes.
+    private var itemsRevision = 0
+    private var cachedItems: [Shortcut]?
+    private var cachedItemsRevision = -1
     private var isDragging: Bool { if case .none = drag { return false } else { return true } }
     private var isGuestDrag: Bool { if case .guest = drag { return true } else { return false } }
 
@@ -576,8 +582,19 @@ final class DesktopModel: ObservableObject {
         NotificationCenter.default.addObserver(forName: UIDevice.batteryLevelDidChangeNotification,
                                                object: nil, queue: .main) { [weak self] _ in self?.batteryChanged() }
         ContentBlocker.prepare()
-        appsSubscription = GuestStore.shared.$apps.sink { [weak self] in self?.apps = $0 }
-        browsingSubscription = Browsing.shared.objectWillChange.sink { [weak self] in self?.objectWillChange.send() }
+        appsSubscription = GuestStore.shared.$apps.sink { [weak self] in
+            self?.apps = $0
+            self?.invalidateItems()
+        }
+        browsingSubscription = Browsing.shared.objectWillChange.sink { [weak self] in
+            self?.objectWillChange.send()
+            self?.invalidateItems()
+        }
+        webAppsSubscription = WebApps.shared.objectWillChange.sink { [weak self] _ in
+            DispatchQueue.main.async { self?.invalidateItems() }
+        }
+        NotificationCenter.default.addObserver(forName: UserDefaults.didChangeNotification,
+                                               object: nil, queue: .main) { [weak self] _ in self?.invalidateItems() }
         updatesSubscription = UpdateChecker.shared.objectWillChange.sink { [weak self] in
             DispatchQueue.main.async { self?.objectWillChange.send() }
         }
@@ -622,6 +639,7 @@ final class DesktopModel: ObservableObject {
     /// Everything on the desktop and in the app menu: built-in shortcuts (minus those the user removed), pages the
     /// user added, iDesk's own pages, then installed apps.
     var items: [Shortcut] {
+        if let cachedItems, cachedItemsRevision == itemsRevision { return cachedItems }
         let browsing = Browsing.shared
         // A web shortcut named like an installed app ("YouTube" and the YouTube app) says it is the website.
         let appNames = Set(apps.map { $0.name.lowercased() })
@@ -633,8 +651,13 @@ final class DesktopModel: ObservableObject {
         func isOwn(_ s: Shortcut) -> Bool { DesktopPage(URL(string: s.url)) != nil || s.url == Self.trashURL }
         let own = builtIn.filter(isOwn), web = builtIn.filter { !isOwn($0) }
         let webApps = WebApps.shared.all.map { Shortcut(name: $0.title, symbol: "app.badge", url: $0.url, hue: Self.hue(for: $0.url), webApp: true) }
-        return web + links + webApps + own + apps.map { Shortcut(name: $0.name, symbol: "app.fill", url: "", hue: 0.5, app: $0) }
+        let result = web + links + webApps + own + apps.map { Shortcut(name: $0.name, symbol: "app.fill", url: "", hue: 0.5, app: $0) }
+        cachedItems = result
+        cachedItemsRevision = itemsRevision
+        return result
     }
+
+    private func invalidateItems() { itemsRevision &+= 1; cachedItems = nil }
 
     /// A stable colour per site for the icon of a page added to the desktop.
     private static func hue(for url: String) -> Double {
@@ -1228,7 +1251,8 @@ final class DesktopModel: ObservableObject {
             guard let self, let w else { return }
             self.setFullscreen(w, on)
         }
-        windows.append(w)
+        // Spring the new window in: it grows from the dock/taskbar click instead of blinking in.
+        withAnimation(.spring(response: 0.38, dampingFraction: 0.78)) { windows.append(w) }
         restack()
         scheduleSave()
     }
@@ -1295,7 +1319,8 @@ final class DesktopModel: ObservableObject {
         rememberFrame(of: w)
         w.webView?.stopLoading()
         if w.isApp, isGuestDrag { Self.guestInput { GuestTouch.cancel() }; drag = .none }
-        windows.removeAll { $0.id == w.id }
+        // Shrink the window away before the guest app is suspended.
+        withAnimation(.easeIn(duration: 0.18)) { windows.removeAll { $0.id == w.id } }
         // Closing an app: it gets the "went to the background" events, so it stops playing and pauses.
         if let guest = w.guestWindow { GuestRuntime.suspendApp(with: guest) }
         focusedID = windows.last(where: { $0.isShown })?.id
@@ -1304,7 +1329,7 @@ final class DesktopModel: ObservableObject {
     }
 
     func minimize(_ w: DeskWindow) {
-        w.isMinimized = true
+        withAnimation(.easeInOut(duration: 0.2)) { w.isMinimized = true }
         if focusedID == w.id { focusedID = windows.last(where: { $0.isShown })?.id }
         scheduleSave()
     }

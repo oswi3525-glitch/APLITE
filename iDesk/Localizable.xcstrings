@@ -6940,6 +6940,56 @@
           }
         }
       }
+    },
+    "Save login cookies": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lưu cookie đăng nhập"
+          }
+        }
+      }
+    },
+    "Saved login cookies": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cookie đăng nhập đã lưu"
+          }
+        }
+      }
+    },
+    "No saved logins yet.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chưa có phiên đăng nhập nào được lưu."
+          }
+        }
+      }
+    },
+    "Forget": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quên"
+          }
+        }
+      }
+    },
+    "Export saved…": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Xuất đã lưu…"
+          }
+        }
+      }
     }
   },
   "version": "1.0"

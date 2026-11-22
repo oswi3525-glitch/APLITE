@@ -113,7 +113,7 @@ struct SettingsSheet: View {
                         .disabled(updates.checking)
                     }
                 } header: {
-                    Text(verbatim: "\(APLite.name) \(UpdateChecker.current)")
+                    Text(verbatim: "\(APLite.name) \(APLite.displayVersion)")
                 } footer: {
                     if let result = updates.lastResult, updates.available == nil { Text(verbatim: result) }
                 }

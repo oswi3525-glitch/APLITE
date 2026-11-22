@@ -394,6 +394,7 @@ private struct WindowView: View {
         .shadow(color: .black.opacity(focused ? 0.5 : 0.25), radius: focused ? 24 : 10, y: 8)
         .offset(x: f.minX, y: f.minY)
         .opacity(window.isShown ? 1 : 0)   // keep the web view alive while minimized or on another workspace
+        .transition(.scale(scale: 0.88, anchor: .center).combined(with: .opacity))
     }
 }
 
@@ -1068,6 +1069,7 @@ private struct DockItem: View {
         .frame(width: rect.width, height: rect.height, alignment: .bottom)
         .offset(x: rect.minX - container.minX, y: rect.minY - container.minY)
         .opacity(window?.isMinimized == true ? 0.55 : 1)
+        .transition(.scale(scale: 0.5, anchor: .bottom).combined(with: .opacity))
     }
 
     private var pinnedName: String {

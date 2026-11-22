@@ -21,7 +21,7 @@ struct AboutView: View {
                         VStack(alignment: .leading, spacing: 3) {
                             Text(verbatim: APLite.name).font(.title3.bold())
                             Text(verbatim: APLite.fullName).foregroundStyle(.secondary)
-                            Text(verbatim: "\(String(localized: "Version")) \(APLite.version)")
+                            Text(verbatim: "\(String(localized: "Version")) \(APLite.displayVersion)")
                                 .font(.caption).foregroundStyle(.secondary)
                         }
                     }

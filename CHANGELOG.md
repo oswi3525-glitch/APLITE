@@ -3,10 +3,15 @@
 All notable changes to APLite are documented here. APLite is based on iDesk v0.6.3
 (upstream commit `2179dbd`); the original upstream history is not rewritten.
 
-## 1.1.0 (aplite-dev)
+## 1.1.0 (beta 1) — aplite-dev
 
 ### Added
 
+- **Saved login cookies (vault):** imported cookies and cookies captured from WebKit are persisted
+  in `cookies.json` under Application Support, restored at launch, listed per domain in Settings,
+  exportable as JSON and removable per domain. New buttons: *Save login cookies* and *Export saved…*.
+- **App open/close animation:** new windows spring in, closing windows shrink away, dock icons scale
+  in/out, and minimizing animates opacity/size.
 - **Cookie import** in Settings → Cookies from Safari: paste a `Cookie:` header / `document.cookie`
   from Safari's Web Inspector for a domain, import a Netscape `cookies.txt` from Files, or clear
   cookies for a domain. Cookies are installed into the shared `WKHTTPCookieStore`, so every APLite
@@ -18,8 +23,10 @@ All notable changes to APLite are documented here. APLite is based on iDesk v0.6
 
 ### Changed / improved
 
-- Performance: dock geometry (`taskLayout`) is computed once per redraw instead of three times, and
-  window-preview hit testing no longer walks the dock on every pointer move outside the taskbar.
+- Performance: dock geometry (`taskLayout`) is computed once per redraw instead of three times,
+  window-preview hit testing no longer walks the dock on every pointer move outside the taskbar,
+  and the shortcut list (`items`) is cached and invalidated only when apps/bookmarks/web apps/user
+  defaults actually change.
 - Fixed the text-replacement separator sent from the Settings page (`\u0001` now reaches Swift as
   the intended control character).
 - Visual polish: mesh-light gradient wallpapers, glass highlight on the dock pills, gradient title

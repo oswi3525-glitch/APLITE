@@ -81,6 +81,15 @@ enum CookieImporter {
         group.notify(queue: .main) { completion(cookies.count) }
     }
 
+    /// Cookies WebKit currently holds for a domain — used by "save login cookies".
+    static func currentCookies(for rawDomain: String, completion: @escaping ([HTTPCookie]) -> Void) {
+        guard let domain = sanitizedDomain(rawDomain) else { completion([]); return }
+        WKWebsiteDataStore.default().httpCookieStore.getAllCookies { cookies in
+            let matching = cookies.filter { $0.domain == domain || $0.domain.hasSuffix("." + domain) }
+            DispatchQueue.main.async { completion(matching) }
+        }
+    }
+
     static func removeCookies(for rawDomain: String, completion: @escaping (Int) -> Void) {
         guard let domain = sanitizedDomain(rawDomain) else { completion(0); return }
         let store = WKWebsiteDataStore.default().httpCookieStore

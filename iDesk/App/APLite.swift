@@ -29,7 +29,16 @@ enum APLite {
     }
 
     static var version: String {
-        Bundle.iDesk.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "1.0.0"
+        Bundle.iDesk.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "1.1.0"
+    }
+
+    /// Optional channel suffix, e.g. "1.1.0 (beta 1)". Set `APLiteReleaseChannel` in Info.plist.
+    static var channel: String {
+        (Bundle.iDesk.object(forInfoDictionaryKey: "APLiteReleaseChannel") as? String) ?? ""
+    }
+
+    static var displayVersion: String {
+        channel.isEmpty ? version : "\(version) (\(channel))"
     }
 
     /// The attribution required by the project rules. Shown in Settings → About, About on the

@@ -34,6 +34,7 @@ targets:
           UIImageRespectsSafeAreaInsets: true
         APLiteRepository: oswi3525-glitch/APLITE
         APLiteUpstreamRepository: itshieuk/iDesk
+        APLiteReleaseChannel: beta 1
         UIApplicationSupportsIndirectInputEvents: true
         UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait, UIInterfaceOrientationLandscapeLeft, UIInterfaceOrientationLandscapeRight]
         UISupportedInterfaceOrientations~ipad: [UIInterfaceOrientationPortrait, UIInterfaceOrientationPortraitUpsideDown, UIInterfaceOrientationLandscapeLeft, UIInterfaceOrientationLandscapeRight]

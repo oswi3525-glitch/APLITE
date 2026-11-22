@@ -118,6 +118,7 @@ enum DesktopPages {
             "night": NightFilter.mode.rawValue,
             "wallpapers": wallpapers,
             "custom": customWallpaperThumbnail() ?? NSNull(),
+            "savedCookies": CookieVault.domains(),
             "wallpaperBlur": Int(m.wallpaperBlur.rounded()),
             "autoHide": m.autoHideTaskbar,
             "dockScale": m.dockScale,
@@ -148,7 +149,7 @@ enum DesktopPages {
             "scroll": String(format: "%.1f×", Double(InputSettings.scrollSpeed)),
             "natural": InputSettings.naturalScrolling,
             "mouseModeButton": InputSettings.alwaysShowMouseMode,
-            "version": Bundle.iDesk.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "",
+            "version": APLite.displayVersion,
             "autoUpdate": UpdateChecker.shared.automatic,
             "update": UpdateChecker.shared.available?.version ?? "",
             "updateResult": UpdateChecker.shared.stepText ?? (UpdateChecker.shared.checking ? String(localized: "Checking…") : (UpdateChecker.shared.lastResult ?? "")),
@@ -293,6 +294,7 @@ enum DesktopPages {
                 break
             }
             let cookies = CookieImporter.cookies(fromHeader: parts[1], domain: domain)
+            CookieVault.save(cookies)
             CookieImporter.install(cookies) { count in
                 m.showToast(count > 0
                     ? String(localized: "Imported \(count) cookies for \(domain).")
@@ -302,6 +304,7 @@ enum DesktopPages {
             DocumentPicker.present(types: [.plainText]) { urls in
                 guard let url = urls.first, let text = try? String(contentsOf: url, encoding: .utf8) else { return }
                 let cookies = CookieImporter.cookies(fromNetscape: text)
+                CookieVault.save(cookies)
                 CookieImporter.install(cookies) { count in
                     m.showToast(count > 0
                         ? String(localized: "Imported \(count) cookies from the file.")
@@ -313,6 +316,19 @@ enum DesktopPages {
             CookieImporter.removeCookies(for: value) { count in
                 m.showToast(String(localized: "Removed \(count) cookies."))
             }
+        case (.settings, "cookieSaveCurrent"):
+            CookieImporter.currentCookies(for: value) { cookies in
+                let added = CookieVault.save(cookies)
+                m.showToast(added > 0
+                    ? String(localized: "Saved \(added) login cookies for \(value).")
+                    : String(localized: "No cookies were found in what you pasted."))
+            }
+        case (.settings, "cookieVaultRemove"):
+            let removed = CookieVault.remove(domain: value)
+            m.showToast(String(localized: "Removed \(removed) saved cookies."))
+        case (.settings, "cookieExport"):
+            if let file = CookieVault.exportFile() { ShareSheet.present(file) }
+            else { m.showToast(String(localized: "No saved cookies to export.")) }
         case (.settings, "autoHide"): m.autoHideTaskbar.toggle()
         case (.settings, "dockScale"):
             m.dockScale = DockSettings.clamp(m.dockScale + (Double(value) ?? 0), to: DockSettings.scaleRange)
@@ -578,6 +594,11 @@ enum DesktopPages {
             "cookieImport": String(localized: "Import pasted cookies"),
             "cookieFile": String(localized: "Import cookies.txt…"),
             "cookieClear": String(localized: "Clear"),
+            "cookieSaveCurrent": String(localized: "Save login cookies"),
+            "cookieVault": String(localized: "Saved login cookies"),
+            "cookieVaultEmpty": String(localized: "No saved logins yet."),
+            "cookieVaultRemove": String(localized: "Forget"),
+            "cookieExport": String(localized: "Export saved…"),
             "aboutTitle": String(localized: "About APLite"),
             "attribution": String(localized: "APLite is an independently developed project based on the original iDesk project by itshieuk.\n\nOriginal project:\nhttps://github.com/itshieuk/iDesk\n\nAPLite introduces independent design changes, improvements, modifications and additional features while acknowledging the original project’s author and contributors.\n\nAPLite is not an official release or endorsement of the original iDesk project."),
             "upstream": String(localized: "Original project"), "apliteRepo": String(localized: "APLite repository"),
@@ -795,7 +816,14 @@ enum DesktopPages {
         + `<button onclick="const d=document.getElementById('cookieDomain').value.trim(); if(d) send('cookieClear', d)">${esc(T.cookieClear)}</button></div>`
         + `<div class="row"><textarea id="cookieValue" rows="3" placeholder="${esc(T.cookiePaste)}" autocapitalize="off" autocorrect="off"></textarea></div>`
         + `<div class="row"><div class="label"></div><button class="primary" onclick="const d=document.getElementById('cookieDomain').value.trim(), v=document.getElementById('cookieValue').value.trim(); if(d&&v) send('cookieAdd', d+'\u0001'+v)">${esc(T.cookieImport)}</button>`
-        + `<button onclick="send('cookieFile')">${esc(T.cookieFile)}</button></div></div>`;
+        + `<button onclick="send('cookieFile')">${esc(T.cookieFile)}</button>`
+        + `<button onclick="const d=document.getElementById('cookieDomain').value.trim(); if(d) send('cookieSaveCurrent', d)">${esc(T.cookieSaveCurrent)}</button></div>`
+        + `<div class="row"><div class="label"><b>${esc(T.cookieVault)}</b></div><button onclick="send('cookieExport')">${esc(T.cookieExport)}</button></div>`
+        + (s.savedCookies.length ? s.savedCookies.map(x =>
+            `<div class="row"><div class="label">${esc(x.domain)} <span class="note">(${x.count})</span></div>`
+            + `<button onclick="send('cookieVaultRemove', ${JSON.stringify(x.domain).replace(/"/g, '&quot;')})">${esc(T.cookieVaultRemove)}</button></div>`).join('')
+          : `<div class="row"><div class="label note">${esc(T.cookieVaultEmpty)}</div></div>`)
+        + `</div>`;
       h += `<h2>${esc(T.aboutTitle)}</h2><div class="card">`
         + `<div class="row"><div class="label"><b>APLite</b> · AirPlayLite<br><span class="note">${esc(T.about)} ${esc(s.version)}</span></div></div>`
         + `<div class="row"><div class="label note" style="white-space:pre-line;padding:10px 0;line-height:1.5">${esc(T.attribution)}</div></div>`
