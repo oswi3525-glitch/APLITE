@@ -3,6 +3,36 @@
 All notable changes to APLite are documented here. APLite is based on iDesk v0.6.3
 (upstream commit `2179dbd`); the original upstream history is not rewritten.
 
+## 1.2.1 (unsigned development release)
+
+CI: `Build APLite` run `45015076389` — build + all unit test groups passed.
+
+### Audio (tiếp tục sửa lỗi mất tiếng)
+
+- Interruption `ended` now **always** reactivates the session a moment later, not only when
+  `AVAudioSession.InterruptionOption.shouldResume` is present. Many interruptions (other app audio,
+  route takeovers, Siri) end without that flag — this was the remaining cause of "silent after a
+  call".
+- Route changes re-assert `setActive(true)` on every change, even if our cached state says active
+  (a guest app can deactivate the session behind our back).
+- `VoiceTyping` now checks whether the recording session switch succeeded and fully rolls back the
+  tap/request/session if `AVAudioEngine.start()` fails. Previously that path left the process in
+  `.playAndRecord` and ducked every other sound.
+- Web Audio: added `__ideskVolumeResume` to the injected script; after recovery APLite nudges every
+  open tab so a suspended `AudioContext` starts again.
+- Mute state no longer goes stale when the hardware volume buttons change the volume.
+
+### App Creator (công cụ tạo app)
+
+- Build Center → "Create a new app project": three real templates (Hello World, Web view, Notes),
+  editable display name and Bundle ID, generates Swift sources + `project.yml`, zips them into
+  APLite's managed file area, can share the ZIP or feed it straight into Build Center analysis and a
+  real macOS worker. No fake compilation.
+
+### Verification
+
+- Build + unit tests passed on macOS CI (see run above). On-device audio checklist still pending.
+
 ## 1.2.0 (unsigned development release)
 
 Built by GitHub Actions `Build APLite` run `45003598269` on branch `fix/audio-and-hardening`:

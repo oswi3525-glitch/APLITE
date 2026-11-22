@@ -76,6 +76,17 @@ these on an iOS Simulator and uploads the test log on failure.
 - [ ] Quick Look on an `.m4a`/`.mp3` file, then close: sound stops and other audio is unaffected.
 - [ ] Copy diagnostics from Settings and confirm the report shows the active route.
 
+## Follow-up fixes (1.2.1)
+
+- Interruption recovery no longer depends on the `shouldResume` flag — the session is re-activated
+  shortly after **every** interruption ends.
+- Route changes always re-assert an active session, even when our cached state says active.
+- A failed voice-typing start now rolls the session back from `.playAndRecord` to playback instead of
+  leaving the desktop ducked.
+- Web pages get `__ideskVolumeResume()` after recovery so a suspended Web Audio context resumes;
+  native code calls it on every open tab through `AudioSessionManager.resumeWebAudio`.
+- Mute state clears when the user changes volume with the hardware buttons.
+
 ## Limits (by iOS design, not defects we can fix in this sandbox)
 
 - APLite does **not** declare the `audio` UIBackgroundMode. Switching to another *system* app

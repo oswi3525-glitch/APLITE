@@ -65,6 +65,13 @@ iPhone/iPad before any item is marked complete. Status today: **not tested on ha
 - [ ] With a real GitHub token, a dispatch request is accepted (HTTP 204) and run statuses come from
       the API; IPA download is offered only for runs whose API conclusion is `success`.
 
+## App Creator
+
+- [ ] Generate each of the three templates; open the ZIP and confirm real Swift + project.yml files.
+- [ ] Bundle ID and display name with spaces/quotes produce a valid module name and source.
+- [ ] "Analyse in Build Center" reads the generated project and reports the correct Bundle ID.
+- [ ] A build request sent to a real macOS worker compiles the generated project (only then claim it builds).
+
 ## Known unresolved issues
 
 Record any failures here before merging to `main`. Do not mark a feature complete on the strength of
