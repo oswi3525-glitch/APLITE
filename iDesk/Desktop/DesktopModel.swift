@@ -1836,28 +1836,40 @@ final class DesktopModel: ObservableObject {
         }
     }
 
-    /// Hovering a window's button on the taskbar for a moment shows a picture of the window above it.
+    /// Hovering a window's button on the dock for a moment shows a picture of the window above it.
+    /// The dock geometry is only computed when the pointer is actually in the taskbar band: this
+    /// runs on every pointer move, and taskLayout walks every pinned app and open window.
     private func updateTaskPreview(_ p: CGPoint) {
-        let item = (p.y >= taskbarHitTop && contextMenu == nil && recents == nil && !showLauncher)
-            ? taskLayout.first(where: { $0.rect.contains(p) && $0.entry.window != nil }) : nil
-        guard let item, let w = item.entry.window else {
-            taskPreviewWork?.cancel()
-            if taskPreview != nil { taskPreview = nil }
+        guard p.y >= taskbarHitTop, contextMenu == nil, recents == nil, !showLauncher else {
+            cancelTaskPreview()
+            return
+        }
+        let items = taskLayout
+        guard let item = items.first(where: { $0.rect.contains(p) && $0.entry.window != nil }),
+              let w = item.entry.window else {
+            cancelTaskPreview()
             return
         }
         if taskPreview?.id == w.id { return }
-        taskPreview = nil
-        taskPreviewWork?.cancel()
+        cancelTaskPreview()
+        let anchor = item.rect
         let work = DispatchWorkItem { [weak self, weak w] in
             guard let self, let w else { return }
             self.thumbnail(of: w) { [weak self] image in
-                guard let self, self.taskLayout.first(where: { $0.rect.contains(self.cursor.position) })?.entry.window === w
+                guard let self, self.cursor.position.y >= self.taskbarHitTop,
+                      self.taskLayout.first(where: { $0.rect.contains(self.cursor.position) })?.entry.window === w
                 else { return }
-                self.taskPreview = TaskPreview(id: w.id, title: w.title, image: image, anchor: item.rect)
+                self.taskPreview = TaskPreview(id: w.id, title: w.title, image: image, anchor: anchor)
             }
         }
         taskPreviewWork = work
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.45, execute: work)
+    }
+
+    private func cancelTaskPreview() {
+        taskPreviewWork?.cancel()
+        taskPreviewWork = nil
+        if taskPreview != nil { taskPreview = nil }
     }
 
     /// Press (start of a drag): drag the title bar to move, an edge/corner to resize.
@@ -2141,8 +2153,7 @@ final class DesktopModel: ObservableObject {
     }
 
     private func clickTaskbar(_ p: CGPoint) {
-        taskPreviewWork?.cancel()
-        taskPreview = nil
+        cancelTaskPreview()
         if startButtonRect.contains(p) { showLauncher.toggle(); return }
         if showDesktopRect.contains(p) { toggleShowDesktop(); return }
         if navButtonRect(.search).contains(p) { toggleSpotlight(); return }

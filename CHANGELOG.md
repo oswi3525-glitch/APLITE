@@ -3,6 +3,34 @@
 All notable changes to APLite are documented here. APLite is based on iDesk v0.6.3
 (upstream commit `2179dbd`); the original upstream history is not rewritten.
 
+## 1.1.0 (aplite-dev)
+
+### Added
+
+- **Cookie import** in Settings → Cookies from Safari: paste a `Cookie:` header / `document.cookie`
+  from Safari's Web Inspector for a domain, import a Netscape `cookies.txt` from Files, or clear
+  cookies for a domain. Cookies are installed into the shared `WKHTTPCookieStore`, so every APLite
+  window sees them. iOS sandboxing prevents reading Safari's jar directly; the UI says so and never
+  sends values anywhere.
+- **Configurable screen saver**: 1/2/5/10/15/30/60-minute or never, three styles (drifting clock,
+  APLite gradient, blurred wallpaper), motion on/off (burn-in protection) and 0.2–2 s fade.
+- Vietnamese/localisable strings for the new settings.
+
+### Changed / improved
+
+- Performance: dock geometry (`taskLayout`) is computed once per redraw instead of three times, and
+  window-preview hit testing no longer walks the dock on every pointer move outside the taskbar.
+- Fixed the text-replacement separator sent from the Settings page (`\u0001` now reaches Swift as
+  the intended control character).
+- Visual polish: mesh-light gradient wallpapers, glass highlight on the dock pills, gradient title
+  bars with a focused accent line, and a refreshed APLite-accented Settings page with responsive
+  cards and buttons.
+
+### Verification
+
+- Same macOS CI process as 1.0.0; see the workflow run attached to this commit. No on-device
+  cookie-import test is claimed.
+
 ## 1.0.0 (aplite-dev)
 
 ### Added

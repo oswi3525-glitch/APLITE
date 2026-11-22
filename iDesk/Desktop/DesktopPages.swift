@@ -131,6 +131,9 @@ enum DesktopPages {
             "workspaces": m.workspacesEnabled,
             "hotCorners": m.hotCorners,
             "lock": LockSettings.lockEnabled, "saver": LockSettings.saverMinutes, "biometry": LockSettings.biometryName,
+            "saverStyle": ScreenSaverSettings.style.rawValue,
+            "saverMotion": ScreenSaverSettings.motion,
+            "saverFade": ScreenSaverSettings.fade,
             "replacements": TextReplacements.all.map { [$0.short, $0.phrase] },
             "zoom": Int((PageZoom.standard * 100).rounded()),
             "zooms": PageZoom.levels.map { Int(($0 * 100).rounded()) },
@@ -283,6 +286,33 @@ enum DesktopPages {
             m.showToast(String(localized: "Choose a picture on the iPhone."))
         case (.settings, "wallpaperBlur"):
             m.wallpaperBlur = DockSettings.clamp(m.wallpaperBlur + (Double(value) ?? 0), to: 0...20)
+        case (.settings, "cookieAdd"):
+            let parts = value.components(separatedBy: "\u{1}")
+            guard parts.count == 2, let domain = CookieImporter.sanitizedDomain(parts[0]) else {
+                m.showToast(String(localized: "Enter a domain such as example.com."))
+                break
+            }
+            let cookies = CookieImporter.cookies(fromHeader: parts[1], domain: domain)
+            CookieImporter.install(cookies) { count in
+                m.showToast(count > 0
+                    ? String(localized: "Imported \(count) cookies for \(domain).")
+                    : String(localized: "No cookies were found in what you pasted."))
+            }
+        case (.settings, "cookieFile"):
+            DocumentPicker.present(types: [.plainText]) { urls in
+                guard let url = urls.first, let text = try? String(contentsOf: url, encoding: .utf8) else { return }
+                let cookies = CookieImporter.cookies(fromNetscape: text)
+                CookieImporter.install(cookies) { count in
+                    m.showToast(count > 0
+                        ? String(localized: "Imported \(count) cookies from the file.")
+                        : String(localized: "No cookies were found in what you pasted."))
+                }
+            }
+            m.showToast(String(localized: "Choose a cookies.txt file on the iPhone."))
+        case (.settings, "cookieClear"):
+            CookieImporter.removeCookies(for: value) { count in
+                m.showToast(String(localized: "Removed \(count) cookies."))
+            }
         case (.settings, "autoHide"): m.autoHideTaskbar.toggle()
         case (.settings, "dockScale"):
             m.dockScale = DockSettings.clamp(m.dockScale + (Double(value) ?? 0), to: DockSettings.scaleRange)
@@ -307,6 +337,17 @@ enum DesktopPages {
         case (.settings, "hotCorners"): m.hotCorners.toggle()
         case (.settings, "lock"): LockSettings.lockEnabled.toggle()
         case (.settings, "saver"): if let n = Int(value) { LockSettings.saverMinutes = n; m.lastInput = Date() }
+        case (.settings, "saverStyle"):
+            if let n = Int(value), ScreenSaverStyle(rawValue: n) != nil {
+                ScreenSaverSettings.style = ScreenSaverStyle(rawValue: n)!
+                m.objectWillChange.send()
+            }
+        case (.settings, "saverMotion"):
+            ScreenSaverSettings.motion.toggle()
+            m.objectWillChange.send()
+        case (.settings, "saverFade"):
+            ScreenSaverSettings.fade += Double(value) ?? 0
+            m.objectWillChange.send()
         case (.settings, "lockNow"): m.lockDesktop(force: true)
         case (.settings, "addReplacement"):
             let parts = value.components(separatedBy: "\u{1}")
@@ -514,6 +555,12 @@ enum DesktopPages {
             "hotCorners": String(localized: "Hot corners"),
             "security": String(localized: "Lock and screen saver"), "lockToggle": String(localized: "Lock the desktop when I come back"),
             "saverLabel": String(localized: "Screen saver after"), "never": String(localized: "Never"), "min": String(localized: "min"),
+            "saverStyle": String(localized: "Screen saver style"),
+            "saverClock": String(localized: "Drifting clock"),
+            "saverGradient": String(localized: "APLite gradient"),
+            "saverWallpaper": String(localized: "Blurred wallpaper"),
+            "saverMotion": String(localized: "Let the clock drift (avoids burn-in)"),
+            "saverFade": String(localized: "Fade duration"),
             "lockNow": String(localized: "Lock now"),
             "typing": String(localized: "Typing"), "replacements": String(localized: "Text replacement"),
             "short": String(localized: "Type"), "phrase": String(localized: "To get"), "add": String(localized: "Add"),
@@ -524,6 +571,13 @@ enum DesktopPages {
             "accessibility": String(localized: "Accessibility"),
             "mouseModeButton": String(localized: "Always show the mouse mode button"),
             "about": String(localized: "Version"),
+            "cookies": String(localized: "Cookies from Safari"),
+            "cookieNote": String(localized: "iOS does not let APLite read Safari's cookie jar. Copy cookies from Safari's Web Inspector (or export cookies.txt) and paste or import them here. Values stay on this device."),
+            "cookieDomain": String(localized: "Domain, e.g. example.com"),
+            "cookiePaste": String(localized: "Paste cookies: name=value; name2=value2"),
+            "cookieImport": String(localized: "Import pasted cookies"),
+            "cookieFile": String(localized: "Import cookies.txt…"),
+            "cookieClear": String(localized: "Clear"),
             "aboutTitle": String(localized: "About APLite"),
             "attribution": String(localized: "APLite is an independently developed project based on the original iDesk project by itshieuk.\n\nOriginal project:\nhttps://github.com/itshieuk/iDesk\n\nAPLite introduces independent design changes, improvements, modifications and additional features while acknowledging the original project’s author and contributors.\n\nAPLite is not an official release or endorsement of the original iDesk project."),
             "upstream": String(localized: "Original project"), "apliteRepo": String(localized: "APLite repository"),
@@ -533,22 +587,28 @@ enum DesktopPages {
         <!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
         <title>\(strings["title"] ?? "")</title>
         <style>
-        :root { color-scheme: dark; }
+        :root { color-scheme: dark; --accent: #38bdf8; --accent2: #0ea5a4; }
         * { box-sizing: border-box; }
-        body { margin: 0; padding: 26px 30px 40px; background: #161618; color: #eee; font: 15px -apple-system, sans-serif;
+        body { margin: 0; padding: 26px 30px 40px; min-height: 100vh;
+               background: radial-gradient(1000px 500px at 12% -10%, rgba(56,189,248,.13), transparent 70%),
+                           radial-gradient(800px 500px at 100% 0%, rgba(14,165,164,.10), transparent 65%), #111318;
+               color: #f2f5f8; font: 15px -apple-system, sans-serif;
                user-select: none; -webkit-user-select: none; }
         h1 { font-size: 24px; margin: 0 0 4px; }
-        h2 { font-size: 13px; text-transform: uppercase; letter-spacing: .04em; color: #8e8e93; margin: 26px 0 8px; }
+        h2 { font-size: 12px; text-transform: uppercase; letter-spacing: .10em; color: var(--accent);
+             margin: 28px 0 10px; font-weight: 700; }
         .sub, .note { color: #999; font-size: 13px; }
-        .card { background: #232326; border-radius: 12px; padding: 4px 16px; }
+        .card { background: linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.018)), #1c2026;
+                border: 1px solid rgba(255,255,255,.075); border-radius: 16px; padding: 4px 16px;
+                box-shadow: 0 12px 30px rgba(0,0,0,.24); }
         .row { display: flex; align-items: center; gap: 12px; min-height: 52px; border-top: 1px solid #2f2f33; }
         .row:first-child { border-top: 0; }
         .row .label { flex: 1; }
         button { background: #34343a; color: #eee; border: 0; border-radius: 8px; padding: 8px 13px; font: inherit;
                  font-size: 14px; cursor: pointer; }
         button:hover { background: #45454c; }
-        button.primary { background: #0a84ff; color: #fff; }
-        button.primary:hover { background: #3797ff; }
+        button.primary { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #04212b; font-weight: 600; }
+        button.primary:hover { filter: brightness(1.12); }
         button.danger { color: #ff8a80; }
         button:disabled { opacity: .45; }
         .round { width: 34px; height: 34px; padding: 0; border-radius: 17px; font-size: 18px; }
@@ -558,11 +618,12 @@ enum DesktopPages {
                          background: #fff; transition: left .15s; }
         .switch.on { background: #30d158; } .switch.on::after { left: 21px; }
         .seg { display: flex; gap: 6px; flex-wrap: wrap; }
-        .seg button.on { background: #0a84ff; color: #fff; }
+        .seg button.on { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #04212b; }
         .walls { display: flex; gap: 10px; flex-wrap: wrap; padding: 12px 0; }
         .wall { display: flex; align-items: flex-end; justify-content: flex-end; padding: 4px; font-size: 14px; width: 110px; height: 62px; border-radius: 9px; border: 2px solid transparent; background-size: cover;
                 background-position: center; cursor: pointer; }
-        .wall.on { border-color: #0a84ff; } .wall:hover { border-color: #666; } .wall.on:hover { border-color: #0a84ff; }
+        .wall.on { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(56,189,248,.15); }
+        .wall:hover { border-color: #8b97a5; } .wall.on:hover { border-color: var(--accent); }
         .app { display: flex; align-items: center; gap: 14px; padding: 12px 0; border-top: 1px solid #2f2f33; }
         .app:first-child { border-top: 0; }
         .app img, .app .noicon { width: 46px; height: 46px; border-radius: 11px; flex: none; background: #2a8; }
@@ -574,11 +635,17 @@ enum DesktopPages {
         .head { display: flex; align-items: flex-end; gap: 12px; }
         .head .grow { flex: 1; }
         .bar { height: 8px; border-radius: 4px; background: #3a3a40; overflow: hidden; margin-top: 8px; }
-        .bar div { height: 100%; background: #0a84ff; }
+        .bar div { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); }
         a { color: #8ab4ff; text-decoration: none; } a:hover { text-decoration: underline; }
-        input { background: #2c2c30; color: #eee; border: 0; border-radius: 8px; padding: 8px 12px; font: inherit;
-                font-size: 14px; width: 220px; -webkit-user-select: text; user-select: text; }
-        .seg button.on, button.on { background: #0a84ff; color: #fff; }
+        input, textarea { background: #262b32; color: #f2f5f8; border: 1px solid rgba(255,255,255,.08);
+                border-radius: 9px; padding: 8px 12px; font: inherit; font-size: 14px; width: 220px;
+                -webkit-user-select: text; user-select: text; }
+        textarea { width: 100%; resize: vertical; line-height: 1.45; }
+        .wall { transition: transform .18s ease, border-color .18s ease; }
+        .wall:hover { transform: translateY(-2px); }
+        button { transition: background .18s ease, filter .18s ease, transform .12s ease; }
+        button:active { transform: scale(.97); }
+        .seg button.on, button.on { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #04212b; }
         .day { color: #8e8e93; font-size: 12px; font-weight: 600; text-transform: uppercase; padding: 14px 0 4px; }
         .entry { display: flex; align-items: center; gap: 12px; min-height: 38px; border-top: 1px solid #2f2f33; }
         .entry a { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -686,12 +753,19 @@ enum DesktopPages {
         + `</div></div></div>`;
       h += `<h2>${esc(T.security)}</h2><div class="card">` + toggle('lock', s.lock, T.lockToggle)
         + `<div class="row"><div class="label">${esc(T.saverLabel)}</div><div class="seg">`
-        + [0, 5, 10, 15, 30].map(n => `<button class="${s.saver === n ? 'on' : ''}" onclick="send('saver', ${n})">${n ? n + ' ' + esc(T.min) : esc(T.never)}</button>`).join('')
-        + `</div></div><div class="row"><div class="label"></div><button onclick="send('lockNow')">🔒 ${esc(T.lockNow)}</button></div></div>`;
+        + [0, 1, 2, 5, 10, 15, 30, 60].map(n => `<button class="${s.saver === n ? 'on' : ''}" onclick="send('saver', ${n})">${n ? n + ' ' + esc(T.min) : esc(T.never)}</button>`).join('')
+        + `</div></div>`
+        + `<div class="row"><div class="label">${esc(T.saverStyle)}</div><div class="seg">`
+        + [[0, T.saverClock], [1, T.saverGradient], [2, T.saverWallpaper]].map(([n, l]) =>
+            `<button class="${s.saverStyle === n ? 'on' : ''}" onclick="send('saverStyle', ${n})">${esc(l)}</button>`).join('')
+        + `</div></div>`
+        + toggle('saverMotion', s.saverMotion, T.saverMotion)
+        + stepper('saverFade', T.saverFade, Number(s.saverFade).toFixed(1) + ' s', 0.2)
+        + `<div class="row"><div class="label"></div><button onclick="send('lockNow')">🔒 ${esc(T.lockNow)}</button></div></div>`;
       h += `<h2>${esc(T.typing)}</h2><div class="card">` + s.replacements.map(([a, b]) =>
           `<div class="row"><div class="label"><b>${esc(a)}</b> → ${esc(b)}</div><button onclick="send('removeReplacement', '${esc(a).replace(/'/g, "\\'")}')">×</button></div>`).join('')
         + `<div class="row"><input id="rs" placeholder="${esc(T.short)}" style="width:90px"> <input id="rp" placeholder="${esc(T.phrase)}" style="flex:1;margin:0 8px">`
-        + `<button onclick="const a = document.getElementById('rs').value, b = document.getElementById('rp').value; if (a && b) send('addReplacement', a + '\\u0001' + b)">${esc(T.add)}</button></div></div>`;
+        + `<button onclick="const a = document.getElementById('rs').value, b = document.getElementById('rp').value; if (a && b) send('addReplacement', a + '\u0001' + b)">${esc(T.add)}</button></div></div>`;
       h += `<h2>${esc(T.browser)}</h2><div class="card"><div class="row"><div class="label">${esc(T.browserLink)}</div>`
         + `<button onclick="send('browserSettings')">${esc(T.openBrowser)}</button></div></div>`;
       h += `<h2>${esc(T.windows)}</h2><div class="card"><div class="row"><div class="label">${esc(T.maxWindows)}</div><div class="seg">`;
@@ -715,6 +789,13 @@ enum DesktopPages {
         + (s.update ? `<button class="primary" onclick="send('downloadUpdate')">${esc(T.downloadUpdate)} ${esc(s.update)}</button>`
                     : `<button onclick="send('checkUpdate')">${esc(T.checkNow)}</button>`)
         + `</div></div>`;
+      h += `<h2>${esc(T.cookies)}</h2><div class="card">`
+        + `<div class="row"><div class="label note" style="white-space:normal;padding:10px 0;line-height:1.5">${esc(T.cookieNote)}</div></div>`
+        + `<div class="row"><input id="cookieDomain" placeholder="${esc(T.cookieDomain)}" autocapitalize="off" autocorrect="off" style="flex:1">`
+        + `<button onclick="const d=document.getElementById('cookieDomain').value.trim(); if(d) send('cookieClear', d)">${esc(T.cookieClear)}</button></div>`
+        + `<div class="row"><textarea id="cookieValue" rows="3" placeholder="${esc(T.cookiePaste)}" autocapitalize="off" autocorrect="off"></textarea></div>`
+        + `<div class="row"><div class="label"></div><button class="primary" onclick="const d=document.getElementById('cookieDomain').value.trim(), v=document.getElementById('cookieValue').value.trim(); if(d&&v) send('cookieAdd', d+'\u0001'+v)">${esc(T.cookieImport)}</button>`
+        + `<button onclick="send('cookieFile')">${esc(T.cookieFile)}</button></div></div>`;
       h += `<h2>${esc(T.aboutTitle)}</h2><div class="card">`
         + `<div class="row"><div class="label"><b>APLite</b> · AirPlayLite<br><span class="note">${esc(T.about)} ${esc(s.version)}</span></div></div>`
         + `<div class="row"><div class="label note" style="white-space:pre-line;padding:10px 0;line-height:1.5">${esc(T.attribution)}</div></div>`

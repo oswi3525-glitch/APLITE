@@ -10,7 +10,7 @@ enum LockSettings {
         get { UserDefaults.standard.bool(forKey: lockKey) }
         set { UserDefaults.standard.set(newValue, forKey: lockKey) }
     }
-    /// 0 = never.
+    /// 0 = never. The Settings page offers 1, 2, 5, 10, 15, 30 and 60 minutes.
     static var saverMinutes: Int {
         get { UserDefaults.standard.object(forKey: saverKey) as? Int ?? 10 }
         set { UserDefaults.standard.set(newValue, forKey: saverKey) }
@@ -25,6 +25,39 @@ enum LockSettings {
         default: return String(localized: "the passcode")
         }
     }
+}
+
+/// APLite's configurable screen saver. Everything is local (UserDefaults) and read when the saver
+/// starts, so changing a setting does not require an app restart.
+enum ScreenSaverStyle: Int, CaseIterable {
+    case clock = 0
+    case gradient = 1
+    case wallpaper = 2
+}
+
+enum ScreenSaverSettings {
+    static let styleKey = "APLite.saverStyle"
+    static let motionKey = "APLite.saverMotion"
+    static let fadeKey = "APLite.saverFade"
+
+    static var style: ScreenSaverStyle {
+        get { ScreenSaverStyle(rawValue: UserDefaults.standard.integer(forKey: styleKey)) ?? .clock }
+        set { UserDefaults.standard.set(newValue.rawValue, forKey: styleKey) }
+    }
+    /// The slow drift protects OLED screens from burn-in; turn it off for a still image.
+    static var motion: Bool {
+        get { UserDefaults.standard.object(forKey: motionKey) as? Bool ?? true }
+        set { UserDefaults.standard.set(newValue, forKey: motionKey) }
+    }
+    /// Seconds for the fade in/out of the saver.
+    static var fade: Double {
+        get {
+            let value = UserDefaults.standard.object(forKey: fadeKey) as? Double ?? 0.8
+            return min(2, max(0.2, value))
+        }
+        set { UserDefaults.standard.set(min(2, max(0.2, newValue)), forKey: fadeKey) }
+    }
+    static let minuteOptions = [1, 2, 5, 10, 15, 30, 60]
 }
 
 extension DesktopModel {
@@ -60,33 +93,59 @@ extension DesktopModel {
               !ScreenRecorder.shared.isRecording,
               Date().timeIntervalSince(lastInput) > Double(minutes * 60) else { return }
         closePanels()
-        withAnimation(.easeIn(duration: 0.8)) { showScreenSaver = true }
+        withAnimation(.easeIn(duration: ScreenSaverSettings.fade)) { showScreenSaver = true }
     }
 }
 
-/// The big clock of the screen saver, drifting slowly so nothing burns into the display.
+/// The screen saver: a drifting clock by default, an APLite gradient, or the blurred wallpaper.
+/// `size` is the external display's size; the clock stays readable on a TV across the room.
 struct ScreenSaverView: View {
     let size: CGSize
+    var wallpaperIndex: Int = 0
+    var wallpaper: UIImage?
+    var wallpaperBlur: Double = 0
+
     var body: some View {
         TimelineView(.periodic(from: .now, by: 1)) { ctx in
             let t = ctx.date.timeIntervalSinceReferenceDate
-            // Within the screen: the clock is about 600 × 220 points.
-            let dx = CGFloat(sin(t / 37)) * max(0, size.width / 2 - 340), dy = CGFloat(cos(t / 53)) * max(0, size.height / 2 - 160)
+            let drift = ScreenSaverSettings.motion
+            let dx = drift ? CGFloat(sin(t / 37)) * max(0, size.width / 2 - 340) : 0
+            let dy = drift ? CGFloat(cos(t / 53)) * max(0, size.height / 2 - 160) : 0
             ZStack {
-                Color.black
-                VStack(spacing: 8) {
-                    Text(ctx.date.formatted(date: .omitted, time: .shortened))
-                        .font(.system(size: 150, weight: .thin, design: .rounded).monospacedDigit())
-                    Text(ctx.date.formatted(.dateTime.weekday(.wide).day().month(.wide)))
-                        .font(.system(size: 30, weight: .light))
-                        .foregroundStyle(.white.opacity(0.6))
+                switch ScreenSaverSettings.style {
+                case .gradient:
+                    LinearGradient(colors: Wallpapers.all[0], startPoint: .topLeading, endPoint: .bottomTrailing)
+                        .overlay(alignment: .center) {
+                            Text(verbatim: APLite.name)
+                                .font(.system(size: min(size.width, size.height) * 0.18, weight: .black, design: .rounded))
+                                .foregroundStyle(.white.opacity(0.22))
+                        }
+                        .animation(.easeInOut(duration: 4), value: ctx.date)
+                case .wallpaper:
+                    WallpaperView(index: wallpaperIndex, image: wallpaper,
+                                  blur: CGFloat(wallpaperBlur) + 14, watermark: false)
+                    Color.black.opacity(0.32)
+                    clock(ctx.date, dx: dx, dy: dy, compact: true)
+                case .clock:
+                    Color.black
+                    clock(ctx.date, dx: dx, dy: dy, compact: false)
                 }
-                .foregroundStyle(.white.opacity(0.85))
-                .offset(x: dx, y: dy)
             }
         }
         .frame(width: size.width, height: size.height)
         .allowsHitTesting(false)
+    }
+
+    private func clock(_ date: Date, dx: CGFloat, dy: CGFloat, compact: Bool) -> some View {
+        VStack(spacing: compact ? 6 : 8) {
+            Text(date.formatted(date: .omitted, time: .shortened))
+                .font(.system(size: compact ? 84 : 150, weight: .thin, design: .rounded).monospacedDigit())
+            Text(date.formatted(.dateTime.weekday(.wide).day().month(.wide)))
+                .font(.system(size: compact ? 20 : 30, weight: .light))
+                .foregroundStyle(.white.opacity(0.6))
+        }
+        .foregroundStyle(.white.opacity(0.85))
+        .offset(x: dx, y: dy)
     }
 }
 

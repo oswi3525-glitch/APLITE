@@ -33,6 +33,11 @@ The original MIT license and copyright notice are preserved in [LICENSE](LICENSE
   auto-hide, all live in Settings → Dock.
 - **Wallpapers:** a new APLite default set, photo import from Photos **or Files**, blur, persistence
   and per-workspace choices.
+- **Cookies from Safari:** paste a `Cookie:` header for a domain or import a Netscape `cookies.txt`
+  from Files into APLite's shared WebKit cookie store. iOS does not expose Safari's jar to other
+  apps, so the values are copied by you and stay on the device.
+- **Screen saver:** choose the delay (1–60 min or off), style (drifting clock, APLite gradient or
+  blurred wallpaper), drift on/off and fade duration in Settings → Security.
 - **Build/CI:** the unsigned artifact is named for what it is (`APLite-unsigned.ipa`) and is built
   from the `aplite-dev` branch.
 

@@ -170,7 +170,9 @@ struct DesktopView: View {
                 }
 
                 if model.showScreenSaver {
-                    ScreenSaverView(size: geo.size).transition(.opacity)
+                    ScreenSaverView(size: geo.size, wallpaperIndex: model.wallpaper,
+                                    wallpaper: model.customWallpaper, wallpaperBlur: model.wallpaperBlur)
+                        .transition(.opacity)
                 }
 
                 if model.isLocked {
@@ -225,16 +227,23 @@ struct WallpaperView: View {
                 .blur(radius: blur, opaque: true)
                 .clipped()
         } else {
-            LinearGradient(colors: Wallpapers.all[max(0, index) % Wallpapers.count],
-                           startPoint: .topLeading, endPoint: .bottomTrailing)
-                .overlay(alignment: .center) {
-                    if watermark {
-                        Text(verbatim: APLite.name)
-                            .font(.system(size: 96, weight: .black, design: .rounded))
-                            .foregroundStyle(.white.opacity(0.06))
-                    }
+            let colors = Wallpapers.all[max(0, index) % Wallpapers.count]
+            ZStack {
+                LinearGradient(colors: colors, startPoint: .topLeading, endPoint: .bottomTrailing)
+                // Soft light blobs give the flat gradients a mesh-glass depth without image assets.
+                RadialGradient(colors: [colors[min(2, colors.count - 1)].opacity(0.55), .clear],
+                               center: .topTrailing, startRadius: 40, endRadius: 900)
+                    .blendMode(.screen)
+                RadialGradient(colors: [colors[min(1, colors.count - 1)].opacity(0.35), .clear],
+                               center: .bottomLeading, startRadius: 20, endRadius: 760)
+                    .blendMode(.screen)
+                if watermark {
+                    Text(verbatim: APLite.name)
+                        .font(.system(size: 96, weight: .black, design: .rounded))
+                        .foregroundStyle(.white.opacity(0.06))
                 }
-                .animation(.easeInOut(duration: 0.4), value: index)
+            }
+            .animation(.easeInOut(duration: 0.4), value: index)
         }
     }
 }
@@ -431,7 +440,14 @@ private struct TitleBar: View {
 
     var body: some View {
         ZStack(alignment: .topLeading) {
-            Rectangle().fill(focused ? Color(white: 0.2) : Color(white: 0.15))
+            LinearGradient(colors: focused ? [Color(white: 0.26), Color(white: 0.18)]
+                                           : [Color(white: 0.18), Color(white: 0.13)],
+                           startPoint: .top, endPoint: .bottom)
+            .overlay(alignment: .bottom) {
+                Rectangle()
+                    .fill(focused ? Color.accentColor.opacity(0.55) : Color.white.opacity(0.06))
+                    .frame(height: 1)
+            }
             if keepOnTop {
                 Image(systemName: "pin.fill").font(.system(size: 10)).foregroundStyle(.yellow)
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .trailing)
@@ -835,7 +851,10 @@ private struct TaskbarView: View {
         let palette = DockPalette(mode: model.dockAppearance, scheme: colorScheme)
         let left = model.leftDockRect
         let right = model.rightDockRect
-        let dock = model.dockRect
+        // taskLayout walks the pinned apps and every open window. Compute it once per redraw
+        // instead of once for the empty check, once for the ForEach and once inside dockRect.
+        let items = model.taskLayout
+        let dock = Self.dockRect(from: items, height: model.dockHeight, y: model.dockY)
 
         ZStack(alignment: .topLeading) {
             DockGlass(rect: left, y0: y0, palette: palette, opacity: model.dockOpacity) {
@@ -858,10 +877,10 @@ private struct TaskbarView: View {
                 }
             }
 
-            if !model.taskLayout.isEmpty {
+            if !items.isEmpty {
                 DockGlass(rect: dock, y0: y0, palette: palette, opacity: model.dockOpacity) {
                     ZStack(alignment: .topLeading) {
-                        ForEach(Array(model.taskLayout.enumerated()), id: \.offset) { _, item in
+                        ForEach(Array(items.enumerated()), id: \.offset) { _, item in
                             DockItem(entry: item.entry, rect: item.rect, container: dock,
                                      hovered: item.rect.contains(p),
                                      magnification: magnification(for: item.rect, at: p),
@@ -891,6 +910,14 @@ private struct TaskbarView: View {
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+    }
+
+    private static func dockRect(from items: [(entry: DesktopModel.TaskEntry, rect: CGRect)],
+                                 height: CGFloat, y: CGFloat) -> CGRect {
+        guard let first = items.first, let last = items.last else { return .zero }
+        let pad = Layout.dockPadding
+        return CGRect(x: first.rect.minX - pad, y: y,
+                      width: last.rect.maxX - first.rect.minX + pad * 2, height: height)
     }
 
     /// Apple-style magnification: icons near the pointer grow, the ones further away stay put.
@@ -977,6 +1004,12 @@ private struct DockGlass<Content: View>: View {
                 }
             }
             .overlay(shape.strokeBorder(palette.stroke, lineWidth: 1))
+            .overlay(alignment: .top) {
+                Capsule()
+                    .fill(palette.primary.opacity(0.16))
+                    .frame(width: rect.width * 0.55, height: 1)
+                    .padding(.top, 1)
+            }
             .shadow(color: .black.opacity(0.35), radius: 18, y: 8)
             .offset(x: rect.minX, y: rect.minY - y0)
             .allowsHitTesting(false)

@@ -6800,6 +6800,146 @@
           }
         }
       }
+    },
+    "Enter a domain such as example.com.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nhập tên miền, ví dụ example.com."
+          }
+        }
+      }
+    },
+    "No cookies were found in what you pasted.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Không tìm thấy cookie trong nội dung bạn dán."
+          }
+        }
+      }
+    },
+    "Choose a cookies.txt file on the iPhone.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chọn file cookies.txt trên iPhone."
+          }
+        }
+      }
+    },
+    "Cookies from Safari": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cookie từ Safari"
+          }
+        }
+      }
+    },
+    "Paste cookies: name=value; name2=value2": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dán cookie: name=value; name2=value2"
+          }
+        }
+      }
+    },
+    "Import pasted cookies": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nhập cookie đã dán"
+          }
+        }
+      }
+    },
+    "Import cookies.txt…": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nhập cookies.txt…"
+          }
+        }
+      }
+    },
+    "Domain, e.g. example.com": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tên miền, ví dụ example.com"
+          }
+        }
+      }
+    },
+    "Screen saver style": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kiểu màn hình nghỉ"
+          }
+        }
+      }
+    },
+    "Drifting clock": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đồng hồ chuyển động"
+          }
+        }
+      }
+    },
+    "APLite gradient": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gradient APLite"
+          }
+        }
+      }
+    },
+    "Blurred wallpaper": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hình nền mờ"
+          }
+        }
+      }
+    },
+    "Let the clock drift (avoids burn-in)": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cho đồng hồ chuyển động (tránh burn-in)"
+          }
+        }
+      }
+    },
+    "Fade duration": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thời gian mờ dần"
+          }
+        }
+      }
     }
   },
   "version": "1.0"
