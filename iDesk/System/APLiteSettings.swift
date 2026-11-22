@@ -91,5 +91,10 @@ enum APLiteSettings {
             set { store.set(newValue, forKey: key("system", "lastShutdown")) }
         }
         static var cleanShutdown: Bool { get { APLiteSettings.bool("system", "cleanShutdown", default: true) } set { APLiteSettings.set("system", "cleanShutdown", newValue) } }
+        /// Pages open at the last clean shutdown, so a fresh launch can restore the desktop.
+        static var savedSession: [String] {
+            get { store.array(forKey: key("system", "session")) as? [String] ?? [] }
+            set { store.set(newValue, forKey: key("system", "session")) }
+        }
     }
 }

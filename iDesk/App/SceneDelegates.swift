@@ -30,10 +30,12 @@ final class PhoneSceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     func sceneDidEnterBackground(_ scene: UIScene) {
         GuestRuntime.forwardSceneEvent(#selector(UISceneDelegate.sceneDidEnterBackground(_:)), scene: scene)
+        MemoryManager.shared.releaseCaches(reason: "background")
     }
 
     func sceneWillEnterForeground(_ scene: UIScene) {
         GuestRuntime.forwardSceneEvent(#selector(UISceneDelegate.sceneWillEnterForeground(_:)), scene: scene)
+        MemoryManager.shared.sample()
     }
 
     /// "Open in APLite" from Files / a signing app: install the shared IPAs.

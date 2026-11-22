@@ -17,6 +17,8 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         AudioSessionManager.shared.start()
         MediaControl.shared.start()
+        MemoryManager.shared.start()        // 1 GB target, peak, warnings and leak hints
+        PowerManager.shared.restoreSessionIfNeeded()
         if APLiteSettings.Security.lockOnLaunch { DesktopModel.shared.lockDesktop(force: true) }
         UpdateChecker.shared.startChecking()
         LiveUpdate.check()          // data-only refresh; native code still requires a signed IPA

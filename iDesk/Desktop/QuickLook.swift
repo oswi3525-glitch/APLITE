@@ -47,6 +47,9 @@ enum QuickLook {
         player.play()
     }
 
+    /// Drops the single decoded preview image under memory pressure.
+    static func clearImageCache() { cached = nil }
+
     fileprivate static func image(at url: URL) -> UIImage? {
         if cached?.url == url { return cached?.image }
         let image = UIImage(contentsOfFile: url.path)

@@ -77,7 +77,8 @@ struct TaskManagerView: View {
                 VStack(alignment: .leading, spacing: 2) {
                     Text("Task Manager").font(.system(size: 15, weight: .semibold))
                     Text(verbatim: "\(model.windows.count) \(String(localized: "windows")) · "
-                         + MemoryStatus.format(MemoryStatus.used) + " \(String(localized: "in use"))")
+                         + MemoryStatus.format(MemoryManager.shared.used) + " \(String(localized: "in use")) · "
+                         + String(localized: "peak") + " " + MemoryStatus.format(MemoryManager.shared.peak))
                         .font(.system(size: 11)).foregroundStyle(.secondary)
                 }
                 Spacer()
