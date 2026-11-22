@@ -138,6 +138,18 @@ def trash():
     return finish(img, 192)
 
 
+def camera():
+    img = rounded_tile(192, (88, 170, 210), (26, 96, 132))
+    d = ImageDraw.Draw(img)
+    d.rounded_rectangle((28 * S, 60 * S, 164 * S, 146 * S), radius=16 * S,
+                        fill=(248, 252, 255, 240))
+    d.rounded_rectangle((66 * S, 48 * S, 126 * S, 66 * S), radius=7 * S,
+                        fill=(232, 244, 250, 245))
+    d.ellipse((68 * S, 76 * S, 124 * S, 132 * S), fill=(52, 132, 168, 255))
+    d.ellipse((80 * S, 88 * S, 112 * S, 120 * S), fill=(22, 62, 88, 255))
+    return finish(img, 192)
+
+
 def imageset(name, image192, image64):
     folder = ROOT / name
     folder.mkdir(parents=True, exist_ok=True)
@@ -152,7 +164,8 @@ def imageset(name, image192, image64):
 
 # Source at 192, 1x at 64 for the small dock/desktop glyphs.
 for name, fn in (("BrowserIcon", browser), ("FilesIcon", files),
-                 ("SettingsIcon", settings), ("TrashIcon", trash)):
+                 ("SettingsIcon", settings), ("TrashIcon", trash),
+                 ("CameraIcon", camera)):
     big = fn()
     imageset(name, big, big.resize((64, 64), Image.Resampling.LANCZOS))
 

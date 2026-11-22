@@ -6990,6 +6990,66 @@
           }
         }
       }
+    },
+    "Camera": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Máy ảnh"
+          }
+        }
+      }
+    },
+    "Starting the camera…": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đang khởi động máy ảnh…"
+          }
+        }
+      }
+    },
+    "Allow the camera in the iPhone's Settings.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cho phép dùng máy ảnh trong Cài đặt của iPhone."
+          }
+        }
+      }
+    },
+    "Photo saved to Files": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ảnh đã lưu vào Files"
+          }
+        }
+      }
+    },
+    "Photo saved to Photos and Files": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ảnh đã lưu vào Ảnh và Files"
+          }
+        }
+      }
+    },
+    "Connect an external display first; the camera opens as a window on the desktop.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hãy kết nối màn hình ngoài trước; máy ảnh sẽ mở thành cửa sổ trên desktop."
+          }
+        }
+      }
     }
   },
   "version": "1.0"

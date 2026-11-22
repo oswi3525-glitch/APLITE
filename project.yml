@@ -42,7 +42,7 @@ targets:
         UIRequiresFullScreen: true
         # Apps loaded into APLite ask for permissions as APLite: iOS terminates an app that requests one
         # without its description in Info.plist, so declare them all.
-        NSCameraUsageDescription: An app running in APLite needs this permission.
+        NSCameraUsageDescription: Shows the camera window on the desktop, and lets apps running in APLite use the camera.
         NSMicrophoneUsageDescription: Voice typing on the desktop, and apps running in APLite that use the microphone.
         NSPhotoLibraryUsageDescription: An app running in APLite needs this permission.
         NSPhotoLibraryAddUsageDescription: Saves screenshots of the desktop, and photos from apps running in APLite.

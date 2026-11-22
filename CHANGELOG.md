@@ -7,6 +7,10 @@ All notable changes to APLite are documented here. APLite is based on iDesk v0.6
 
 ### Added
 
+- **Camera window:** open *Camera* from the app menu for a live preview; the shutter saves the
+  photo to Files and Photos, the rotate glyph switches front/back camera, and the session stops when
+  the window is minimized or closed. The buttons are wired to DesktopModel hit testing, so they work
+  on an external display and in preview mode.
 - **Saved login cookies (vault):** imported cookies and cookies captured from WebKit are persisted
   in `cookies.json` under Application Support, restored at launch, listed per domain in Settings,
   exportable as JSON and removable per domain. New buttons: *Save login cookies* and *Export saved…*.

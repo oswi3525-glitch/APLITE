@@ -374,7 +374,9 @@ private struct WindowView: View {
                         .frame(height: Layout.bookmarksBar)
                 }
             }
-            if let guest = window.guestWindow {
+            if window.kind == .camera {
+                CameraView(frame: f, cursor: cursor)
+            } else if let guest = window.guestWindow {
                 GuestWindowHost(guest: guest, hidden: !window.isShown, area: window.guestRect) { on in window.onFullscreen?(on) }
             } else if let web = window.webView {
                 WebViewHost(webView: web).id(ObjectIdentifier(web))     // another tab: another web view

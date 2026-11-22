@@ -33,6 +33,8 @@ The original MIT license and copyright notice are preserved in [LICENSE](LICENSE
   auto-hide, all live in Settings → Dock.
 - **Wallpapers:** a new APLite default set, photo import from Photos **or Files**, blur, persistence
   and per-workspace choices.
+- **Camera window:** open *Camera* from the app menu. Live preview, front/back switch and a shutter
+  that saves to Files and Photos; the camera session pauses when the window is minimized or closed.
 - **Cookies & saved logins:** paste a `Cookie:` header for a domain or import a Netscape
   `cookies.txt` from Files into APLite's shared WebKit cookie store; APLite also keeps a local
   cookie vault, restores it at launch, and can export it as JSON. iOS does not expose Safari's jar

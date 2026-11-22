@@ -56,7 +56,7 @@
 	<key>NSCalendarsWriteOnlyAccessUsageDescription</key>
 	<string>An app running in APLite needs this permission.</string>
 	<key>NSCameraUsageDescription</key>
-	<string>An app running in APLite needs this permission.</string>
+	<string>Shows the camera window on the desktop, and lets apps running in APLite use the camera.</string>
 	<key>NSContactsUsageDescription</key>
 	<string>An app running in APLite needs this permission.</string>
 	<key>NSFaceIDUsageDescription</key>

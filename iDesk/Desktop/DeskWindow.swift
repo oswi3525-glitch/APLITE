@@ -11,6 +11,8 @@ final class DeskWindow: NSObject, ObservableObject, Identifiable, WKUIDelegate, 
         case system(DesktopPage)
         /// An iOS app from an IPA.
         case guest
+        /// A live camera preview with a shutter (Camera.swift).
+        case camera
     }
 
     let id = UUID()
@@ -33,6 +35,7 @@ final class DeskWindow: NSObject, ObservableObject, Identifiable, WKUIDelegate, 
         case .browser: return "globe"
         case let .system(page): return page.symbol
         case .guest: return "app.fill"
+        case .camera: return "camera.fill"
         }
     }
     @Published var frame: CGRect
@@ -240,6 +243,17 @@ final class DeskWindow: NSObject, ObservableObject, Identifiable, WKUIDelegate, 
         self.kind = .guest
         super.init()
         title = app.name
+    }
+
+    /// A camera window. It has no web view or guest app: CameraModel owns the AVCaptureSession.
+    init(camera frame: CGRect) {
+        self.frame = frame
+        self.initialURL = URL(string: "idesk-camera:")!
+        self.guestApp = nil
+        self.guestWindow = nil
+        self.kind = .camera
+        super.init()
+        title = String(localized: "Camera")
     }
 
     /// A browser window, or the window of one of iDesk's own apps when `url` is one of its pages (idesk://settings…)

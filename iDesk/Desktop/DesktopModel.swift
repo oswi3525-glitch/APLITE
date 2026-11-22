@@ -230,9 +230,11 @@ final class DesktopModel: ObservableObject {
         Shortcut(name: String(localized: "Files"), symbol: "folder.fill", url: DesktopPage.files.url.absoluteString, hue: 0.57, asset: "FilesIcon"),
         Shortcut(name: String(localized: "Settings"), symbol: "gearshape.fill", url: DesktopPage.settings.url.absoluteString, hue: 0.0, asset: "SettingsIcon"),
         Shortcut(name: String(localized: "Trash"), symbol: "trash.fill", url: trashURL, hue: 0.0, asset: "TrashIcon"),
+        Shortcut(name: String(localized: "Camera"), symbol: "camera.fill", url: cameraURL, hue: 0.52, asset: "CameraIcon"),
     ]
     /// The Trash's desktop icon opens Files at the Trash (FilesExtras.swift).
     static let trashURL = "idesk-trash:"
+    static let cameraURL = "idesk-camera:"
 
     @Published var windows: [DeskWindow] = []      // order = stacking order (last = topmost)
     @Published var focusedID: UUID? {
@@ -648,7 +650,9 @@ final class DesktopModel: ObservableObject {
             return Shortcut(name: String(localized: "\(s.name) (web)"), symbol: s.symbol, url: s.url, hue: s.hue)
         }
         let links = browsing.desktopLinks.map { Shortcut(name: $0.title, symbol: "globe", url: $0.url, hue: Self.hue(for: $0.url)) }
-        func isOwn(_ s: Shortcut) -> Bool { DesktopPage(URL(string: s.url)) != nil || s.url == Self.trashURL }
+        func isOwn(_ s: Shortcut) -> Bool {
+            DesktopPage(URL(string: s.url)) != nil || s.url == Self.trashURL || s.url == Self.cameraURL
+        }
         let own = builtIn.filter(isOwn), web = builtIn.filter { !isOwn($0) }
         let webApps = WebApps.shared.all.map { Shortcut(name: $0.title, symbol: "app.badge", url: $0.url, hue: Self.hue(for: $0.url), webApp: true) }
         let result = web + links + webApps + own + apps.map { Shortcut(name: $0.name, symbol: "app.fill", url: "", hue: 0.5, app: $0) }
@@ -670,6 +674,7 @@ final class DesktopModel: ObservableObject {
         if let app = item.app { openApp(app) }
         else if let file = item.file { openFile(file) }
         else if item.url == Self.trashURL { openFile(Trash.folder) }
+        else if item.url == Self.cameraURL { openCamera() }
         else if item.webApp { openWebApp(item.url) }
         else { openWindow(item.url) }
     }
@@ -1147,6 +1152,26 @@ final class DesktopModel: ObservableObject {
     /// Puts a window in a part of the screen (for code outside this file).
     func snapWindow(_ w: DeskWindow, _ s: Snap) { snap(w, s) }
 
+    // MARK: Camera
+
+    /// Opens a window with a live camera preview. There is only one camera window: clicking its
+    /// icon again brings it forward instead of starting a second capture session.
+    func openCamera() {
+        guard isExternalConnected else {
+            notice = String(localized: "Connect an external display first; the camera opens as a window on the desktop.")
+            return
+        }
+        if let existing = windows.first(where: { $0.kind == .camera }) { focus(existing); return }
+        let area = desktopArea
+        let size = CGSize(width: min(520, area.width - 16), height: min(560, area.height - 16))
+        let f = CGRect(x: (area.width - size.width) / 2, y: max(8, (area.height - size.height) / 2),
+                       width: size.width, height: size.height)
+        let w = DeskWindow(camera: f)
+        add(w)
+        focusedID = w.id
+        CameraModel.shared.start()
+    }
+
     // MARK: Apps installed from IPA files
 
     /// Loads the guest app into the process (first time) and puts its window on the desktop.
@@ -1259,7 +1284,9 @@ final class DesktopModel: ObservableObject {
 
     func focus(_ w: DeskWindow) {
         if w.workspace != workspace { setWorkspace(w.workspace) }
+        let wasMinimized = w.isMinimized
         w.isMinimized = false
+        if w.kind == .camera, wasMinimized { CameraModel.shared.start() }
         if let i = windows.firstIndex(where: { $0.id == w.id }), i != windows.count - 1 {
             windows.append(windows.remove(at: i))
         }
@@ -1321,6 +1348,7 @@ final class DesktopModel: ObservableObject {
         if w.isApp, isGuestDrag { Self.guestInput { GuestTouch.cancel() }; drag = .none }
         // Shrink the window away before the guest app is suspended.
         withAnimation(.easeIn(duration: 0.18)) { windows.removeAll { $0.id == w.id } }
+        if w.kind == .camera { CameraModel.shared.stop() }
         // Closing an app: it gets the "went to the background" events, so it stops playing and pauses.
         if let guest = w.guestWindow { GuestRuntime.suspendApp(with: guest) }
         focusedID = windows.last(where: { $0.isShown })?.id
@@ -1329,6 +1357,7 @@ final class DesktopModel: ObservableObject {
     }
 
     func minimize(_ w: DeskWindow) {
+        if w.kind == .camera { CameraModel.shared.stop() }
         withAnimation(.easeInOut(duration: 0.2)) { w.isMinimized = true }
         if focusedID == w.id { focusedID = windows.last(where: { $0.isShown })?.id }
         scheduleSave()
@@ -2126,6 +2155,12 @@ final class DesktopModel: ObservableObject {
                 return
             }
             w.addressDraft = nil       // clicking the page leaves the address field
+            if w.kind == .camera {
+                let camera = CameraModel.shared
+                if camera.flipRect(in: f).contains(p) { camera.flip(); return }
+                if camera.shutterRect(in: f).contains(p) { camera.capture(); return }
+                return
+            }
             if let guest = w.guestWindow {
                 tapGuest(guest, at: localPoint(p, in: w), hold: 0.06)
             } else if let web = w.webView {

@@ -76,7 +76,7 @@
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "Một app chạy trong APLite cần quyền này."
+            "value": "Hiển thị cửa sổ máy ảnh trên desktop và cho phép các app chạy trong APLite dùng máy ảnh."
           }
         }
       }
