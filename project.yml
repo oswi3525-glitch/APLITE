@@ -104,3 +104,5 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.hieuk.aplite.tests
         SWIFT_VERSION: "5.0"
+        GENERATE_INFOPLIST_FILE: YES
+        CODE_SIGNING_ALLOWED: NO
