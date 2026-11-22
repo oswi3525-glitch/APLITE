@@ -8,7 +8,6 @@ final class CacheManager: ObservableObject {
     static let shared = CacheManager()
 
     @Published private(set) var lastTrim = Date.distantPast
-    @Published private(set) var lastRemovedRecords = 0
 
     private var timer: Timer?
     private let dataStore = WKWebsiteDataStore.default()
@@ -26,17 +25,9 @@ final class CacheManager: ObservableObject {
         URLCache.shared.removeAllCachedResponses()
         QuickLook.clearImageCache()
         let types: Set<String> = [WKWebsiteDataTypeDiskCache, WKWebsiteDataTypeMemoryCache]
-        dataStore.fetchDataRecords(ofTypes: types) { [weak self] records in
-            guard let self else { return }
-            let cutoff = Date().addingTimeInterval(-3 * 24 * 3600)
-            let old = records.filter { ($0.modificationDate ?? .distantPast) < cutoff }
-            guard !old.isEmpty else { return }
-            self.dataStore.removeData(ofTypes: types, for: old) {
-                DispatchQueue.main.async {
-                    self.lastTrim = Date()
-                    self.lastRemovedRecords = old.count
-                }
-            }
+        let cutoff = Date().addingTimeInterval(-3 * 24 * 3600)
+        dataStore.removeData(ofTypes: types, modifiedSince: cutoff) { [weak self] in
+            DispatchQueue.main.async { self?.lastTrim = Date() }
         }
         DispatchQueue.main.async { self.lastTrim = Date() }
     }
