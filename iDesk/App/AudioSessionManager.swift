@@ -167,6 +167,9 @@ final class AudioSessionManager: NSObject, ObservableObject {
             let resume = options.contains(.shouldResume)
             note(.interruption, "Interruption ended (shouldResume=\(resume ? "yes" : "no"))")
             if resume { reactivateCurrentMode(reason: "interruption ended") } else { refresh() }
+        @unknown default:
+            note(.diagnostic, "Unknown audio interruption type")
+            refresh()
         }
     }
 

@@ -27,6 +27,7 @@ struct SystemSettingsView: View {
     @State private var showBuildCenter = false
 
     private var apliteUsage: (files: Int, bytes: UInt64) { APLiteFileManager.systemUsage() }
+    private var brightnessText: String { "\(Int((model.externalBrightness * 100).rounded()))%" }
 
     var body: some View {
         List {
@@ -99,7 +100,7 @@ struct SystemSettingsView: View {
             }
 
             Section(SettingsGroup.display.title) {
-                LabeledContent("Brightness", value: "\(Int((model.externalBrightness * 100).rounded())%)")
+                LabeledContent("Brightness", value: brightnessText)
                 Button("TV mode (720p, larger text)") {
                     DesktopPages.handle(.settings, action: "tvMode", value: "")
                 }

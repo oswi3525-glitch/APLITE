@@ -39,6 +39,7 @@ final class SecurityManager: ObservableObject {
     static let shared = SecurityManager()
 
     @Published private(set) var isConfigured = false
+    @Published private(set) var isLocked = false
     @Published private(set) var failedAttempts = 0
     @Published private(set) var lockoutUntil: Date?
 
