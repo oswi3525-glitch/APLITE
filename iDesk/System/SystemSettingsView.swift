@@ -25,6 +25,9 @@ struct SystemSettingsView: View {
 
     @State private var showPasscode = false
     @State private var showBuildCenter = false
+    @State private var showCertificatePassword = false
+    @State private var certificatePassword = ""
+    @State private var pendingCertificate: Data?
 
     private var apliteUsage: (files: Int, bytes: UInt64) { APLiteFileManager.systemUsage() }
     private var brightnessText: String { "\(Int((model.externalBrightness * 100).rounded()))%" }
@@ -130,6 +133,23 @@ struct SystemSettingsView: View {
         .navigationBarTitleDisplayMode(.inline)
         .sheet(isPresented: $showPasscode) { PasscodeSetupView() }
         .sheet(isPresented: $showBuildCenter) { BuildCenterView() }
+        .alert("Certificate password", isPresented: $showCertificatePassword) {
+            SecureField("Password", text: $certificatePassword)
+            Button("Cancel", role: .cancel) { pendingCertificate = nil }
+            Button("Import") {
+                guard let data = pendingCertificate else { return }
+                do {
+                    try certificates.import(p12: data, password: certificatePassword)
+                    model.showToast(String(localized: "Certificate imported."))
+                } catch {
+                    model.showToast(error.localizedDescription)
+                }
+                pendingCertificate = nil
+                certificatePassword = ""
+            }
+        } message: {
+            Text("Enter the password for the .p12 / .pfx file. It is stored in the Keychain and never logged.")
+        }
     }
 
     private func minuteLabel(_ minutes: Int) -> String {
@@ -140,11 +160,9 @@ struct SystemSettingsView: View {
         DocumentPicker.present { urls in
             guard let url = urls.first else { return }
             do {
-                let data = try CertificateManager.shared.readCertificate(from: url)
-                // The password comes from a secure prompt in the Apps page; here we validate the
-                // file first and report a concrete error without ever logging it.
-                try CertificateManager.shared.verify(p12: data, password: "")
-                model.showToast(String(localized: "Certificate file read. Add its password in Apps → Certificate."))
+                pendingCertificate = try CertificateManager.shared.readCertificate(from: url)
+                certificatePassword = ""
+                showCertificatePassword = true
             } catch {
                 model.showToast(error.localizedDescription)
             }

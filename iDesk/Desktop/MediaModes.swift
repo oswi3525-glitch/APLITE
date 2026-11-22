@@ -233,6 +233,12 @@ enum WebVolume {
         });
         return (ctx ? ctx.state : 'none') + ' ' + peak.toFixed(3);
       };
+      // Called from native code after an interruption / route change. A Web Audio context created
+      // while the session was inactive stays suspended forever without this nudge.
+      window.__ideskVolumeResume = () => {
+        context();
+        pending.forEach(applyTo);
+      };
     })();
     """#, injectionTime: .atDocumentStart, forMainFrameOnly: false)
 }

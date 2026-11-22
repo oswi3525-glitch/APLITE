@@ -30,6 +30,8 @@ final class AudioSessionManager: NSObject, ObservableObject {
     /// Set once at launch. Guest apps share this process and may change the category themselves;
     /// when the last one closes we put the desktop's playback baseline back.
     var guestAppsActive: () -> Bool = { false }
+    /// Set at launch. Web pages need a small JS nudge to resume a suspended Web Audio context.
+    var resumeWebAudio: (() -> Void)?
 
     private var started = false
     private var recording = false
@@ -81,7 +83,11 @@ final class AudioSessionManager: NSObject, ObservableObject {
         let session = AVAudioSession.sharedInstance()
         do {
             if sessionActive, session.category == .playback, session.mode == .default {
+                // Guest apps share this session and may have deactivated it without telling us.
+                // setActive(true) when already active is a harmless no-op, but it guarantees sound.
+                try? session.setActive(true)
                 refresh()
+                notifyResumed()
                 return
             }
             if sessionActive { try session.setActive(false, options: .notifyOthersOnDeactivation) }
@@ -90,7 +96,7 @@ final class AudioSessionManager: NSObject, ObservableObject {
             sessionActive = true
             note(.playback, "Playback session activated (\(reason))")
             refresh()
-            NotificationCenter.default.post(name: .apliteAudioDidResume, object: self)
+            notifyResumed()
         } catch {
             note(.error, "Cannot activate playback session (\(reason)): \(error.localizedDescription)")
             refresh()
@@ -98,7 +104,10 @@ final class AudioSessionManager: NSObject, ObservableObject {
     }
 
     /// Switches to a recording session. Voice Typing must pair this with `endRecording()`.
-    func beginRecording(reason: String = "voice typing") {
+    /// Returns whether the switch succeeded: callers must not start an engine after a failure,
+    /// otherwise the session is left in `.playAndRecord` and the desktop loses its audio.
+    @discardableResult
+    func beginRecording(reason: String = "voice typing") -> Bool {
         let session = AVAudioSession.sharedInstance()
         do {
             if sessionActive { try session.setActive(false, options: .notifyOthersOnDeactivation) }
@@ -109,9 +118,12 @@ final class AudioSessionManager: NSObject, ObservableObject {
             recording = true
             note(.recording, "Recording session activated (\(reason))")
             refresh()
+            return true
         } catch {
             note(.error, "Cannot activate recording session (\(reason)): \(error.localizedDescription)")
+            sessionActive = false
             refresh()
+            return false
         }
     }
 
@@ -166,7 +178,13 @@ final class AudioSessionManager: NSObject, ObservableObject {
                 .map(AVAudioSession.InterruptionOptions.init(rawValue:)) ?? []
             let resume = options.contains(.shouldResume)
             note(.interruption, "Interruption ended (shouldResume=\(resume ? "yes" : "no"))")
-            if resume { reactivateCurrentMode(reason: "interruption ended") } else { refresh() }
+            // Many interruptions (other apps' audio, route takeovers) end WITHOUT .shouldResume.
+            // Waiting for that flag was the main cause of "no sound after a phone call": reactivate
+            // unconditionally a moment later. setActive(true) is safe when already active.
+            DispatchQueue.main.asyncAfter(deadline: .now() + (resume ? 0.05 : 0.35)) { [weak self] in
+                self?.reactivateCurrentMode(reason: "interruption ended")
+            }
+            refresh()
         @unknown default:
             note(.diagnostic, "Unknown audio interruption type")
             refresh()
@@ -183,11 +201,16 @@ final class AudioSessionManager: NSObject, ObservableObject {
         note(.route, "Route changed: \(reason) (was: \(from))")
         refresh()
         // Unplugging headphones or a display can leave the session inactive without an interruption.
-        // Re-activate without overriding a guest app that deliberately changed the category.
-        let session = AVAudioSession.sharedInstance()
-        if !sessionActive, !recording, !isInterrupted {
+        // Re-assert playback on EVERY route change (not only when our cached flag says inactive):
+        // a guest app may have deactivated the session behind our back.
+        if !recording, !isInterrupted {
             activatePlayback(reason: "route change")
         }
+    }
+
+    private func notifyResumed() {
+        NotificationCenter.default.post(name: .apliteAudioDidResume, object: self)
+        resumeWebAudio?()
     }
 
     private func reactivateCurrentMode(reason: String) {

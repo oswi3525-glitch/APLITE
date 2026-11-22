@@ -11,6 +11,7 @@ struct BuildCenterView: View {
     @State private var workflow = "build.yml"
     @State private var ref = "main"
     @State private var error: String?
+    @State private var showCreator = false
 
     var body: some View {
         NavigationStack {
@@ -34,6 +35,8 @@ struct BuildCenterView: View {
                 }
 
                 Section("Project") {
+                    Button("Create a new app project") { showCreator = true }
+                        .buttonStyle(APLiteGlassButtonStyle())
                     Button("Import project files from Files") {
                         DocumentPicker.present { urls in
                             do {
@@ -104,5 +107,6 @@ struct BuildCenterView: View {
             }
         }
         .preferredColorScheme(.dark)
+        .sheet(isPresented: $showCreator) { AppCreatorView() }
     }
 }

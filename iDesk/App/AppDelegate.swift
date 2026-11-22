@@ -15,6 +15,14 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         AudioSessionManager.shared.guestAppsActive = {
             DesktopModel.shared.windows.contains { $0.guestWindow != nil && $0.isShown }
         }
+        // Web Audio contexts can stay suspended after an interruption; nudge every open tab.
+        AudioSessionManager.shared.resumeWebAudio = {
+            for window in DesktopModel.shared.windows {
+                for tab in window.tabs {
+                    tab.evaluateJavaScript("window.__ideskVolumeResume && window.__ideskVolumeResume()")
+                }
+            }
+        }
         AudioSessionManager.shared.start()
         MediaControl.shared.start()
         MemoryManager.shared.start()        // 1 GB target, peak, warnings and leak hints

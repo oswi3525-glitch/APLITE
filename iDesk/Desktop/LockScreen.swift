@@ -66,6 +66,7 @@ extension DesktopModel {
         guard force || LockSettings.lockEnabled, isExternalConnected, !isLocked else { return }
         closePanels()
         isLocked = true
+        SecurityManager.shared.lock()   // keep APLite's security state in sync with the view
     }
 
     /// Asks for Face ID / Touch ID / the passcode on the iPhone and unlocks.
@@ -73,7 +74,12 @@ extension DesktopModel {
         let ctx = LAContext()
         ctx.localizedCancelTitle = String(localized: "Cancel")
         ctx.evaluatePolicy(.deviceOwnerAuthentication, localizedReason: String(localized: "Unlock the desktop")) { ok, _ in
-            DispatchQueue.main.async { if ok { self.isLocked = false; self.lastInput = Date() } }
+            DispatchQueue.main.async {
+                guard ok else { return }
+                self.isLocked = false
+                SecurityManager.shared.unlock()
+                self.lastInput = Date()
+            }
         }
     }
 

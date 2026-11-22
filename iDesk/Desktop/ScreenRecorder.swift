@@ -171,7 +171,10 @@ final class MediaControl: NSObject, ObservableObject {
         let session = AVAudioSession.sharedInstance()
         volumeObservation = session.observe(\.outputVolume, options: [.new]) { [weak self] _, change in
             guard let v = change.newValue else { return }
-            DispatchQueue.main.async { self?.show(volume: v) }
+            DispatchQueue.main.async {
+                if v > 0.001 { self?.mutedLevel = nil }   // hardware buttons un-muted us
+                self?.show(volume: v)
+            }
         }
         let center = MPRemoteCommandCenter.shared()
         center.togglePlayPauseCommand.addTarget { [weak self] _ in self?.playPause(); return .success }

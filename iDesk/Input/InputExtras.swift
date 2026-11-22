@@ -42,7 +42,10 @@ final class VoiceTyping: ObservableObject {
         }
         // The shared manager switches the category and, crucially, restores playback when we stop.
         // Setting the category here directly used to leave the whole desktop silent after voice typing.
-        AudioSessionManager.shared.beginRecording()
+        guard AudioSessionManager.shared.beginRecording() else {
+            problem = String(localized: "The microphone could not be started. Close other apps using it and try again.")
+            return
+        }
         let request = SFSpeechAudioBufferRecognitionRequest()
         request.shouldReportPartialResults = true
         request.addsPunctuation = true
@@ -53,7 +56,13 @@ final class VoiceTyping: ObservableObject {
         input.installTap(onBus: 0, bufferSize: 1024, format: input.outputFormat(forBus: 0)) { buffer, _ in request.append(buffer) }
         engine.prepare()
         do { try engine.start() } catch {
-            problem = error.localizedDescription; return
+            // Never leave the shared session in .playAndRecord: that ducks/mutes the whole desktop.
+            input.removeTap(onBus: 0)
+            self.request = nil
+            task = nil
+            AudioSessionManager.shared.endRecording()
+            problem = error.localizedDescription
+            return
         }
         isListening = true
         task = recognizer.recognitionTask(with: request) { [weak self] result, error in
