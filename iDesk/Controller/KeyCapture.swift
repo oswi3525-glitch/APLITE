@@ -228,7 +228,6 @@ final class PhoneWindow: UIWindow {
         // Locked, or the screen saver: a key only wakes the desktop.
         if model.isLocked || model.showScreenSaver { model.noteInput(); return true }
         let flags = key.modifierFlags
-        let command = flags.contains(.command) || flags.contains(.control)
         let shift = flags.contains(.shift)
         let chars = key.charactersIgnoringModifiers.lowercased()
 

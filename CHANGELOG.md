@@ -41,8 +41,12 @@ All notable changes to APLite are documented here. APLite is based on iDesk v0.6
 
 - Static checks in the development container: YAML/JSON/plist parsing, asset validation, shell
   syntax and source-hit-test consistency (model and view share the same rects).
-- Build and IPA packaging: performed by GitHub Actions on `macos-15`; see the workflow summary for
-  the commit under test. No on-device testing is claimed.
+- GitHub Actions `Build APLite` run `44985429096` on `macos-15` built successfully from
+  `aplite-dev` and uploaded `APLite-unsigned.ipa` (2,412,749 bytes).
+- The IPA was unpacked and checked: `Payload/APLite.app`, `CFBundleDisplayName = APLite`,
+  `CFBundleName = APLite`, `CFBundleShortVersionString = 1.0.0`, bundle id unchanged, branded
+  launch screen and repository keys present.
+- No simulator or on-device test was performed; no signed IPA was produced (no certificate).
 
 ## Upstream
 
