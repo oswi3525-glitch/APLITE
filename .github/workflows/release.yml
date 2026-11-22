@@ -56,6 +56,10 @@ jobs:
           https://github.com/itshieuk/iDesk
 
           APLite is not an official release or endorsement of the original iDesk project.
+
+          This is an unsigned development build compiled by GitHub Actions. Unit tests passed in CI,
+          but on-device verification (audio, lock screen, power, certificates, files) is still
+          pending — see SYSTEM_TEST_PLAN.md and AUDIO_DIAGNOSTICS.md in the repository.
           EOF
           if gh release view "$TAG" >/dev/null 2>&1; then
             gh release upload "$TAG" "build/APLite-unsigned-$VERSION.ipa" --clobber

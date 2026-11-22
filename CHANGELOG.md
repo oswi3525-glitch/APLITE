@@ -3,6 +3,13 @@
 All notable changes to APLite are documented here. APLite is based on iDesk v0.6.3
 (upstream commit `2179dbd`); the original upstream history is not rewritten.
 
+## 1.2.0 (unsigned development release)
+
+Built by GitHub Actions `Build APLite` run `45003598269` on branch `fix/audio-and-hardening`:
+unsigned IPA produced and all `APLiteTests` groups passed. The sections below describe this build.
+**On-device verification is still pending** — see `SYSTEM_TEST_PLAN.md` and
+`AUDIO_DIAGNOSTICS.md`; no hardware behaviour is claimed as tested.
+
 ## Unreleased — system expansion & independent modules (branch `fix/audio-and-hardening`)
 
 ### Architecture
