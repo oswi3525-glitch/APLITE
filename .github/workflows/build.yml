@@ -1,35 +1,71 @@
-name: Build
+name: Build APLite
 
-# Checks that every push and pull request still builds, and keeps the unsigned IPA for a while.
+# Every push to aplite-dev (and manual runs) must produce a buildable unsigned IPA.
 on:
   push:
-    branches: [main]
-  pull_request:
+    branches: [aplite-dev]
   workflow_dispatch:
 
 concurrency:
   group: build-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+
 jobs:
   build:
+    name: Build unsigned IPA
     runs-on: macos-15
-    timeout-minutes: 30
+    timeout-minutes: 40
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout source
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Select Xcode
+        # macos-15 ships Xcode 16; selecting explicitly keeps the runner's default from silently changing.
+        run: sudo xcode-select -s /Applications/Xcode.app/Contents/Developer && xcodebuild -version
 
       - name: Install XcodeGen
         run: brew install xcodegen
 
+      - name: Resolve package dependencies
+        # The project currently has no Swift Package dependencies. The step is kept so a future
+        # Package.swift is resolved by CI instead of failing at first use.
+        run: |
+          if [ -f Package.swift ] || grep -q '^packages:' project.yml; then
+            xcodegen generate
+            xcodebuild -project APLite.xcodeproj -scheme APLite -resolvePackageDependencies
+          else
+            echo "No Swift Package dependencies declared."
+          fi
+
       - name: Build unsigned IPA
+        id: build
         run: BUILD_NUMBER=${{ github.run_number }} scripts/build-ipa.sh
+
+      - name: Rename artifact for its actual signing state
+        run: mv build/APLite.ipa build/APLite-unsigned.ipa
 
       - name: Upload IPA
         uses: actions/upload-artifact@v4
         with:
-          name: iDesk-${{ github.sha }}
-          path: build/iDesk.ipa
+          name: APLite-unsigned.ipa
+          path: build/APLite-unsigned.ipa
+          if-no-files-found: error
           retention-days: 14
+
+      - name: Build summary
+        if: always()
+        run: |
+          {
+            echo "## APLite build"
+            echo "- Status: ${{ steps.build.outcome }}"
+            echo "- Artifact: APLite-unsigned.ipa (unsigned — sign it before installing)"
+            echo "- Commit: ${{ github.sha }}"
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload build log
         if: failure()
@@ -37,3 +73,5 @@ jobs:
         with:
           name: xcodebuild-log
           path: build/xcodebuild.log
+          if-no-files-found: warn
+          retention-days: 7

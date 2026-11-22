@@ -1,13 +1,15 @@
-name: Release
+name: Release APLite
 
-# Push a tag such as v0.2.0 (or run it by hand with a version) to build the unsigned IPA and publish a release.
+# Pushing a tag such as v1.0.0 builds an unsigned APLite IPA and publishes it.
+# This workflow is intentionally not run by the development branch; releases are created only
+# when explicitly requested by pushing a tag or running it by hand.
 on:
   push:
     tags: ["v*"]
   workflow_dispatch:
     inputs:
       version:
-        description: "Version to release, e.g. 0.2.0 (the tag becomes v0.2.0)"
+        description: "Version to release, e.g. 1.0.0 (the tag becomes v1.0.0)"
         required: true
 
 permissions:
@@ -16,7 +18,7 @@ permissions:
 jobs:
   release:
     runs-on: macos-15
-    timeout-minutes: 30
+    timeout-minutes: 40
     steps:
       - uses: actions/checkout@v4
 
@@ -38,8 +40,8 @@ jobs:
       - name: Build unsigned IPA
         run: VERSION=${{ steps.version.outputs.version }} BUILD_NUMBER=${{ github.run_number }} scripts/build-ipa.sh
 
-      - name: Name the IPA after the version
-        run: mv build/iDesk.ipa "build/iDesk-${{ steps.version.outputs.version }}.ipa"
+      - name: Name the IPA after its signing state and version
+        run: mv build/APLite.ipa "build/APLite-unsigned-${{ steps.version.outputs.version }}.ipa"
 
       - name: Publish the release
         env:
@@ -48,25 +50,16 @@ jobs:
           VERSION: ${{ steps.version.outputs.version }}
         run: |
           cat > notes.md <<EOF
-          ## Install
+          APLite $VERSION — unsigned IPA. Sign it with your own certificate (ESign, Feather, Scarlet, ...) before installing.
 
-          1. Download **iDesk-$VERSION.ipa** below. It is unsigned.
-          2. Open it in a signing app (ESign, Feather, Scarlet, …), sign it and install it.
-          3. Connect your iPhone to a monitor with a USB-C → HDMI/DisplayPort cable.
+          APLite is an independently developed project based on the original iDesk project by itshieuk:
+          https://github.com/itshieuk/iDesk
 
-          To run iOS apps inside iDesk, see [Running iOS apps from IPA files](https://github.com/${{ github.repository }}#running-ios-apps-from-ipa-files).
-
-          ## Cài đặt
-
-          1. Tải **iDesk-$VERSION.ipa** bên dưới (chưa ký).
-          2. Mở bằng app ký (ESign, Feather, Scarlet…), ký rồi cài.
-          3. Cắm iPhone vào màn hình bằng cáp USB-C → HDMI/DisplayPort.
-
-          Chạy app iOS bên trong iDesk: xem [Chạy app iOS từ file IPA](https://github.com/${{ github.repository }}/blob/main/README.vi.md#chạy-app-ios-từ-file-ipa).
+          APLite is not an official release or endorsement of the original iDesk project.
           EOF
           if gh release view "$TAG" >/dev/null 2>&1; then
-            gh release upload "$TAG" "build/iDesk-$VERSION.ipa" --clobber
+            gh release upload "$TAG" "build/APLite-unsigned-$VERSION.ipa" --clobber
           else
-            gh release create "$TAG" "build/iDesk-$VERSION.ipa" --title "iDesk $VERSION" \
+            gh release create "$TAG" "build/APLite-unsigned-$VERSION.ipa" --title "APLite $VERSION" \
               --notes-file notes.md --generate-notes --target "$GITHUB_SHA"
           fi
