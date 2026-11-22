@@ -192,23 +192,92 @@ struct LockScreenView: View {
     }
 }
 
+/// APLite's own passcode entry. The passcode never leaves this view: it is compared against a
+/// salted hash in the Keychain by SecurityManager, which also enforces the lockout.
+private struct PasscodeUnlockView: View {
+    @ObservedObject private var security = SecurityManager.shared
+    @State private var code = ""
+    @State private var message: String?
+    let onUnlock: () -> Void
+
+    var body: some View {
+        VStack(spacing: 12) {
+            SecureField(String(localized: "APLite passcode"), text: $code)
+                .textContentType(.password)
+                .keyboardType(.numberPad)
+                .textFieldStyle(.roundedBorder)
+                .frame(maxWidth: 260)
+                .onSubmit(verify)
+            if let message {
+                Text(message).font(.footnote).foregroundStyle(.red)
+                    .multilineTextAlignment(.center).frame(maxWidth: 300)
+            }
+            if let deadline = security.lockoutUntil, deadline > Date() {
+                TimelineView(.periodic(from: .now, by: 1)) { ctx in
+                    Text(String(format: String(localized: "Try again in %d s"),
+                                max(0, Int(deadline.timeIntervalSince(ctx.date)))))
+                        .font(.footnote).foregroundStyle(.secondary)
+                }
+            }
+            Button(action: verify) {
+                Label(String(localized: "Unlock"), systemImage: "lock.open")
+                    .frame(maxWidth: 260, minHeight: 50)
+            }
+            .buttonStyle(.borderedProminent)
+            .disabled(code.isEmpty)
+        }
+    }
+
+    private func verify() {
+        do {
+            try security.verifyPasscode(code)
+            code = ""
+            message = nil
+            security.unlock()
+            onUnlock()
+        } catch {
+            code = ""
+            message = error.localizedDescription
+        }
+    }
+}
+
 /// On the iPhone while the desktop is locked.
 struct LockedRemote: View {
     @ObservedObject var model: DesktopModel
+    @ObservedObject private var security = SecurityManager.shared
+
+    private func opened() {
+        model.isLocked = false
+        model.lastInput = Date()
+    }
+
     var body: some View {
         VStack(spacing: 22) {
             Spacer()
             Image(systemName: "lock.display").font(.system(size: 64)).foregroundStyle(.tint)
             Text("The desktop is locked").font(.title2.bold())
-            Button { model.unlockDesktop() } label: {
-                Label(String(localized: "Unlock with \(LockSettings.biometryName)"), systemImage: "faceid")
-                    .font(.headline).frame(maxWidth: 360, minHeight: 54)
+            if security.isConfigured {
+                PasscodeUnlockView(onUnlock: opened)
+                Button { model.unlockDesktop() } label: {
+                    Label(String(localized: "Use \(LockSettings.biometryName) instead"), systemImage: "faceid")
+                        .font(.subheadline)
+                }
+                .buttonStyle(.bordered)
+            } else {
+                Button { model.unlockDesktop() } label: {
+                    Label(String(localized: "Unlock with \(LockSettings.biometryName)"), systemImage: "faceid")
+                        .font(.headline).frame(maxWidth: 360, minHeight: 54)
+                }
+                .buttonStyle(.borderedProminent)
             }
-            .buttonStyle(.borderedProminent)
             Spacer()
         }
         .padding(24)
-        .onAppear { model.unlockDesktop() }
+        .onAppear {
+            // Never auto-prompt when APLite's own passcode is required — that would bypass it.
+            if !security.isConfigured { model.unlockDesktop() }
+        }
     }
 }
 

@@ -17,6 +17,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         AudioSessionManager.shared.start()
         MediaControl.shared.start()
+        if APLiteSettings.Security.lockOnLaunch { DesktopModel.shared.lockDesktop(force: true) }
         UpdateChecker.shared.startChecking()
         LiveUpdate.check()          // data-only refresh; native code still requires a signed IPA
         UIDevice.current.isBatteryMonitoringEnabled = true   // battery level in the taskbar

@@ -93,6 +93,8 @@ targets:
     sources:
       - Tests
       - iDesk/App/AudioDiagnostics.swift
+      - iDesk/System/APLiteSettings.swift
+      - iDesk/System/SecurityManager.swift
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.hieuk.aplite.tests
