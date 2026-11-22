@@ -23,6 +23,8 @@ enum Wallpapers {
         [Color(red: 0.05, green: 0.25, blue: 0.20), Color(red: 0.10, green: 0.45, blue: 0.40), Color(red: 0.02, green: 0.12, blue: 0.18)],
         [Color(red: 0.20, green: 0.45, blue: 0.85), Color(red: 0.45, green: 0.30, blue: 0.85), Color(red: 0.10, green: 0.20, blue: 0.50)],
         [Color(red: 0.12, green: 0.12, blue: 0.14), Color(red: 0.22, green: 0.22, blue: 0.26), Color(red: 0.08, green: 0.08, blue: 0.10)],
+        // Đồng cỏ (meadow): added at the end so saved wallpaper indices stay valid.
+        [Color(red: 0.10, green: 0.20, blue: 0.12), Color(red: 0.28, green: 0.46, blue: 0.22), Color(red: 0.72, green: 0.62, blue: 0.28)],
     ]
     /// A live manifest can replace the palettes with data, without shipping new native code.
     static var all: [[Color]] { LiveUpdate.wallpaperColors ?? builtIn }
@@ -255,6 +257,14 @@ struct WallpaperView: View {
                 LinearGradient(colors: DynamicWallpaper.colors(at: ctx.date), startPoint: .topLeading, endPoint: .bottomTrailing)
                     .animation(.easeInOut(duration: 2), value: ctx.date)
             }
+        } else if index == -3, let meadow = UIImage(named: "MeadowWallpaper") {
+            // Bundled "Đồng cỏ" wallpaper, drawn locally by scripts/generate_meadow.py.
+            Image(uiImage: meadow)
+                .resizable()
+                .scaledToFill()
+                .scaleEffect(1 + blur / 160)
+                .blur(radius: blur, opaque: true)
+                .clipped()
         } else if index < 0, let image {
             // Scale a little past the frame before blurring so the edges never turn transparent.
             Image(uiImage: image)
@@ -1251,18 +1261,22 @@ private struct DockItem: View {
 private struct TrayView: View {
     @ObservedObject private var network = NetworkStatus.shared
     @ObservedObject private var thermal = ThermalMonitor.shared
+    @ObservedObject private var memoryMonitor = MemoryManager.shared
     let palette: DockPalette
 
     var body: some View {
-        TimelineView(.periodic(from: .now, by: 5)) { ctx in
+        // 15 s instead of 5 s: the tray is informational, and every redraw here is a full
+        // SwiftUI pass over the dock. MemoryManager already samples and publishes its own values.
+        TimelineView(.periodic(from: .now, by: 15)) { ctx in
             HStack(spacing: 10) {
-                // Memory: every app runs inside iDesk; orange / red when iOS is about to close it.
-                let memory = MemoryStatus.level
+                let usedText = MemoryStatus.format(memoryMonitor.used)
                 HStack(spacing: 4) {
                     Image(systemName: "memorychip")
-                    Text(verbatim: MemoryStatus.format(MemoryStatus.used)).font(.system(size: 12).monospacedDigit())
+                    Text(verbatim: usedText).font(.system(size: 12).monospacedDigit())
                 }
-                .foregroundStyle(memory == .critical ? Color.red : memory == .low ? Color.orange : palette.primary)
+                .foregroundStyle(memoryMonitor.usedFraction >= 0.95 ? Color.red
+                                 : memoryMonitor.usedFraction >= memoryMonitor.warningThreshold ? Color.orange
+                                 : palette.primary)
                 Image(systemName: network.symbol)
                     .font(.system(size: 13, weight: .medium))
                     .foregroundStyle(network.kind == .offline ? palette.secondary : palette.primary)

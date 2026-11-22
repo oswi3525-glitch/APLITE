@@ -113,7 +113,7 @@ enum DesktopPages {
             "resolution": ExternalDisplay.resolution.map(ExternalDisplay.name) ?? "",
             "current": ExternalDisplay.currentResolution.map { "\(Int($0.width)) × \(Int($0.height))" } ?? "",
             "overscan": ExternalDisplay.fitsOverscan,
-            "wallpaper": m.wallpaper,
+            "wallpaper": m.wallpaper, "meadow": String(localized: "Đồng cỏ (meadow)"),
             "dynamic": DynamicWallpaper.cssColors(at: Date()),
             "night": NightFilter.mode.rawValue,
             "wallpapers": wallpapers,
@@ -773,6 +773,7 @@ enum DesktopPages {
         h += `<div class="wall ${s.wallpaper === i ? 'on' : ''}" style="background-image:linear-gradient(135deg, ${c.join(',')})" onclick="send('wallpaper', ${i})"></div>`;
       });
       h += `<div class="wall ${s.wallpaper === -2 ? 'on' : ''}" style="background-image:linear-gradient(135deg, ${s.dynamic.join(',')})" onclick="send('wallpaper', -2)">🕒</div>`;
+      h += `<div class="wall ${s.wallpaper === -3 ? 'on' : ''}" style="background-image:linear-gradient(135deg, #2c5a30, #7a9e46, #e3c46b)" onclick="send('wallpaper', -3)" title="${esc(s.meadow)}">🌿</div>`;
       if (s.custom) h += `<div class="wall ${s.wallpaper === -1 ? 'on' : ''}" style="background-image:url(${s.custom})" onclick="send('wallpaper', -1)"></div>`;
       h += `</div>` + stepper('wallpaperBlur', T.blur, s.wallpaperBlur + '%', 2)
         + `<div class="row"><div class="label"></div><button onclick="send('photo')">${esc(T.photo)}</button>`

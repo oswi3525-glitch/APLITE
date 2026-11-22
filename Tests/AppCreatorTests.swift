@@ -18,6 +18,18 @@ final class AppCreatorTests: XCTestCase {
         XCTAssertTrue(files["Sources/ContentView.swift"]!.contains("WKWebView"))
     }
 
+    func testPythonAndNodeTemplates() {
+        let py = AppCreatorTemplates.files(template: .python, displayName: "Py Tool", bundleID: "com.test.py")
+        XCTAssertNotNil(py["main.py"])
+        XCTAssertNotNil(py["requirements.txt"])
+        XCTAssertTrue(py["project.json"]!.contains("\"language\" : \"python\"") || py["project.json"]!.contains("\"language\": \"python\""))
+
+        let js = AppCreatorTemplates.files(template: .node, displayName: "Node Tool", bundleID: "com.test.node")
+        XCTAssertNotNil(js["index.js"])
+        XCTAssertNotNil(js["package.json"])
+        XCTAssertTrue(js["package.json"]!.contains("\"start\""))
+    }
+
     func testAllTemplatesProduceCompilableShapes() {
         for template in AppTemplate.allCases {
             let files = AppCreatorTemplates.files(template: template, displayName: "X", bundleID: "com.test.x")

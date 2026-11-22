@@ -31,7 +31,7 @@ final class MemoryManager: ObservableObject {
     func start() {
         guard timer == nil else { return }
         sample()
-        timer = Timer.scheduledTimer(withTimeInterval: 5, repeats: true) { [weak self] _ in self?.sample() }
+        timer = Timer.scheduledTimer(withTimeInterval: 10, repeats: true) { [weak self] _ in self?.sample() }
         timer?.tolerance = 1
     }
 

@@ -28,6 +28,7 @@ struct SystemSettingsView: View {
     @State private var showCertificatePassword = false
     @State private var certificatePassword = ""
     @State private var pendingCertificate: Data?
+    @State private var resolution = ""
 
     private var apliteUsage: (files: Int, bytes: UInt64) { APLiteFileManager.systemUsage() }
     private var brightnessText: String { "\(Int((model.externalBrightness * 100).rounded()))%" }
@@ -92,6 +93,18 @@ struct SystemSettingsView: View {
                 Toggle("Reopen guest apps at launch", isOn: $model.reopenApps)
             }
 
+            Section("Accounts") {
+                Button("Save signed-in Google account") {
+                    GoogleSession.save { count in
+                        model.showToast(String(localized: count > 0
+                            ? "Saved \(count) Google cookies."
+                            : "No Google account is signed in on the desktop yet."))
+                    }
+                }
+                Text("Stored locally in APLite's cookie vault. Never sent anywhere.")
+                    .font(.footnote).foregroundStyle(.secondary)
+            }
+
             Section(SettingsGroup.storage.title) {
                 LabeledContent("APLite managed files", value: "\(apliteUsage.files) files · \(APLiteFileManager.sizeText(Int64(apliteUsage.bytes)))")
                 Button("Save a diagnostics report") {
@@ -103,6 +116,14 @@ struct SystemSettingsView: View {
             }
 
             Section(SettingsGroup.display.title) {
+                Picker("Resolution", selection: $resolution) {
+                    Text("Automatic").tag("")
+                    ForEach(ExternalDisplay.resolutions.map(ExternalDisplay.name(of:)), id: \.self) { Text($0).tag($0) }
+                }
+                .onChange(of: resolution) { _, value in
+                    let parts = value.split(separator: "x").compactMap { Double($0) }
+                    ExternalDisplay.resolution = parts.count == 2 ? CGSize(width: parts[0], height: parts[1]) : nil
+                }
                 LabeledContent("Brightness", value: brightnessText)
                 Button("TV mode (720p, larger text)") {
                     DesktopPages.handle(.settings, action: "tvMode", value: "")
@@ -123,6 +144,7 @@ struct SystemSettingsView: View {
             }
 
             Section(SettingsGroup.system.title) {
+                NavigationLink { SystemChangelogView() } label: { Label("What's new", systemImage: "sparkles") }
                 LabeledContent("Version", value: APLite.displayVersion)
                 LabeledContent("Last clean shutdown", value: APLiteSettings.System.lastShutdown?.formatted() ?? String(localized: "never"))
                 Button("Build Center") { showBuildCenter = true }
@@ -131,6 +153,7 @@ struct SystemSettingsView: View {
         }
         .navigationTitle("System settings")
         .navigationBarTitleDisplayMode(.inline)
+        .onAppear { resolution = ExternalDisplay.resolution.map(ExternalDisplay.name(of:)) ?? "" }
         .sheet(isPresented: $showPasscode) { PasscodeSetupView() }
         .sheet(isPresented: $showBuildCenter) { BuildCenterView() }
         .alert("Certificate password", isPresented: $showCertificatePassword) {

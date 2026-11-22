@@ -52,6 +52,8 @@ struct AppCreatorView: View {
     @State private var bundleID = "com.example.myapp"
     @State private var result: URL?
     @State private var error: String?
+    @State private var showPreview = false
+    @State private var previewFiles: [String: String] = [:]
 
     var body: some View {
         NavigationStack {
@@ -59,8 +61,12 @@ struct AppCreatorView: View {
                 TemplatePickerSection(template: $template)
                 AppDetailsSection(name: $name, bundleID: $bundleID)
                 Section {
+                    Button("Preview files") {
+                        previewFiles = AppCreatorTemplates.files(template: template, displayName: name, bundleID: bundleID)
+                        showPreview = true
+                    }
                     Button("Generate project ZIP", action: generate)
-                    Text("Creates real Swift sources and a project.yml in APLite's file area. A macOS worker is still required to compile it.")
+                    Text("Creates real source files in APLite's file area. A worker is still required to compile it.")
                         .font(.footnote).foregroundStyle(.secondary)
                 }
                 if let result { AppResultSection(result: result, analyse: { analyse(result) }) }
@@ -75,6 +81,7 @@ struct AppCreatorView: View {
             }
         }
         .preferredColorScheme(.dark)
+        .sheet(isPresented: $showPreview) { ProjectPreviewView(files: previewFiles) }
     }
 
     private func generate() {

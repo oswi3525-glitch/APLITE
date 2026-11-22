@@ -6,7 +6,7 @@ windows, a floating Liquid-Glass dock, a browser, files, widgets and iOS apps in
 becomes the trackpad and keyboard.
 
 > Experimental: APLite uses private UIKit APIs, is meant to be sideloaded, and a future iOS may
-> break parts of it. Latest unsigned build: **1.2.2** (CI build + unit tests passed; on-device
+> break parts of it. Latest unsigned build: **1.2.3** (CI build + unit tests passed; on-device
 > verification is still pending).
 
 ## Attribution — original project
@@ -118,6 +118,6 @@ over Wi-Fi. The earlier draft mentioned TV USB mice; that claim has been removed
 
 ## Documentation
 
-[APLite_AUDIT.md](APLite_AUDIT.md) · [ARCHITECTURE.md](ARCHITECTURE.md) ·
+[APLite_AUDIT.md](APLite_AUDIT.md) · [ARCHITECTURE.md](ARCHITECTURE.md) · [INDEPENDENCE.md](INDEPENDENCE.md) ·
 [AUDIO_DIAGNOSTICS.md](AUDIO_DIAGNOSTICS.md) · [BUILD.md](BUILD.md) ·
 [CHANGELOG.md](CHANGELOG.md) · [NOTICE.md](NOTICE.md) · [SYSTEM_TEST_PLAN.md](SYSTEM_TEST_PLAN.md)

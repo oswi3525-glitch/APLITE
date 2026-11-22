@@ -31,6 +31,7 @@ final class PhoneSceneDelegate: UIResponder, UIWindowSceneDelegate {
     func sceneDidEnterBackground(_ scene: UIScene) {
         GuestRuntime.forwardSceneEvent(#selector(UISceneDelegate.sceneDidEnterBackground(_:)), scene: scene)
         MemoryManager.shared.releaseCaches(reason: "background")
+        GoogleSession.save()   // keep the signed-in Google account in APLite's cookie vault
     }
 
     func sceneWillEnterForeground(_ scene: UIScene) {

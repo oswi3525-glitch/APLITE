@@ -1686,8 +1686,9 @@ final class DesktopModel: ObservableObject {
     // MARK: Taskbar / app menu / icon geometry
 
     /// Height of the floating dock and its top edge inside the taskbar band.
-    var dockHeight: CGFloat { min(56, max(42, 52 * CGFloat(dockScale))) }
-    var dockY: CGFloat { taskbarTop + (Layout.taskbar - dockHeight) / 2 }
+    var dockHeight: CGFloat { min(62, max(48, 58 * CGFloat(dockScale))) }
+    /// Raised a little so the icons are not clipped low on large displays.
+    var dockY: CGFloat { taskbarTop + (Layout.taskbar - dockHeight) / 2 - 6 }
     private var dockControlY: CGFloat { dockY + (dockHeight - Layout.buttonHeight) / 2 }
 
     var startButtonRect: CGRect {

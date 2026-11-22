@@ -13,8 +13,12 @@ struct ProjectAnalysis: Equatable {
     let bundleID: String?
     let dependencies: [String]
     let warnings: [String]
+    /// swift / python / node — decides which kind of macOS worker is needed.
+    let language: String
+    let hasPython: Bool
+    let hasNode: Bool
 
-    var needsMacOSWorker: Bool { hasXcodeProject || hasXcodeGenSpec || hasPackageSwift }
+    var needsMacOSWorker: Bool { language == "swift" && (hasXcodeProject || hasXcodeGenSpec || hasPackageSwift) }
 
     var summary: String {
         var parts = ["\(swiftFiles) Swift files"]
@@ -30,6 +34,7 @@ struct ProjectAnalysis: Equatable {
 enum ProjectAnalyzer {
     static func analyze(files: [(name: String, text: String)]) -> ProjectAnalysis {
         var swift = 0, xcodeProject = false, xcodegen = false, package = false, plist = false, profile = false
+        var python = false, node = false
         var bundleID: String?
         var dependencies: [String] = []
         var warnings: [String] = []
@@ -37,6 +42,8 @@ enum ProjectAnalyzer {
         for file in files {
             let name = file.name.lowercased()
             if name.hasSuffix(".swift") { swift += 1 }
+            if name.hasSuffix(".py") || name == "requirements.txt" { python = true }
+            if name.hasSuffix(".js") || name == "package.json" { node = true }
             if name.hasSuffix(".xcodeproj/project.pbxproj") || name.hasSuffix(".xcodeproj") { xcodeProject = true }
             if name == "project.yml" || name == "project.yaml" { xcodegen = true }
             if name == "package.swift" { package = true }
@@ -56,10 +63,12 @@ enum ProjectAnalyzer {
             warnings.append(String(localized: "No Bundle ID was found; configure one before requesting a build."))
         }
 
+        let language = python && !node ? "python" : node && !python ? "node" : node && python ? "mixed" : "swift"
         return ProjectAnalysis(name: files.first?.name ?? String(localized: "Imported project"),
                                swiftFiles: swift, hasXcodeProject: xcodeProject, hasXcodeGenSpec: xcodegen,
                                hasPackageSwift: package, hasInfoPlist: plist, hasProvisioningProfile: profile,
-                               bundleID: bundleID, dependencies: dependencies, warnings: warnings)
+                               bundleID: bundleID, dependencies: dependencies, warnings: warnings,
+                               language: language, hasPython: python, hasNode: node)
     }
 
     /// Recognises `PRODUCT_BUNDLE_IDENTIFIER = com.example.app;` and `"CFBundleIdentifier": "..."`.

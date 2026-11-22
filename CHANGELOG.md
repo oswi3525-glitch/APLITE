@@ -3,6 +3,16 @@
 All notable changes to APLite are documented here. APLite is based on iDesk v0.6.3
 (upstream commit `2179dbd`); the original upstream history is not rewritten.
 
+## 1.2.3 (unsigned development release)
+
+- Dock icons raised (pill height 52 → 58 pt, top edge -6 pt).
+- Google account cookies saved into APLite's local vault (also on backgrounding).
+- Performance: tray redraw 5 s → 15 s, memory sampling 5 s → 10 s; no per-frame idle work added.
+- App Creator: Python and Node.js templates, `project.json` build descriptor, read-only project preview.
+- New bundled "Đồng cỏ" meadow wallpaper drawn by `scripts/generate_meadow.py` plus a matching gradient.
+- Native System settings gained a resolution picker and a "What's new" changelog screen.
+- More audio recovery hardening (interruption + route changes) and iDesk separation notes in INDEPENDENCE.md.
+
 ## 1.2.2 (unsigned development release)
 
 - Desktop Settings → About now has **Open system settings on iPhone**, which opens the native
