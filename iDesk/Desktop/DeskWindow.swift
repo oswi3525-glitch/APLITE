@@ -277,6 +277,7 @@ final class DeskWindow: NSObject, ObservableObject, Identifiable, WKUIDelegate, 
         ContentBlocker.apply(to: config.userContentController)
         config.userContentController.addUserScript(DarkPages.script())
         config.userContentController.addUserScript(WebVolume.script)
+        config.userContentController.add(WebAudioBridge.shared, name: WebAudioBridge.messageName)
         config.userContentController.addUserScript(ControllerInput.pageScript)
         config.userContentController.add(gamepadBridge, name: ControllerInput.messageName)
         let tab = WKWebView(frame: CGRect(origin: .zero, size: frame.size), configuration: config)

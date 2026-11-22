@@ -47,6 +47,9 @@ enum QuickLook {
         player.play()
     }
 
+    /// True while a media preview is actually playing (audio session should stay active).
+    static var isActive: Bool { player != nil }
+
     /// Drops the single decoded preview image under memory pressure.
     static func clearImageCache() { cached = nil }
 

@@ -3,6 +3,19 @@
 All notable changes to APLite are documented here. APLite is based on iDesk v0.6.3
 (upstream commit `2179dbd`); the original upstream history is not rewritten.
 
+## 1.2.4 (unsigned development release)
+
+- **Heat / battery**: the audio session is no longer held active forever. A new activity tracker
+  (Quick Look, read-aloud, guest windows, and a JS play/pause bridge for web media) lets
+  `AudioSessionManager` release the session after ~20 s of silence and on backgrounding.
+- Idle WebKit/URL caches are trimmed every 5 minutes (`CacheManager`) instead of growing for the
+  whole session; Quick Look's decoded image is dropped with them.
+- When iOS reports thermal state `fair` or hotter, APLite automatically switches to instant
+  animations (no springs/blurs/ripples) to stop feeding the heat loop.
+- Built-in **web app presets**: Chrome, Zalo, Facebook, Telegram (one tap in Settings → Applications).
+  Native versions still require a decrypted IPA; these are web shortcuts, clearly labelled as such.
+- Meadow wallpaper and dock raise from 1.2.3 remain.
+
 ## 1.2.3 (unsigned development release)
 
 - Dock icons raised (pill height 52 → 58 pt, top edge -6 pt).

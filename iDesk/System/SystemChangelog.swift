@@ -11,6 +11,12 @@ enum SystemChangelog {
     }
 
     static let entries: [Entry] = [
+        Entry(version: "1.2.4", date: "2026-11-22", items: [
+            "Audio session is released when the desktop is silent — less heat and battery drain.",
+            "WebKit / URL caches trimmed every 5 minutes; memory stays flatter in long sessions.",
+            "Instant animations automatically when iOS reports the device is warm.",
+            "One-tap web apps: Chrome, Zalo, Facebook, Telegram (web shortcuts, not native apps).",
+        ]),
         Entry(version: "1.2.3", date: "2026-11-22", items: [
             "Raised the dock icons and enlarged the floating pills.",
             "Saved the signed-in Google account into APLite's local cookie vault.",

@@ -161,6 +161,44 @@ struct PresentationRemote: View {
     }
 }
 
+// MARK: - Web audio activity
+
+/// Tracks whether any open web tab is actually playing media. APLite uses this to release the
+/// audio session when the desktop is quiet — a permanently active session keeps the audio hardware
+/// powered and is a noticeable source of heat on iPhone/iPad.
+final class WebAudioActivity {
+    static let shared = WebAudioActivity()
+
+    private final class WeakWebView {
+        weak var view: WKWebView?
+        init(_ view: WKWebView) { self.view = view }
+    }
+
+    private var playing: [WeakWebView] = []
+    private let lock = NSLock()
+
+    var isPlaying: Bool {
+        lock.lock(); defer { lock.unlock() }
+        playing.removeAll { $0.view == nil }
+        return !playing.isEmpty
+    }
+
+    func set(webView: WKWebView?, active: Bool) {
+        lock.lock(); defer { lock.unlock() }
+        playing.removeAll { $0.view == nil || (webView != nil && $0.view === webView) }
+        if active, let webView { playing.append(WeakWebView(webView)) }
+    }
+}
+
+final class WebAudioBridge: NSObject, WKScriptMessageHandler {
+    static let shared = WebAudioBridge()
+    static let messageName = "ideskAudioActivity"
+
+    func userContentController(_ controller: WKUserContentController, didReceive message: WKScriptMessage) {
+        WebAudioActivity.shared.set(webView: message.webView, active: (message.body as? Bool) == true)
+    }
+}
+
 // MARK: - Volume of web videos
 
 /// On iOS a page cannot change a video's volume (HTMLMediaElement.volume stays 1: the iPhone's buttons set it), so
@@ -239,6 +277,17 @@ enum WebVolume {
         context();
         pending.forEach(applyTo);
       };
+      // Tell native code whether this tab is really playing: the session is released when quiet.
+      function reportActivity() {
+        const busy = Array.from(document.querySelectorAll('video, audio'))
+          .some(m => !m.paused && !m.ended && m.currentTime > 0);
+        try { window.webkit.messageHandlers.ideskAudioActivity.postMessage(busy); } catch (_) {}
+      }
+      document.addEventListener('play', reportActivity, true);
+      document.addEventListener('pause', reportActivity, true);
+      document.addEventListener('ended', reportActivity, true);
+      setInterval(reportActivity, 4000);
+      reportActivity();
     })();
     """#, injectionTime: .atDocumentStart, forMainFrameOnly: false)
 }

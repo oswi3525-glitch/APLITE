@@ -8,7 +8,10 @@ enum APLiteAnimation {
     static let reduceMotionKey = "APLite.reduceMotion"
 
     static var reduced: Bool {
-        UIAccessibility.isReduceMotionEnabled || UserDefaults.standard.bool(forKey: reduceMotionKey)
+        // When iOS reports the device is warm, drop straight to instant state changes: glass
+        // blurs, springs and repetitions are the first thing to cost GPU time and heat the phone.
+        let hot = ThermalMonitor.shared.state.rawValue >= ProcessInfo.ThermalState.fair.rawValue
+        return UIAccessibility.isReduceMotionEnabled || UserDefaults.standard.bool(forKey: reduceMotionKey) || hot
     }
 
     static var spring: Animation {

@@ -90,6 +90,14 @@ struct SystemSettingsView: View {
                 Button { model.openPage(.apps) } label: {
                     Label("Manage iOS apps", systemImage: "square.grid.2x2")
                 }
+                Button("Add Chrome, Zalo, Facebook, Telegram") {
+                    let n = BuiltInWebApps.installMissing()
+                    model.showToast(String(localized: n > 0
+                        ? "Added \(n) web apps to the desktop."
+                        : "Those web apps are already installed."))
+                }
+                Text("Web shortcuts. Native versions need a decrypted IPA added in Apps.")
+                    .font(.footnote).foregroundStyle(.secondary)
                 Toggle("Reopen guest apps at launch", isOn: $model.reopenApps)
             }
 

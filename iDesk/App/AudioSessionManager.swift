@@ -32,6 +32,11 @@ final class AudioSessionManager: NSObject, ObservableObject {
     var guestAppsActive: () -> Bool = { false }
     /// Set at launch. Web pages need a small JS nudge to resume a suspended Web Audio context.
     var resumeWebAudio: (() -> Void)?
+    /// True while something can actually make sound. Used to release the session when quiet —
+    /// keeping it active forever keeps the audio hardware awake and heats the device.
+    var audioInUse: () -> Bool = { false }
+
+    private var idleTimer: Timer?
 
     private var started = false
     private var recording = false
@@ -56,7 +61,8 @@ final class AudioSessionManager: NSObject, ObservableObject {
         observers.append(center.addObserver(forName: .GuestRuntimeWindowsChanged, object: nil, queue: .main) { [weak self] _ in
             self?.note(.diagnostic, "Guest app windows changed")
             self?.refresh()
-            if !(self?.guestAppsActive() ?? false) { self?.activatePlayback(reason: "last guest app closed") }
+            if self?.guestAppsActive() == true { self?.activatePlayback(reason: "guest app opened") }
+            else { self?.deactivateIfIdle(reason: "last guest app closed") }
         })
         observers.append(center.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: .main) { [weak self] _ in
             self?.note(.lifecycle, "App became active")
@@ -66,8 +72,14 @@ final class AudioSessionManager: NSObject, ObservableObject {
             // Do NOT deactivate here: playback audio should be allowed to continue (e.g. during a
             // picture-in-picture style switch or while another APLite scene takes over).
             self?.note(.lifecycle, "App entered background")
+            self?.deactivateIfIdle(reason: "background")
             self?.refresh()
         })
+        // Check every 20 s: if nothing is playing, give the audio hardware back to iOS.
+        idleTimer = Timer.scheduledTimer(withTimeInterval: 20, repeats: true) { [weak self] _ in
+            self?.deactivateIfIdle(reason: "no active audio source")
+        }
+        idleTimer?.tolerance = 5
         activatePlayback(reason: "launch")
         note(.diagnostic, "AudioSessionManager started")
     }
@@ -127,6 +139,20 @@ final class AudioSessionManager: NSObject, ObservableObject {
         }
     }
 
+    /// Releases the session only when no component is using audio. Silent desktop = no powered
+    /// audio hardware = less heat. Any later `activatePlayback()` call reasserts it instantly.
+    func deactivateIfIdle(reason: String = "idle") {
+        guard started, sessionActive, !recording, !isInterrupted, !audioInUse() else { return }
+        do {
+            try AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+            sessionActive = false
+            note(.playback, "Playback session released (\(reason))")
+            refresh()
+        } catch {
+            note(.error, "Could not release audio session: \(error.localizedDescription)")
+        }
+    }
+
     /// Restores the playback baseline after recording. This is the fix for "everything went silent
     /// after I used voice typing": the session is never left deactivated.
     func endRecording() {
@@ -181,8 +207,12 @@ final class AudioSessionManager: NSObject, ObservableObject {
             // Many interruptions (other apps' audio, route takeovers) end WITHOUT .shouldResume.
             // Waiting for that flag was the main cause of "no sound after a phone call": reactivate
             // unconditionally a moment later. setActive(true) is safe when already active.
-            DispatchQueue.main.asyncAfter(deadline: .now() + (resume ? 0.05 : 0.35)) { [weak self] in
-                self?.reactivateCurrentMode(reason: "interruption ended")
+            if recording || audioInUse() {
+                DispatchQueue.main.asyncAfter(deadline: .now() + (resume ? 0.05 : 0.35)) { [weak self] in
+                    self?.reactivateCurrentMode(reason: "interruption ended")
+                }
+            } else {
+                note(.playback, "Staying quiet after interruption")
             }
             refresh()
         @unknown default:
@@ -203,7 +233,7 @@ final class AudioSessionManager: NSObject, ObservableObject {
         // Unplugging headphones or a display can leave the session inactive without an interruption.
         // Re-assert playback on EVERY route change (not only when our cached flag says inactive):
         // a guest app may have deactivated the session behind our back.
-        if !recording, !isInterrupted {
+        if (recording || audioInUse()), !isInterrupted {
             activatePlayback(reason: "route change")
         }
     }

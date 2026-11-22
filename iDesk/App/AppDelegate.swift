@@ -15,6 +15,10 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         AudioSessionManager.shared.guestAppsActive = {
             DesktopModel.shared.windows.contains { $0.guestWindow != nil && $0.isShown }
         }
+        AudioSessionManager.shared.audioInUse = {
+            QuickLook.isActive || ReadAloud.shared.isSpeaking || WebAudioActivity.shared.isPlaying
+                || DesktopModel.shared.windows.contains { $0.guestWindow != nil && $0.isShown }
+        }
         // Web Audio contexts can stay suspended after an interruption; nudge every open tab.
         AudioSessionManager.shared.resumeWebAudio = {
             for window in DesktopModel.shared.windows {
@@ -26,6 +30,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         AudioSessionManager.shared.start()
         MediaControl.shared.start()
         MemoryManager.shared.start()        // 1 GB target, peak, warnings and leak hints
+        CacheManager.shared.start()         // bound WebKit / URL caches on long sessions
         PowerManager.shared.restoreSessionIfNeeded()
         if APLiteSettings.Security.lockOnLaunch { DesktopModel.shared.lockDesktop(force: true) }
         UpdateChecker.shared.startChecking()
