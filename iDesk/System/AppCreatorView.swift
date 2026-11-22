@@ -12,16 +12,43 @@ struct AppCreatorView: View {
     var body: some View {
         NavigationStack {
             List {
-                templateSection
-                detailsSection
-                actionSection
+                Section("Template") {
+                    ForEach(AppTemplate.allCases, id: \.self) { item in
+                        Button {
+                            template = item
+                        } label: {
+                            HStack {
+                                Image(systemName: item.symbol).foregroundStyle(.tint)
+                                VStack(alignment: .leading) {
+                                    Text(item.title)
+                                    Text(item.detail).font(.caption).foregroundStyle(.secondary)
+                                }
+                                Spacer()
+                                if item == template { Image(systemName: "checkmark").foregroundStyle(.tint) }
+                            }
+                        }
+                    }
+                }
+
+                Section("App details") {
+                    TextField("Display name", text: $name)
+                    TextField("Bundle ID", text: $bundleID)
+                        .textInputAutocapitalization(.never)
+                        .autocorrectionType(.no)
+                }
+
+                Section {
+                    Button("Generate project ZIP") { generate() }
+                        .buttonStyle(APLiteGlassButtonStyle())
+                    Text("Creates real Swift sources and a project.yml in APLite's file area. A macOS worker is still required to compile it.")
+                        .font(.footnote).foregroundStyle(.secondary)
+                }
+
                 if let result {
-                    Section {
+                    Section("Created") {
                         Text(result.lastPathComponent).font(.footnote)
                         Button("Share project ZIP") { ShareSheet.present(result) }
                         Button("Analyse in Build Center") { analyse(result) }
-                    } header: {
-                        Text("Created")
                     }
                 }
                 if let error {
@@ -37,48 +64,6 @@ struct AppCreatorView: View {
             }
         }
         .preferredColorScheme(.dark)
-    }
-
-    private var templateSection: some View {
-        Section {
-            ForEach(AppTemplate.allCases, id: \.self) { item in
-                Button {
-                    template = item
-                } label: {
-                    HStack {
-                        Image(systemName: item.symbol).foregroundStyle(.tint)
-                        VStack(alignment: .leading) {
-                            Text(item.title)
-                            Text(item.detail).font(.caption).foregroundStyle(.secondary)
-                        }
-                        Spacer()
-                        if item == template { Image(systemName: "checkmark").foregroundStyle(.tint) }
-                    }
-                }
-            }
-        } header: {
-            Text("Template")
-        }
-    }
-
-    private var detailsSection: some View {
-        Section {
-            TextField("Display name", text: $name)
-            TextField("Bundle ID", text: $bundleID)
-                .textInputAutocapitalization(.never)
-                .autocorrectionType(.no)
-        } header: {
-            Text("App details")
-        }
-    }
-
-    private var actionSection: some View {
-        Section {
-            Button("Generate project ZIP") { generate() }
-                .buttonStyle(APLiteGlassButtonStyle())
-            Text("Creates real Swift sources and a project.yml in APLite's file area. A macOS worker is still required to compile it.")
-                .font(.footnote).foregroundStyle(.secondary)
-        }
     }
 
     private func generate() {
