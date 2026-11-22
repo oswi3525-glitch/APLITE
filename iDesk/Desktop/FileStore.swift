@@ -72,6 +72,8 @@ enum FileStore {
         let size: Int
         let date: Date
         let isFolder: Bool
+        /// Recursive size for folders (iOS reports only the directory entry itself).
+        let totalSize: Int64
     }
 
     /// What is in a folder of Files (not the hidden page file), newest first.
@@ -82,8 +84,10 @@ enum FileStore {
                                                                  options: [.skipsHiddenFiles])) ?? []
         return urls.map { url in
             let v = try? url.resourceValues(forKeys: Set(keys))
-            return Item(url: url, size: v?.fileSize ?? 0, date: v?.contentModificationDate ?? .distantPast,
-                        isFolder: v?.isDirectory == true)
+            let isDir = v?.isDirectory == true
+            let bytes = isDir ? Int64(APLiteFileManager.folderSize(of: url)) : Int64(v?.fileSize ?? 0)
+            return Item(url: url, size: Int(bytes), date: v?.contentModificationDate ?? .distantPast,
+                        isFolder: isDir, totalSize: bytes)
         }
         .sorted { $0.date > $1.date }
     }
@@ -131,7 +135,6 @@ enum FileStore {
         return page
     }
 
-    private static let sizeFormatter = ByteCountFormatter()
     private static let dateFormatter: DateFormatter = {
         let f = DateFormatter()
         f.dateStyle = .medium
@@ -145,9 +148,8 @@ enum FileStore {
             let path = folder.isEmpty ? item.url.lastPathComponent : folder + "/" + item.url.lastPathComponent
             return [
                 "name": item.url.lastPathComponent, "path": path, "dir": item.isFolder,
-                "bytes": item.size, "date": item.date.timeIntervalSince1970 * 1000,
-                "meta": item.isFolder ? dateFormatter.string(from: item.date)
-                    : sizeFormatter.string(fromByteCount: Int64(item.size)) + " · " + dateFormatter.string(from: item.date),
+                "bytes": item.totalSize, "date": item.date.timeIntervalSince1970 * 1000,
+                "meta": APLiteFileManager.sizeText(item.totalSize) + " · " + dateFormatter.string(from: item.date),
                 "icon": item.isFolder ? "📁" : symbol(for: item.url.pathExtension),
                 "ipa": item.url.pathExtension.lowercased() == "ipa",
                 "zip": item.url.pathExtension.lowercased() == "zip",
@@ -198,6 +200,7 @@ enum FileStore {
             "title": String(localized: "Files"),
             "sub": String(localized: "Double-click to open. Select a file and press Space for a quick look, or drag it to the desktop."),
             "import": String(localized: "Import…"), "newFolder": String(localized: "New folder"),
+            "system": String(localized: "APLite system files"),
             "newFile": String(localized: "New text file"), "fileName": String(localized: "File name"),
             "untitled": String(localized: "Untitled.txt"), "extract": String(localized: "Extract"),
             "search": String(localized: "Search in this folder"), "up": String(localized: "Up"),
@@ -306,6 +309,7 @@ enum FileStore {
         <button onclick="go('.Trash')">🗑️ ${esc(T.trash)}${S.trashCount ? ' (' + S.trashCount + ')' : ''}</button>
         <button onclick="startNew('file')">${esc(T.newFile)}</button>
         <button onclick="startNew('folder')">${esc(T.newFolder)}</button>
+        <button onclick="post('system')">${esc(T.system)}</button>
         <button class="primary" onclick="post('import')">${esc(T.import)}</button></div>`;
       // Breadcrumbs, search, sort.
       const parts = S.folder && !S.trash ? S.folder.split('/') : [];
@@ -481,6 +485,14 @@ final class FilesBridge: NSObject, WKScriptMessageHandler {
         switch action {
         case "import":
             FileStore.importFromPhone(into: window.filesFolder)
+        case "system":
+            // APLite's own managed area: write a real report and open it in the desktop.
+            if let report = APLiteFileManager.writeDiagnostics() {
+                model.openWindow(report.absoluteString)   // system area is outside the Downloads root
+                model.showToast(String(localized: "APLite system report saved in its own file area."))
+            } else {
+                model.showToast(String(localized: "Could not write the APLite system report."))
+            }
         case "go":
             if let folder = body["folder"] as? String {
                 if folder == Trash.folder { _ = Trash.url }          // made on first use
