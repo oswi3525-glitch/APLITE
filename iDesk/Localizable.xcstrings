@@ -1,0 +1,6656 @@
+{
+  "sourceLanguage": "en",
+  "strings": {
+    "%@ (web)": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ (web)"
+          }
+        }
+      }
+    },
+    "%@ closed iDesk last time": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ đã làm iDesk thoát lần trước"
+          }
+        }
+      }
+    },
+    "%@ connected": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đã kết nối %@"
+          }
+        }
+      }
+    },
+    "%lld iOS apps": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld app iOS"
+          }
+        }
+      }
+    },
+    "%lld of %lld": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld / %lld"
+          }
+        }
+      }
+    },
+    "%lld windows": {
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld window"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld windows"
+                }
+              }
+            }
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld cửa sổ"
+          }
+        }
+      }
+    },
+    "%lld%%": {
+      "shouldTranslate": false
+    },
+    ", expires %@": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": ", hết hạn %@"
+          }
+        }
+      }
+    },
+    "1 finger": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1 ngón"
+          }
+        }
+      }
+    },
+    "2 fingers": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "2 ngón"
+          }
+        }
+      }
+    },
+    "21:00–7:00": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "21:00–7:00"
+          }
+        }
+      }
+    },
+    "3 fingers": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "3 ngón"
+          }
+        }
+      }
+    },
+    "A Bluetooth keyboard works right away: pair it in the iPhone's Settings → Bluetooth.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bàn phím Bluetooth dùng được ngay: ghép nối trong Cài đặt → Bluetooth của iPhone."
+          }
+        }
+      }
+    },
+    "A USB-C hub with a power port charges the iPhone while it shows the desktop.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hub USB-C có cổng sạc giúp vừa xuất hình vừa sạc iPhone."
+          }
+        }
+      }
+    },
+    "A hub with a power port charges the iPhone while you work.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hub có cổng sạc sẽ sạc iPhone trong lúc bạn làm việc."
+          }
+        }
+      }
+    },
+    "A laptop shows the desktop in its browser.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Laptop đang hiện desktop trong trình duyệt."
+          }
+        }
+      }
+    },
+    "Accessibility": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Trợ năng"
+          }
+        }
+      }
+    },
+    "Actual size": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cỡ thật"
+          }
+        }
+      }
+    },
+    "Add": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thêm"
+          }
+        }
+      }
+    },
+    "Add IPA": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thêm IPA"
+          }
+        }
+      }
+    },
+    "Add IPA files…": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thêm file IPA…"
+          }
+        }
+      }
+    },
+    "Add to desktop": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thêm vào màn hình nền"
+          }
+        }
+      }
+    },
+    "Add, install and remove apps": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thêm, cài và gỡ app"
+          }
+        }
+      }
+    },
+    "Added %lld apps: %@.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đã thêm %lld app: %@."
+          }
+        }
+      }
+    },
+    "Added to the desktop and the app menu.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đã thêm vào màn hình nền và menu ứng dụng."
+          }
+        }
+      }
+    },
+    "Added “%@”.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đã thêm “%@”."
+          }
+        }
+      }
+    },
+    "Adding %lld of %lld…": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đang thêm %lld/%lld…"
+          }
+        }
+      }
+    },
+    "Adding an iOS app": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thêm app iOS"
+          }
+        }
+      }
+    },
+    "Adding your apps… %lld%%": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đang gộp các app của bạn… %lld%%"
+          }
+        }
+      }
+    },
+    "Adding…": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đang thêm…"
+          }
+        }
+      }
+    },
+    "Address bar": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thanh địa chỉ"
+          }
+        }
+      }
+    },
+    "Ads and trackers": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quảng cáo và theo dõi"
+          }
+        }
+      }
+    },
+    "Ads and trackers, dark pages, bookmarks bar": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quảng cáo và theo dõi, trang tối, thanh dấu trang"
+          }
+        }
+      }
+    },
+    "Advanced: sign on this device": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nâng cao: tự ký trên máy"
+          }
+        }
+      }
+    },
+    "AirPlay": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "AirPlay"
+          }
+        }
+      }
+    },
+    "All apps": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tất cả app"
+          }
+        }
+      }
+    },
+    "All done.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đã xong hết."
+          }
+        }
+      }
+    },
+    "Allow Calendars for iDesk in the iPhone's Settings.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cho phép iDesk dùng Lịch trong Cài đặt của iPhone."
+          }
+        }
+      }
+    },
+    "Allow Location for iDesk in the iPhone's Settings to see the weather.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cho phép iDesk dùng Vị trí trong Cài đặt của iPhone để xem thời tiết."
+          }
+        }
+      }
+    },
+    "Allow Microphone and Speech Recognition for iDesk in the iPhone's Settings.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cho phép iDesk dùng Micro và Nhận dạng giọng nói trong Cài đặt của iPhone."
+          }
+        }
+      }
+    },
+    "Allow Reminders for iDesk in the iPhone's Settings.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cho phép iDesk dùng Lời nhắc trong Cài đặt của iPhone."
+          }
+        }
+      }
+    },
+    "Always": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Luôn bật"
+          }
+        }
+      }
+    },
+    "Always block": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Luôn chặn"
+          }
+        }
+      }
+    },
+    "Always show the mouse mode button": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Luôn hiện nút chế độ chuột"
+          }
+        }
+      }
+    },
+    "Always show the taskbar": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Luôn hiện thanh tác vụ"
+          }
+        }
+      }
+    },
+    "Answer": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kết quả"
+          }
+        }
+      }
+    },
+    "App": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "App"
+          }
+        }
+      }
+    },
+    "App Store apps can't open here: use their websites.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "App từ App Store không mở được ở đây: dùng bản web của chúng."
+          }
+        }
+      }
+    },
+    "App menu": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Menu ứng dụng"
+          }
+        }
+      }
+    },
+    "App menu (type to search)": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Menu ứng dụng (gõ để tìm)"
+          }
+        }
+      }
+    },
+    "Apps": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ứng dụng"
+          }
+        }
+      }
+    },
+    "Apps from IPA": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "App từ IPA"
+          }
+        }
+      }
+    },
+    "Apps installed from the App Store can't appear: iOS doesn't let one app show another app's screen.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "App cài từ App Store không hiện được: iOS không cho app này hiện màn hình của app khác."
+          }
+        }
+      }
+    },
+    "Apps others have tried": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "App mọi người đã thử"
+          }
+        }
+      }
+    },
+    "Apps waiting to be installed": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Có app chưa cài vào iDesk"
+          }
+        }
+      }
+    },
+    "Apps' caches": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bộ nhớ đệm của app"
+          }
+        }
+      }
+    },
+    "Apps, trackpad and keyboard.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "App, trackpad và bàn phím."
+          }
+        }
+      }
+    },
+    "Apps, windows, files, bookmarks and history · sums like 12*3 · units like 5 km to mi": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "App, cửa sổ, file, dấu trang và lịch sử · phép tính như 12*3 · đổi đơn vị như 5 km to mi"
+          }
+        }
+      }
+    },
+    "Archive": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lưu trữ"
+          }
+        }
+      }
+    },
+    "AssistiveTouch": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "AssistiveTouch"
+          }
+        }
+      }
+    },
+    "AssistiveTouch can give the right and middle buttons to its own menu: Settings → Accessibility → Touch → AssistiveTouch → Devices lets you change what they do.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "AssistiveTouch có thể dùng nút phải và nút giữa cho menu riêng của nó: vào Cài đặt → Trợ năng → Cảm ứng → AssistiveTouch → Thiết bị để đổi chức năng các nút."
+          }
+        }
+      }
+    },
+    "Audio output": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nguồn phát âm thanh"
+          }
+        }
+      }
+    },
+    "Auto-hide the taskbar": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tự ẩn thanh tác vụ"
+          }
+        }
+      }
+    },
+    "Automatic": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tự động"
+          }
+        }
+      }
+    },
+    "Back": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quay lại"
+          }
+        }
+      }
+    },
+    "Back to the page": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quay lại trang"
+          }
+        }
+      }
+    },
+    "Battery %lld%%": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pin %lld%%"
+          }
+        }
+      }
+    },
+    "Battery %lld%%. Use a USB-C hub with a power port to charge the iPhone while you work.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pin còn %lld%%. Dùng hub USB-C có cổng sạc để vừa sạc iPhone vừa làm việc."
+          }
+        }
+      }
+    },
+    "Below 5 GB: adding and updating apps needs room. Clear the apps' caches on the Apps page, or delete files you don't need.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dưới 5 GB: thêm và cập nhật app cần chỗ trống. Dọn bộ nhớ đệm của app ở trang Ứng dụng, hoặc xoá bớt file không cần."
+          }
+        }
+      }
+    },
+    "Block ads and trackers": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chặn quảng cáo và theo dõi"
+          }
+        }
+      }
+    },
+    "Block ads on this site": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chặn quảng cáo trên trang này"
+          }
+        }
+      }
+    },
+    "Blue": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Xanh dương"
+          }
+        }
+      }
+    },
+    "Bookmark": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dấu trang"
+          }
+        }
+      }
+    },
+    "Bookmark removed.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đã bỏ dấu trang."
+          }
+        }
+      }
+    },
+    "Bookmark this page": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đánh dấu trang này"
+          }
+        }
+      }
+    },
+    "Bookmarked.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đã đánh dấu trang."
+          }
+        }
+      }
+    },
+    "Bookmarks": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dấu trang"
+          }
+        }
+      }
+    },
+    "Bookmarks and history": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dấu trang và lịch sử"
+          }
+        }
+      }
+    },
+    "Break": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nghỉ"
+          }
+        }
+      }
+    },
+    "Break is over: ready for the next 25 minutes.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hết giờ nghỉ: sẵn sàng cho 25 phút tiếp theo."
+          }
+        }
+      }
+    },
+    "Brightness": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Độ sáng"
+          }
+        }
+      }
+    },
+    "Brightness, wallpaper, pointer speed": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Độ sáng, hình nền, tốc độ con trỏ"
+          }
+        }
+      }
+    },
+    "Browser": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Trình duyệt"
+          }
+        }
+      }
+    },
+    "Browser settings": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cài đặt trình duyệt"
+          }
+        }
+      }
+    },
+    "Cancel": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Huỷ"
+          }
+        }
+      }
+    },
+    "Cannot read the app bundle.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Không đọc được bundle của app."
+          }
+        }
+      }
+    },
+    "Cannot read the app’s Info.plist.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Không đọc được Info.plist của app."
+          }
+        }
+      }
+    },
+    "Cascade windows": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Xếp chồng"
+          }
+        }
+      }
+    },
+    "Certificate (advanced)…": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chứng chỉ (nâng cao)…"
+          }
+        }
+      }
+    },
+    "Certificate imported and installed apps re-signed.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đã nhập chứng chỉ và ký lại các app đã cài."
+          }
+        }
+      }
+    },
+    "Certificate imported.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đã nhập chứng chỉ."
+          }
+        }
+      }
+    },
+    "Certificates are on the iPhone screen.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Phần chứng chỉ đang mở trên màn hình iPhone."
+          }
+        }
+      }
+    },
+    "Change certificate": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đổi chứng chỉ"
+          }
+        }
+      }
+    },
+    "Change wallpaper": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đổi hình nền"
+          }
+        }
+      }
+    },
+    "Check for new versions on GitHub": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kiểm tra bản mới trên GitHub"
+          }
+        }
+      }
+    },
+    "Check for updates": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kiểm tra cập nhật"
+          }
+        }
+      }
+    },
+    "Check now": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kiểm tra ngay"
+          }
+        }
+      }
+    },
+    "Check setup": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kiểm tra thiết lập"
+          }
+        }
+      }
+    },
+    "Checking…": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đang kiểm tra…"
+          }
+        }
+      }
+    },
+    "Choose a photo on the iPhone.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chọn ảnh trên iPhone."
+          }
+        }
+      }
+    },
+    "Choose a photo on the iPhone…": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chọn ảnh trên iPhone…"
+          }
+        }
+      }
+    },
+    "Choose a window for this side · Esc: no thanks": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chọn cửa sổ cho bên này · Esc: thôi"
+          }
+        }
+      }
+    },
+    "Choose the IPA files on the iPhone.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chọn file IPA trên iPhone."
+          }
+        }
+      }
+    },
+    "Choose the files on the iPhone.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chọn file trên iPhone."
+          }
+        }
+      }
+    },
+    "Choose where the sound plays: AirPods, the iPhone or the display": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chọn nơi phát âm thanh: AirPods, iPhone hoặc màn hình"
+          }
+        }
+      }
+    },
+    "Choose where to save it on the iPhone.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chọn nơi lưu trên iPhone."
+          }
+        }
+      }
+    },
+    "Choose widgets…": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chọn widget…"
+          }
+        }
+      }
+    },
+    "Clear": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bỏ chọn"
+          }
+        }
+      }
+    },
+    "Clear all": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Xoá hết"
+          }
+        }
+      }
+    },
+    "Clear finished": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Xoá mục đã xong"
+          }
+        }
+      }
+    },
+    "Clear history": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Xoá lịch sử"
+          }
+        }
+      }
+    },
+    "Clear when iDesk reopens": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dọn khi mở lại iDesk"
+          }
+        }
+      }
+    },
+    "Click": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bấm"
+          }
+        }
+      }
+    },
+    "Click a file, then press Space to preview it.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bấm chọn một file, rồi nhấn Space để xem nhanh."
+          }
+        }
+      }
+    },
+    "Click again": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bấm lần nữa"
+          }
+        }
+      }
+    },
+    "Click again to delete": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bấm lần nữa để xoá"
+          }
+        }
+      }
+    },
+    "Click and type": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bấm vào rồi gõ"
+          }
+        }
+      }
+    },
+    "Click “Add IPA files…” above and choose it on the iPhone (or download it and click Install in Files).": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bấm “Thêm file IPA…” ở trên rồi chọn file trên iPhone (hoặc tải file về và bấm Cài đặt trong Tệp)."
+          }
+        }
+      }
+    },
+    "Click “Install new apps into iDesk” and pick ESign on the iPhone: it signs iDesk again with the apps inside and installs it.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bấm “Cài app mới vào iDesk” rồi chọn ESign trên iPhone: ESign ký lại iDesk kèm các app bên trong và cài đặt."
+          }
+        }
+      }
+    },
+    "Clicks": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lần bấm"
+          }
+        }
+      }
+    },
+    "Clipboard": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Clipboard"
+          }
+        }
+      }
+    },
+    "Clipboard history": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lịch sử clipboard"
+          }
+        }
+      }
+    },
+    "Clock": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đồng hồ"
+          }
+        }
+      }
+    },
+    "Clock and calendar widgets": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Widget đồng hồ và lịch"
+          }
+        }
+      }
+    },
+    "Close": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đóng"
+          }
+        }
+      }
+    },
+    "Close all": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đóng tất cả"
+          }
+        }
+      }
+    },
+    "Close other tabs": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đóng các tab khác"
+          }
+        }
+      }
+    },
+    "Close tab": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đóng tab"
+          }
+        }
+      }
+    },
+    "Close the tab or window": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đóng tab hoặc cửa sổ"
+          }
+        }
+      }
+    },
+    "Close the window with all its tabs": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đóng cửa sổ cùng mọi tab"
+          }
+        }
+      }
+    },
+    "Close window": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đóng cửa sổ"
+          }
+        }
+      }
+    },
+    "Compress": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nén"
+          }
+        }
+      }
+    },
+    "Compressing…": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đang nén…"
+          }
+        }
+      }
+    },
+    "Connect a display": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kết nối màn hình"
+          }
+        }
+      }
+    },
+    "Connect an external display first; the app opens as a window on the desktop.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hãy cắm màn hình ngoài trước, app sẽ mở thành cửa sổ trên desktop."
+          }
+        }
+      }
+    },
+    "Connect events": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lần kết nối"
+          }
+        }
+      }
+    },
+    "Connected": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đã kết nối"
+          }
+        }
+      }
+    },
+    "Connected without mouse input": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kết nối nhưng không có dữ liệu chuột"
+          }
+        }
+      }
+    },
+    "Copied “%@”": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đã sao chép “%@”"
+          }
+        }
+      }
+    },
+    "Copy": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sao chép"
+          }
+        }
+      }
+    },
+    "Copy / cut / paste": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chép / cắt / dán"
+          }
+        }
+      }
+    },
+    "Copy address": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sao chép địa chỉ"
+          }
+        }
+      }
+    },
+    "Copy error": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sao chép lỗi"
+          }
+        }
+      }
+    },
+    "Copy link": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sao chép liên kết"
+          }
+        }
+      }
+    },
+    "Copy page address": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sao chép địa chỉ trang"
+          }
+        }
+      }
+    },
+    "Copy text": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sao chép chữ"
+          }
+        }
+      }
+    },
+    "Could not add %@: %@": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Không thêm được %@: %@"
+          }
+        }
+      }
+    },
+    "Could not compress: %@": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Không nén được: %@"
+          }
+        }
+      }
+    },
+    "Could not create %@.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Không tạo được %@."
+          }
+        }
+      }
+    },
+    "Could not create the file: %@": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Không tạo được file: %@"
+          }
+        }
+      }
+    },
+    "Could not download %@.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Không tải được %@."
+          }
+        }
+      }
+    },
+    "Could not download the update: %@": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Không tải được bản cập nhật: %@"
+          }
+        }
+      }
+    },
+    "Could not extract %@: %@": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Không giải nén được %@: %@"
+          }
+        }
+      }
+    },
+    "Could not find the app’s app delegate.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Không tìm thấy app delegate của app."
+          }
+        }
+      }
+    },
+    "Could not load the app: %@": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Không nạp được app: %@"
+          }
+        }
+      }
+    },
+    "Could not package the update: %@": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Không đóng gói được bản cập nhật: %@"
+          }
+        }
+      }
+    },
+    "Could not reach GitHub. Try again later.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Không kết nối được GitHub. Thử lại sau nhé."
+          }
+        }
+      }
+    },
+    "Could not read this image.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Không đọc được ảnh này."
+          }
+        }
+      }
+    },
+    "Could not resume %@. Download it again from the page.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Không tải tiếp được %@. Hãy tải lại từ trang web."
+          }
+        }
+      }
+    },
+    "Could not save %@.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Không lưu được %@."
+          }
+        }
+      }
+    },
+    "Could not start recording: %@": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Không bắt đầu ghi được: %@"
+          }
+        }
+      }
+    },
+    "Could not start: %@. Allow iDesk to use the local network in the iPhone's Settings → Privacy & Security → Local Network.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Không khởi động được: %@. Cho phép iDesk dùng mạng cục bộ trong Cài đặt iPhone → Quyền riêng tư & Bảo mật → Mạng cục bộ."
+          }
+        }
+      }
+    },
+    "Cut": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cắt"
+          }
+        }
+      }
+    },
+    "Dark pages": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Trang web tối"
+          }
+        }
+      }
+    },
+    "Date": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ngày"
+          }
+        }
+      }
+    },
+    "Decrypted IPAs only. Swipe left to delete an app or remove it from iDesk to save space. Several apps can run at once; each one uses memory, so iOS may close iDesk if too many are open.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chỉ nhận IPA đã giải mã. Vuốt sang trái để xoá hoặc gỡ app khỏi iDesk cho nhẹ. Chạy được nhiều app cùng lúc; mỗi app tốn RAM nên mở quá nhiều thì iOS có thể tắt iDesk."
+          }
+        }
+      }
+    },
+    "Delete": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Xoá"
+          }
+        }
+      }
+    },
+    "Delete certificate": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Xoá chứng chỉ"
+          }
+        }
+      }
+    },
+    "Delete for good": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Xoá vĩnh viễn"
+          }
+        }
+      }
+    },
+    "Delete note": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Xoá ghi chú"
+          }
+        }
+      }
+    },
+    "Deleted files stay here until you empty the Trash. Put back returns them where they were.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "File đã xoá nằm đây cho tới khi bạn dọn thùng rác. Khôi phục sẽ đưa file về chỗ cũ."
+          }
+        }
+      }
+    },
+    "Desktop": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Màn hình nền"
+          }
+        }
+      }
+    },
+    "Details:": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chi tiết:"
+          }
+        }
+      }
+    },
+    "Different Team ID from iDesk (%@): iOS will refuse to load the app.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Khác Team ID của iDesk (%@) - iOS sẽ từ chối nạp app."
+          }
+        }
+      }
+    },
+    "Direct (GameController)": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Trực tiếp (GameController)"
+          }
+        }
+      }
+    },
+    "Display": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Màn hình"
+          }
+        }
+      }
+    },
+    "Display connected": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đã có màn hình"
+          }
+        }
+      }
+    },
+    "Do not disturb": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Không làm phiền"
+          }
+        }
+      }
+    },
+    "Do not disturb (no notification pop-ups)": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Không làm phiền (không hiện thông báo)"
+          }
+        }
+      }
+    },
+    "Don't block ads on this site": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Không chặn quảng cáo trên trang này"
+          }
+        }
+      }
+    },
+    "Don't clear": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Không dọn nữa"
+          }
+        }
+      }
+    },
+    "Done": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Xong"
+          }
+        }
+      }
+    },
+    "Double-click to open. Select a file and press Space for a quick look, or drag it to the desktop.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bấm đúp để mở. Chọn file rồi nhấn Space để xem nhanh, hoặc kéo ra màn hình nền."
+          }
+        }
+      }
+    },
+    "Downloaded %@": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đã tải xong %@"
+          }
+        }
+      }
+    },
+    "Downloading": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đang tải"
+          }
+        }
+      }
+    },
+    "Downloading %@…": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đang tải %@…"
+          }
+        }
+      }
+    },
+    "Downloading iDesk %@…": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đang tải iDesk %@…"
+          }
+        }
+      }
+    },
+    "Downloading… %lld%%": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đang tải… %lld%%"
+          }
+        }
+      }
+    },
+    "Downloads": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tải xuống"
+          }
+        }
+      }
+    },
+    "Drag one finger to move the pointer, tap to click, two-finger tap to right-click, two-finger drag to scroll, three-finger swipe up for recent apps": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kéo một ngón để di chuột, chạm để nhấp, chạm hai ngón để nhấp chuột phải, kéo hai ngón để cuộn, vuốt ba ngón lên để xem ứng dụng gần đây"
+          }
+        }
+      }
+    },
+    "Drag to capture an area · click a window to capture it · Esc to cancel": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kéo để chụp một vùng · bấm vào cửa sổ để chụp cửa sổ đó · Esc để huỷ"
+          }
+        }
+      }
+    },
+    "Drag with two fingers to scroll; hold, then drag to move windows.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kéo 2 ngón để cuộn; giữ rồi kéo để di chuyển cửa sổ."
+          }
+        }
+      }
+    },
+    "Drop a file, not a folder, on the page.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hãy thả một file, không phải thư mục, vào trang."
+          }
+        }
+      }
+    },
+    "Drop on a zone to arrange the window": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thả vào một ô để xếp cửa sổ"
+          }
+        }
+      }
+    },
+    "Each key typed on the iPhone keyboard goes straight to the desktop": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mỗi phím gõ trên bàn phím iPhone được gửi thẳng lên desktop"
+          }
+        }
+      }
+    },
+    "Editing…": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đang sửa…"
+          }
+        }
+      }
+    },
+    "Emoji · arrows and Enter, or click": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Emoji · phím mũi tên và Enter, hoặc bấm chuột"
+          }
+        }
+      }
+    },
+    "Empty Trash": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dọn thùng rác"
+          }
+        }
+      }
+    },
+    "End presentation": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kết thúc trình chiếu"
+          }
+        }
+      }
+    },
+    "Enough room to add and update apps.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đủ chỗ để thêm và cập nhật app."
+          }
+        }
+      }
+    },
+    "Enter ↵": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enter ↵"
+          }
+        }
+      }
+    },
+    "Enter: next · Esc: close": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enter: kết quả tiếp · Esc: đóng"
+          }
+        }
+      }
+    },
+    "Exit mouse mode": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thoát chế độ chuột"
+          }
+        }
+      }
+    },
+    "Expires: %@": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hết hạn: %@"
+          }
+        }
+      }
+    },
+    "External display connected": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đã kết nối màn hình ngoài"
+          }
+        }
+      }
+    },
+    "Extract": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Giải nén"
+          }
+        }
+      }
+    },
+    "Extracted to the folder “%@”.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đã giải nén vào thư mục “%@”."
+          }
+        }
+      }
+    },
+    "Extracting %@…": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đang giải nén %@…"
+          }
+        }
+      }
+    },
+    "Failed": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lỗi"
+          }
+        }
+      }
+    },
+    "File": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "File"
+          }
+        }
+      }
+    },
+    "File name": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tên file"
+          }
+        }
+      }
+    },
+    "Files": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tệp"
+          }
+        }
+      }
+    },
+    "Files: downloads, photos, PDFs, videos and text files, with a text editor.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tệp: file tải về, ảnh, PDF, video và file chữ, kèm trình soạn văn bản."
+          }
+        }
+      }
+    },
+    "Fill the window when maximized": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Phủ kín cửa sổ khi phóng to"
+          }
+        }
+      }
+    },
+    "Find": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tìm"
+          }
+        }
+      }
+    },
+    "Find in page": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tìm trong trang"
+          }
+        }
+      }
+    },
+    "Find in page  ·  next match": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tìm trong trang  ·  kết quả tiếp"
+          }
+        }
+      }
+    },
+    "Find in page…": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tìm trong trang…"
+          }
+        }
+      }
+    },
+    "Find on page": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tìm trên trang"
+          }
+        }
+      }
+    },
+    "Fit the picture inside a TV's edges (overscan)": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thu hình vừa trong viền TV (overscan)"
+          }
+        }
+      }
+    },
+    "Floating video": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Video nổi"
+          }
+        }
+      }
+    },
+    "Focus": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tập trung"
+          }
+        }
+      }
+    },
+    "Focus time is over: take a 5-minute break.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hết giờ tập trung: nghỉ 5 phút nhé."
+          }
+        }
+      }
+    },
+    "Focus timer": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hẹn giờ tập trung"
+          }
+        }
+      }
+    },
+    "Folder name": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tên thư mục"
+          }
+        }
+      }
+    },
+    "Forward": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tiếp"
+          }
+        }
+      }
+    },
+    "Found inside files": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tìm thấy trong nội dung file"
+          }
+        }
+      }
+    },
+    "Free space: %@": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dung lượng trống: %@"
+          }
+        }
+      }
+    },
+    "From": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Từ"
+          }
+        }
+      }
+    },
+    "Game controller": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tay cầm chơi game"
+          }
+        }
+      }
+    },
+    "Get a decrypted IPA file of the app. Copies from the App Store are encrypted and can't run.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lấy file IPA đã giải mã của app. Bản tải từ App Store bị mã hóa nên không chạy được."
+          }
+        }
+      }
+    },
+    "Green": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Xanh lá"
+          }
+        }
+      }
+    },
+    "Help": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Trợ giúp"
+          }
+        }
+      }
+    },
+    "Hide bookmarks bar": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ẩn thanh dấu trang"
+          }
+        }
+      }
+    },
+    "Hide taskbar": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ẩn thanh tác vụ"
+          }
+        }
+      }
+    },
+    "Hide widgets": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ẩn widget"
+          }
+        }
+      }
+    },
+    "History": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lịch sử"
+          }
+        }
+      }
+    },
+    "Hold and move your finger here for the laser pointer": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Giữ và di ngón tay ở đây để hiện chấm laser"
+          }
+        }
+      }
+    },
+    "Home": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Màn hình chính"
+          }
+        }
+      }
+    },
+    "Hot corners": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Góc nóng"
+          }
+        }
+      }
+    },
+    "How to add an iOS app": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cách thêm app iOS"
+          }
+        }
+      }
+    },
+    "Icon size": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cỡ biểu tượng"
+          }
+        }
+      }
+    },
+    "If the pointer doesn't move, turn on AssistiveTouch: Settings → Accessibility → Touch → AssistiveTouch.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nếu con trỏ không chạy, bật AssistiveTouch: Cài đặt → Trợ năng → Cảm ứng → AssistiveTouch."
+          }
+        }
+      }
+    },
+    "Import": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nhập"
+          }
+        }
+      }
+    },
+    "Import certificate": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nhập chứng chỉ"
+          }
+        }
+      }
+    },
+    "Imported %lld files into Files.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đã nhập %lld file vào Tệp."
+          }
+        }
+      }
+    },
+    "Imported %lld of %lld files; the others could not be read.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đã nhập %lld trong %lld file; các file còn lại không đọc được."
+          }
+        }
+      }
+    },
+    "Imported the .mobileprovision file.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đã nhập file .mobileprovision."
+          }
+        }
+      }
+    },
+    "Import…": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nhập…"
+          }
+        }
+      }
+    },
+    "In use when iDesk quit last time": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đang dùng khi iDesk bị thoát lần trước"
+          }
+        }
+      }
+    },
+    "Install": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cài"
+          }
+        }
+      }
+    },
+    "Install as app": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cài thành app"
+          }
+        }
+      }
+    },
+    "Install into iDesk": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cài vào iDesk"
+          }
+        }
+      }
+    },
+    "Install new apps into iDesk": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cài app mới vào iDesk"
+          }
+        }
+      }
+    },
+    "Installing %@…": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đang cài %@…"
+          }
+        }
+      }
+    },
+    "Join the same Wi-Fi as the laptop.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kết nối cùng Wi-Fi với laptop."
+          }
+        }
+      }
+    },
+    "Keep": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Giữ lại"
+          }
+        }
+      }
+    },
+    "Keep a phone shape when maximized": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Giữ khung điện thoại khi phóng to"
+          }
+        }
+      }
+    },
+    "Keep iDesk open on the iPhone while you work: locking it or opening another app pauses the desktop.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Để iDesk mở trên iPhone khi làm việc: khóa máy hoặc mở app khác sẽ làm màn hình nền tạm dừng."
+          }
+        }
+      }
+    },
+    "Keep on top": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Luôn ở trên cùng"
+          }
+        }
+      }
+    },
+    "Keyboard": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bàn phím"
+          }
+        }
+      }
+    },
+    "Keyboard and mouse": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bàn phím và chuột"
+          }
+        }
+      }
+    },
+    "Keyboard connected": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đã nhận bàn phím"
+          }
+        }
+      }
+    },
+    "Keyboard shortcuts": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Phím tắt"
+          }
+        }
+      }
+    },
+    "Keyboard: connected": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bàn phím: đã nhận"
+          }
+        }
+      }
+    },
+    "Keyboard: none": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bàn phím: chưa có"
+          }
+        }
+      }
+    },
+    "Landscape": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nằm ngang"
+          }
+        }
+      }
+    },
+    "Laptop": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Laptop"
+          }
+        }
+      }
+    },
+    "Laptop as the display": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Laptop làm màn hình"
+          }
+        }
+      }
+    },
+    "Large": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lớn"
+          }
+        }
+      }
+    },
+    "Larger": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "To hơn"
+          }
+        }
+      }
+    },
+    "Left button": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nút trái"
+          }
+        }
+      }
+    },
+    "Listening… tap the microphone again to type it": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đang nghe… bấm micro lần nữa để gõ"
+          }
+        }
+      }
+    },
+    "Live typing": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gõ trực tiếp"
+          }
+        }
+      }
+    },
+    "Loading…": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đang tải…"
+          }
+        }
+      }
+    },
+    "Location unavailable.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Không lấy được vị trí."
+          }
+        }
+      }
+    },
+    "Lock and screen saver": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Khoá và màn hình chờ"
+          }
+        }
+      }
+    },
+    "Lock now": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Khoá ngay"
+          }
+        }
+      }
+    },
+    "Lock the desktop": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Khoá desktop"
+          }
+        }
+      }
+    },
+    "Lock the desktop when I come back": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Khoá desktop khi tôi quay lại"
+          }
+        }
+      }
+    },
+    "Low Power Mode is on": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đang bật Chế độ nguồn điện thấp"
+          }
+        }
+      }
+    },
+    "Made %@.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đã tạo %@."
+          }
+        }
+      }
+    },
+    "Maximize": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Phóng to"
+          }
+        }
+      }
+    },
+    "Medium": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vừa"
+          }
+        }
+      }
+    },
+    "Memory is almost full (%@ left). Close a window to open another.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bộ nhớ gần đầy (còn %@). Đóng bớt một cửa sổ để mở cái mới."
+          }
+        }
+      }
+    },
+    "Memory is getting low (%@ left). Closing a window or two keeps iDesk smooth.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bộ nhớ đang thấp (còn %@). Đóng bớt một hai cửa sổ để iDesk chạy mượt."
+          }
+        }
+      }
+    },
+    "Memory is low: %lld tabs you weren't using were set aside. They reload when you open them.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bộ nhớ sắp đầy: đã tạm đóng %lld tab bạn không dùng. Mở lại là tải lại."
+          }
+        }
+      }
+    },
+    "Mice iOS reports": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Số chuột iOS báo"
+          }
+        }
+      }
+    },
+    "Middle button": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nút giữa"
+          }
+        }
+      }
+    },
+    "Minimize": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thu nhỏ"
+          }
+        }
+      }
+    },
+    "Month": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tháng"
+          }
+        }
+      }
+    },
+    "Mouse": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chuột"
+          }
+        }
+      }
+    },
+    "Mouse check": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kiểm tra chuột"
+          }
+        }
+      }
+    },
+    "Mouse connected": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đã nhận chuột"
+          }
+        }
+      }
+    },
+    "Mouse mode": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chế độ chuột"
+          }
+        }
+      }
+    },
+    "Mouse: detected, try moving it": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chuột: đã thấy, hãy di thử"
+          }
+        }
+      }
+    },
+    "Mouse: not detected, see the guide": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chuột: chưa nhận - xem hướng dẫn"
+          }
+        }
+      }
+    },
+    "Mouse: working (AssistiveTouch)": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chuột: đang chạy (AssistiveTouch)"
+          }
+        }
+      }
+    },
+    "Mouse: working (GameController)": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chuột: đang chạy (GameController)"
+          }
+        }
+      }
+    },
+    "Move": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Di chuột"
+          }
+        }
+      }
+    },
+    "Move one finger to move the pointer, tap to click, tap with two fingers to right-click.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kéo 1 ngón để di con trỏ, chạm để bấm, chạm 2 ngón để bấm chuột phải."
+          }
+        }
+      }
+    },
+    "Move tab to a window beside": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chuyển tab sang cửa sổ bên cạnh"
+          }
+        }
+      }
+    },
+    "Move the mouse, press each button and turn the wheel. With AssistiveTouch on, also move its pointer over the trackpad area of the iPhone.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Di chuột, bấm từng nút và lăn bánh xe. Nếu bật AssistiveTouch, hãy di con trỏ của nó qua vùng trackpad trên iPhone."
+          }
+        }
+      }
+    },
+    "Move the window to another workspace": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chuyển cửa sổ sang màn hình ảo khác"
+          }
+        }
+      }
+    },
+    "Move to workspace %lld": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chuyển sang màn hình ảo %lld"
+          }
+        }
+      }
+    },
+    "Moved %lld items to the Trash.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đã chuyển %lld mục vào thùng rác."
+          }
+        }
+      }
+    },
+    "Moved %lld items.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đã chuyển %lld mục."
+          }
+        }
+      }
+    },
+    "Moved to workspace %lld": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đã chuyển sang màn hình ảo %lld"
+          }
+        }
+      }
+    },
+    "Movements": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lần di chuyển"
+          }
+        }
+      }
+    },
+    "Movements here mean the mouse works without AssistiveTouch.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Có lần di chuyển ở đây nghĩa là chuột chạy được mà không cần AssistiveTouch."
+          }
+        }
+      }
+    },
+    "Name": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tên"
+          }
+        }
+      }
+    },
+    "Natural (Mac)": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tự nhiên (Mac)"
+          }
+        }
+      }
+    },
+    "Needs a certificate (Advanced)": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cần nhập chứng chỉ (Nâng cao)"
+          }
+        }
+      }
+    },
+    "Never": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Không bao giờ"
+          }
+        }
+      }
+    },
+    "Never block on": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Không chặn trên"
+          }
+        }
+      }
+    },
+    "New file name": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tên file mới"
+          }
+        }
+      }
+    },
+    "New folder": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thư mục mới"
+          }
+        }
+      }
+    },
+    "New sticky note": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ghi chú dán mới"
+          }
+        }
+      }
+    },
+    "New tab": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tab mới"
+          }
+        }
+      }
+    },
+    "New tab  ·  New window": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tab mới  ·  Cửa sổ mới"
+          }
+        }
+      }
+    },
+    "New text file": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "File văn bản mới"
+          }
+        }
+      }
+    },
+    "New window": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cửa sổ mới"
+          }
+        }
+      }
+    },
+    "Next": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tiếp"
+          }
+        }
+      }
+    },
+    "Next / previous app": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "App kế tiếp / trước"
+          }
+        }
+      }
+    },
+    "Next / previous workspace": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Màn hình ảo kế tiếp / trước"
+          }
+        }
+      }
+    },
+    "Next tab": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tab kế tiếp"
+          }
+        }
+      }
+    },
+    "Next window": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cửa sổ kế tiếp"
+          }
+        }
+      }
+    },
+    "Night filter": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lọc ánh sáng xanh"
+          }
+        }
+      }
+    },
+    "No .mobileprovision file (optional).": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chưa có file .mobileprovision (không bắt buộc)."
+          }
+        }
+      }
+    },
+    "No IPA file chosen. Certificates are imported in Apps on the iPhone.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chưa chọn file IPA nào. Chứng chỉ được nhập trong mục App trên iPhone."
+          }
+        }
+      }
+    },
+    "No apps yet. Add a decrypted IPA file, or download one and install it from Files.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chưa có app nào. Thêm file IPA đã giải mã, hoặc tải về rồi cài từ Tệp."
+          }
+        }
+      }
+    },
+    "No apps yet. Tap “Add IPA” to add one.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chưa có app nào. Bấm “Thêm IPA” để thêm."
+          }
+        }
+      }
+    },
+    "No bookmarks yet. Click ☆ in a window's address bar to add the page.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chưa có dấu trang. Bấm ☆ trên thanh địa chỉ của cửa sổ để thêm trang."
+          }
+        }
+      }
+    },
+    "No certificate yet: guest apps cannot run.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chưa có chứng chỉ - app khách chưa chạy được."
+          }
+        }
+      }
+    },
+    "No display yet": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chưa có màn hình"
+          }
+        }
+      }
+    },
+    "No external display": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chưa có màn hình ngoài"
+          }
+        }
+      }
+    },
+    "No files match.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Không có file nào khớp."
+          }
+        }
+      }
+    },
+    "No history.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chưa có lịch sử."
+          }
+        }
+      }
+    },
+    "No iOS apps yet: add them from IPA files": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chưa có app iOS: thêm từ file IPA"
+          }
+        }
+      }
+    },
+    "No keyboard": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chưa có bàn phím"
+          }
+        }
+      }
+    },
+    "No limit": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Không giới hạn"
+          }
+        }
+      }
+    },
+    "No mouse": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chưa có chuột"
+          }
+        }
+      }
+    },
+    "No notifications": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Không có thông báo"
+          }
+        }
+      }
+    },
+    "No preview for this kind of file. Double-click it in Files to open it.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Không xem nhanh được loại file này. Bấm đúp vào file trong Tệp để mở."
+          }
+        }
+      }
+    },
+    "No recent apps": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Không có ứng dụng gần đây"
+          }
+        }
+      }
+    },
+    "No text to read on this page": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Trang này không có chữ để đọc"
+          }
+        }
+      }
+    },
+    "No video on this page": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Trang này không có video"
+          }
+        }
+      }
+    },
+    "Not found": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Không thấy"
+          }
+        }
+      }
+    },
+    "Not needed: the iPhone is the trackpad. For a mouse, pair it in Settings → Bluetooth with AssistiveTouch on (Accessibility → Touch).": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Không bắt buộc: iPhone là trackpad. Muốn dùng chuột thì ghép trong Cài đặt → Bluetooth và bật AssistiveTouch (Trợ năng → Cảm ứng)."
+          }
+        }
+      }
+    },
+    "Not needed: type in the field at the bottom of the iPhone. A Bluetooth keyboard pairs in Settings → Bluetooth.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Không bắt buộc: gõ ở ô dưới cùng màn hình iPhone. Bàn phím Bluetooth thì ghép trong Cài đặt → Bluetooth."
+          }
+        }
+      }
+    },
+    "Nothing copied yet. Text and pictures you copy on the desktop show here.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chưa sao chép gì. Chữ và ảnh bạn sao chép trên desktop sẽ hiện ở đây."
+          }
+        }
+      }
+    },
+    "Nothing downloading": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Không có gì đang tải"
+          }
+        }
+      }
+    },
+    "Nothing here yet. Files you download and screenshots appear here; Import… adds files from the iPhone.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chưa có gì. File tải về và ảnh chụp màn hình sẽ nằm ở đây; Nhập… để thêm file từ iPhone."
+          }
+        }
+      }
+    },
+    "Nothing in the next 7 days.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Không có sự kiện trong 7 ngày tới."
+          }
+        }
+      }
+    },
+    "Notifications": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thông báo"
+          }
+        }
+      }
+    },
+    "OK": {
+      "shouldTranslate": false
+    },
+    "Off": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tắt"
+          }
+        }
+      }
+    },
+    "On": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bật"
+          }
+        }
+      }
+    },
+    "On iPhone a mouse goes through AssistiveTouch: Settings → Accessibility → Touch → AssistiveTouch, then pair the mouse.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Trên iPhone, chuột đi qua AssistiveTouch: Cài đặt → Trợ năng → Cảm ứng → AssistiveTouch, rồi ghép nối chuột."
+          }
+        }
+      }
+    },
+    "On the Apps page, tap “Install new apps into iDesk” and pick ESign: iDesk is signed again with the apps inside.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ở trang Ứng dụng, bấm “Cài app mới vào iDesk” rồi chọn ESign: iDesk được ký lại kèm các app bên trong."
+          }
+        }
+      }
+    },
+    "On the desktop": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đã ở màn hình nền"
+          }
+        }
+      }
+    },
+    "Only works when iDesk is installed with a development certificate (get-task-allow, e.g. through SideStore/AltStore). With a regular ESign certificate iOS blocks this; use “Install new apps into iDesk” instead.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chỉ dùng được khi iDesk được cài bằng chứng chỉ phát triển (có quyền get-task-allow, ví dụ cài qua SideStore/AltStore). Với chứng chỉ ESign thông thường iOS chặn cách này, hãy dùng “Cài app mới vào iDesk”."
+          }
+        }
+      }
+    },
+    "Open": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mở"
+          }
+        }
+      }
+    },
+    "Open %@": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mở %@"
+          }
+        }
+      }
+    },
+    "Open at most": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mở tối đa"
+          }
+        }
+      }
+    },
+    "Open iDesk again: the apps are in the app menu, and open as windows.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mở lại iDesk: các app nằm trong menu ứng dụng và mở thành cửa sổ."
+          }
+        }
+      }
+    },
+    "Open iDesk again: the apps are in the app menu. Not every app works inside iDesk.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mở lại iDesk: các app nằm trong menu ứng dụng. Không phải app nào cũng chạy được trong iDesk."
+          }
+        }
+      }
+    },
+    "Open in new tab": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mở trong tab mới"
+          }
+        }
+      }
+    },
+    "Open it in the laptop's browser": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mở bằng trình duyệt trên laptop"
+          }
+        }
+      }
+    },
+    "Open it on its own, without other heavy apps, and report it from the Apps page if it happens again.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thử mở riêng app đó, không mở kèm app nặng khác, và bấm Báo cáo ở trang Ứng dụng nếu còn bị."
+          }
+        }
+      }
+    },
+    "Open link in new tab": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mở liên kết trong tab mới"
+          }
+        }
+      }
+    },
+    "Open link in new window": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mở liên kết trong cửa sổ mới"
+          }
+        }
+      }
+    },
+    "Open window": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cửa sổ đang mở"
+          }
+        }
+      }
+    },
+    "Or type on the iPhone: the field at the bottom (any language), or Live typing for each key.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hoặc gõ trên iPhone: ô ở dưới cùng (gõ được mọi ngôn ngữ), hoặc Gõ trực tiếp từng phím."
+          }
+        }
+      }
+    },
+    "Password": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mật khẩu"
+          }
+        }
+      }
+    },
+    "Password for the .p12 file": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mật khẩu của file .p12"
+          }
+        }
+      }
+    },
+    "Paste": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dán"
+          }
+        }
+      }
+    },
+    "Paste here": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dán vào đây"
+          }
+        }
+      }
+    },
+    "Pause": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tạm dừng"
+          }
+        }
+      }
+    },
+    "Paused": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đã tạm dừng"
+          }
+        }
+      }
+    },
+    "Phone size": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cỡ điện thoại"
+          }
+        }
+      }
+    },
+    "Pick ESign (or your signing app) on the iPhone to install iDesk %@.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chọn ESign (hoặc app ký của bạn) trên iPhone để cài iDesk %@."
+          }
+        }
+      }
+    },
+    "Pick ESign (or your signing app) on the iPhone.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chọn ESign (hoặc app ký bạn dùng) trên iPhone."
+          }
+        }
+      }
+    },
+    "Picture": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ảnh"
+          }
+        }
+      }
+    },
+    "Pin": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ghim"
+          }
+        }
+      }
+    },
+    "Pin to taskbar": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ghim vào thanh tác vụ"
+          }
+        }
+      }
+    },
+    "Pink": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hồng"
+          }
+        }
+      }
+    },
+    "Plug the iPhone into a monitor or TV with a USB-C → HDMI or DisplayPort cable (or a USB-C hub).": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cắm iPhone vào màn hình hoặc TV bằng cáp USB-C → HDMI hoặc DisplayPort (hoặc hub USB-C)."
+          }
+        }
+      }
+    },
+    "Pointer": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Di chuột"
+          }
+        }
+      }
+    },
+    "Pointer movements": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lần di con trỏ"
+          }
+        }
+      }
+    },
+    "Pointer speed": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tốc độ con trỏ"
+          }
+        }
+      }
+    },
+    "Preparing the install file…": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đang chuẩn bị file cài…"
+          }
+        }
+      }
+    },
+    "Present": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Trình chiếu"
+          }
+        }
+      }
+    },
+    "Presenting": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đang trình chiếu"
+          }
+        }
+      }
+    },
+    "Previous": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Trước"
+          }
+        }
+      }
+    },
+    "Previous / next workspace": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Màn hình ảo trước / kế tiếp"
+          }
+        }
+      }
+    },
+    "Profile: %@": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hồ sơ: %@"
+          }
+        }
+      }
+    },
+    "Purple": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tím"
+          }
+        }
+      }
+    },
+    "Put back": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Khôi phục"
+          }
+        }
+      }
+    },
+    "Put back %lld items.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đã khôi phục %lld mục."
+          }
+        }
+      }
+    },
+    "Put widgets back in place": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đưa widget về chỗ cũ"
+          }
+        }
+      }
+    },
+    "Quick Look of the file selected in Files": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Xem nhanh file đang chọn trong Tệp"
+          }
+        }
+      }
+    },
+    "Read aloud": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đọc to"
+          }
+        }
+      }
+    },
+    "Reader view": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chế độ đọc"
+          }
+        }
+      }
+    },
+    "Ready (signed on device)": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sẵn sàng (tự ký)"
+          }
+        }
+      }
+    },
+    "Ready · %@": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sẵn sàng · %@"
+          }
+        }
+      }
+    },
+    "Recent": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gần đây"
+          }
+        }
+      }
+    },
+    "Recent apps": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ứng dụng gần đây"
+          }
+        }
+      }
+    },
+    "Record the screen": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ghi màn hình"
+          }
+        }
+      }
+    },
+    "Recording the screen. ⌘ + Shift + 5 or the red button stops it.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đang ghi màn hình. Bấm ⌘ + Shift + 5 hoặc nút đỏ để dừng."
+          }
+        }
+      }
+    },
+    "Reinstall iDesk (remove selected apps)": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cài lại iDesk (gỡ app đã chọn)"
+          }
+        }
+      }
+    },
+    "Reload": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tải lại"
+          }
+        }
+      }
+    },
+    "Reminders": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lời nhắc"
+          }
+        }
+      }
+    },
+    "Remove": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Xoá"
+          }
+        }
+      }
+    },
+    "Remove app": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gỡ app"
+          }
+        }
+      }
+    },
+    "Remove bookmark": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bỏ dấu trang"
+          }
+        }
+      }
+    },
+    "Remove from desktop": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Xoá khỏi màn hình nền"
+          }
+        }
+      }
+    },
+    "Remove from iDesk": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gỡ khỏi iDesk"
+          }
+        }
+      }
+    },
+    "Removed when iDesk is reinstalled · %@": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sẽ gỡ khi cài lại iDesk · %@"
+          }
+        }
+      }
+    },
+    "Rename": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đổi tên"
+          }
+        }
+      }
+    },
+    "Reopen closed window or tab": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mở lại cửa sổ hoặc tab vừa đóng"
+          }
+        }
+      }
+    },
+    "Reopen iOS apps from last time": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mở lại các app iOS của lần trước"
+          }
+        }
+      }
+    },
+    "Reopen the last closed tab or window": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mở lại tab hoặc cửa sổ vừa đóng"
+          }
+        }
+      }
+    },
+    "Replace": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thay"
+          }
+        }
+      }
+    },
+    "Replace all": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thay tất cả"
+          }
+        }
+      }
+    },
+    "Replace with": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thay bằng"
+          }
+        }
+      }
+    },
+    "Report": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Báo cáo"
+          }
+        }
+      }
+    },
+    "Reset": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đặt lại"
+          }
+        }
+      }
+    },
+    "Reset to defaults": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Về mặc định"
+          }
+        }
+      }
+    },
+    "Resolution": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Độ phân giải"
+          }
+        }
+      }
+    },
+    "Restore size": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Khôi phục kích thước"
+          }
+        }
+      }
+    },
+    "Right button": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nút phải"
+          }
+        }
+      }
+    },
+    "Right clicks": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lần bấm phải"
+          }
+        }
+      }
+    },
+    "Save": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lưu"
+          }
+        }
+      }
+    },
+    "Save as…": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lưu thành…"
+          }
+        }
+      }
+    },
+    "Save to iPhone…": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lưu vào iPhone…"
+          }
+        }
+      }
+    },
+    "Saved": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đã lưu"
+          }
+        }
+      }
+    },
+    "Saved as %@.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đã lưu thành %@."
+          }
+        }
+      }
+    },
+    "Screen recording": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ghi màn hình"
+          }
+        }
+      }
+    },
+    "Screen recording saved to Photos and Files": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đã lưu video ghi màn hình vào Ảnh và Tệp"
+          }
+        }
+      }
+    },
+    "Screen saver after": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Màn hình chờ sau"
+          }
+        }
+      }
+    },
+    "Screenshot": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chụp màn hình"
+          }
+        }
+      }
+    },
+    "Screenshot of an area": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chụp một vùng màn hình"
+          }
+        }
+      }
+    },
+    "Screenshot of an area or a window": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chụp một vùng hoặc một cửa sổ"
+          }
+        }
+      }
+    },
+    "Screenshot of the whole screen": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chụp cả màn hình"
+          }
+        }
+      }
+    },
+    "Screenshot saved to Files and copied": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đã lưu ảnh chụp vào Tệp và sao chép"
+          }
+        }
+      }
+    },
+    "Screenshot saved to Files and copied, not to Photos: allow iDesk to add photos in the iPhone's Settings → Privacy & Security → Photos.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đã lưu ảnh chụp vào Tệp và sao chép, nhưng chưa lưu được vào Ảnh: cho phép iDesk thêm ảnh trong Cài đặt iPhone → Quyền riêng tư & Bảo mật → Ảnh."
+          }
+        }
+      }
+    },
+    "Screenshot saved to Photos, Files, and copied": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đã lưu ảnh chụp vào Ảnh, Tệp và sao chép"
+          }
+        }
+      }
+    },
+    "Scroll": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cuộn"
+          }
+        }
+      }
+    },
+    "Scroll direction": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hướng cuộn"
+          }
+        }
+      }
+    },
+    "Scrolling": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cuộn"
+          }
+        }
+      }
+    },
+    "Scrolling speed": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tốc độ cuộn"
+          }
+        }
+      }
+    },
+    "Search history": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tìm trong lịch sử"
+          }
+        }
+      }
+    },
+    "Search in this folder": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tìm trong thư mục này"
+          }
+        }
+      }
+    },
+    "Search the web for “%@”": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tìm trên web “%@”"
+          }
+        }
+      }
+    },
+    "Select all": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chọn tất cả"
+          }
+        }
+      }
+    },
+    "Send report": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gửi báo cáo"
+          }
+        }
+      }
+    },
+    "Send text": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gửi chữ"
+          }
+        }
+      }
+    },
+    "Settings": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cài đặt"
+          }
+        }
+      }
+    },
+    "Settings → Help → Update: your apps stay.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cài đặt → Trợ giúp → Cập nhật: app của bạn vẫn còn."
+          }
+        }
+      }
+    },
+    "Several apps can run at once; each one uses memory, so iOS may close iDesk if too many are open.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chạy được nhiều app cùng lúc; mỗi app tốn bộ nhớ, nên mở quá nhiều thì iOS có thể tắt iDesk."
+          }
+        }
+      }
+    },
+    "Show": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hiện"
+          }
+        }
+      }
+    },
+    "Show bookmarks bar": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hiện thanh dấu trang"
+          }
+        }
+      }
+    },
+    "Show desktop": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hiện màn hình nền"
+          }
+        }
+      }
+    },
+    "Show the bookmarks bar": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hiện thanh dấu trang"
+          }
+        }
+      }
+    },
+    "Show the guide on the iPhone": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mở hướng dẫn trên iPhone"
+          }
+        }
+      }
+    },
+    "Show the welcome guide": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Xem lại hướng dẫn"
+          }
+        }
+      }
+    },
+    "Show widgets": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hiện widget"
+          }
+        }
+      }
+    },
+    "Show window": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hiện cửa sổ"
+          }
+        }
+      }
+    },
+    "Show windows again": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hiện lại cửa sổ"
+          }
+        }
+      }
+    },
+    "Shows what the mouse sends to iDesk": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Xem chuột gửi gì cho iDesk"
+          }
+        }
+      }
+    },
+    "Signing failed: %@": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ký thất bại: %@"
+          }
+        }
+      }
+    },
+    "Size": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dung lượng"
+          }
+        }
+      }
+    },
+    "Skip": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bỏ qua"
+          }
+        }
+      }
+    },
+    "Small": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nhỏ"
+          }
+        }
+      }
+    },
+    "Smaller": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nhỏ hơn"
+          }
+        }
+      }
+    },
+    "Snap left": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ghim nửa trái"
+          }
+        }
+      }
+    },
+    "Snap right": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ghim nửa phải"
+          }
+        }
+      }
+    },
+    "Snap, maximize, minimize the window": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ghim, phóng to, thu nhỏ cửa sổ"
+          }
+        }
+      }
+    },
+    "Sound": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Âm thanh"
+          }
+        }
+      }
+    },
+    "Space or Esc closes · ← → other files": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Space hoặc Esc để đóng · ← → file khác"
+          }
+        }
+      }
+    },
+    "Speak, and the words are typed on the desktop": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nói, và lời bạn được gõ lên desktop"
+          }
+        }
+      }
+    },
+    "Spotlight Search": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tìm kiếm Spotlight"
+          }
+        }
+      }
+    },
+    "Spotlight: apps, files, sums, the web": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Spotlight: app, file, phép tính, web"
+          }
+        }
+      }
+    },
+    "Start": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bắt đầu"
+          }
+        }
+      }
+    },
+    "Start using iDesk": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bắt đầu dùng iDesk"
+          }
+        }
+      }
+    },
+    "Stop": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dừng"
+          }
+        }
+      }
+    },
+    "Stop keeping on top": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thôi giữ trên cùng"
+          }
+        }
+      }
+    },
+    "Stop live typing": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tắt gõ trực tiếp"
+          }
+        }
+      }
+    },
+    "Stop reading": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dừng đọc"
+          }
+        }
+      }
+    },
+    "Stop recording": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dừng ghi"
+          }
+        }
+      }
+    },
+    "Stop voice typing": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dừng gõ bằng giọng nói"
+          }
+        }
+      }
+    },
+    "Switch apps": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chuyển app"
+          }
+        }
+      }
+    },
+    "Switch windows": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chuyển cửa sổ"
+          }
+        }
+      }
+    },
+    "TV mode": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chế độ TV"
+          }
+        }
+      }
+    },
+    "TV mode: 720p, larger text and icons. Pick Automatic under Resolution to go back.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chế độ TV: 720p, chữ và biểu tượng to hơn. Chọn Tự động ở mục Độ phân giải để quay lại."
+          }
+        }
+      }
+    },
+    "Tablet size": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cỡ máy tính bảng"
+          }
+        }
+      }
+    },
+    "Tap": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chạm"
+          }
+        }
+      }
+    },
+    "Tap Apps on the trackpad (the box button), then add the IPA file.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bấm App trên trackpad (nút hình hộp), rồi thêm file IPA."
+          }
+        }
+      }
+    },
+    "Tap an app to open it on the desktop.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bấm vào app để mở trên desktop."
+          }
+        }
+      }
+    },
+    "Tap the box button → “Install new apps into iDesk”, pick ESign (or your signing app), then sign and install as usual.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mở nút hình hộp → “Cài app mới vào iDesk”, chọn ESign (hoặc app ký bạn dùng), ký và cài như bình thường."
+          }
+        }
+      }
+    },
+    "Tap “Install new apps into iDesk” and pick ESign: it signs iDesk again with the apps inside and installs it.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bấm “Cài app mới vào iDesk” rồi chọn ESign: ESign ký lại iDesk kèm các app bên trong và cài đặt."
+          }
+        }
+      }
+    },
+    "Team ID: %@": {
+      "shouldTranslate": false
+    },
+    "Text editor": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Soạn văn bản"
+          }
+        }
+      }
+    },
+    "Text replacement": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gõ tắt"
+          }
+        }
+      }
+    },
+    "Text size of pages": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cỡ chữ của trang"
+          }
+        }
+      }
+    },
+    "The Apple WWDR intermediate certificate is missing (not in the .p12 file nor in iDesk’s signature). iOS may reject the signature.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thiếu chứng chỉ trung gian Apple WWDR (file .p12 không kèm, chữ ký của iDesk cũng không có). iOS có thể từ chối chữ ký."
+          }
+        }
+      }
+    },
+    "The IPA file must be decrypted: copies from the App Store can't run. After adding it, tap “Install new apps into iDesk” and pick ESign. Apps installed from the App Store can't open on the desktop; use their website instead.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "File IPA phải được giải mã: bản từ App Store không chạy được. Thêm xong, bấm “Cài app mới vào iDesk” rồi chọn ESign. App cài từ App Store không mở được trên màn hình nền; hãy dùng trang web của app đó."
+          }
+        }
+      }
+    },
+    "The IPA has no Payload/*.app folder.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Trong IPA không có thư mục Payload/*.app."
+          }
+        }
+      }
+    },
+    "The Simulator needs no certificate.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Simulator không cần chứng chỉ."
+          }
+        }
+      }
+    },
+    "The Trash is empty.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thùng rác trống."
+          }
+        }
+      }
+    },
+    "The ZIP file is damaged: %@.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "File ZIP hỏng: %@."
+          }
+        }
+      }
+    },
+    "The ZIP uses an unsupported feature: %@.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ZIP dùng tính năng chưa hỗ trợ: %@."
+          }
+        }
+      }
+    },
+    "The app has no arm64 slice.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "App không có bản arm64."
+          }
+        }
+      }
+    },
+    "The app is still FairPlay-encrypted (an IPA straight from the App Store). iDesk can only load decrypted IPAs.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "App còn mã hoá FairPlay (IPA lấy thẳng từ App Store). iDesk chỉ nạp được IPA đã giải mã."
+          }
+        }
+      }
+    },
+    "The app is still encrypted (an IPA straight from the App Store). iDesk can only load decrypted IPAs.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "App còn mã hoá (IPA lấy thẳng từ App Store). iDesk chỉ nạp được IPA đã giải mã."
+          }
+        }
+      }
+    },
+    "The app needs a library (framework) iDesk cannot find or sign. The IPA may lack its Frameworks folder, or use a system library this iOS version does not have.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "App cần một thư viện (framework) mà iDesk không tìm thấy hoặc chưa ký được. IPA có thể thiếu thư mục Frameworks hoặc dùng thư viện của hệ thống mà iOS này không có."
+          }
+        }
+      }
+    },
+    "The app needs a newer iOS version, or uses a system function this device does not have.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "App cần phiên bản iOS mới hơn máy đang chạy, hoặc dùng hàm hệ thống không có trên máy này."
+          }
+        }
+      }
+    },
+    "The app reported an error while launching: %@": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "App báo lỗi khi khởi chạy: %@"
+          }
+        }
+      }
+    },
+    "The apps' caches are cleared the next time iDesk opens.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bộ nhớ đệm của các app sẽ được dọn lần tới khi mở iDesk."
+          }
+        }
+      }
+    },
+    "The app’s executable has an unusual layout (no LC_LOAD_DYLINKER) and cannot be patched.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "File thực thi của app có cấu trúc lạ (thiếu LC_LOAD_DYLINKER), chưa vá được."
+          }
+        }
+      }
+    },
+    "The app’s executable has no arm64 version suitable for this iPhone.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "File thực thi của app không có bản arm64 phù hợp với iPhone này."
+          }
+        }
+      }
+    },
+    "The app’s executable is not a 64-bit Mach-O.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "File thực thi của app không phải Mach-O 64-bit."
+          }
+        }
+      }
+    },
+    "The desktop and apps run slower. Turn it off in Control Center while you work.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Desktop và app sẽ chạy chậm hơn. Tắt nó trong Trung tâm điều khiển khi làm việc."
+          }
+        }
+      }
+    },
+    "The desktop appears on the display; the iPhone becomes its trackpad and keyboard.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Màn hình desktop hiện trên màn hình ngoài; iPhone thành trackpad và bàn phím."
+          }
+        }
+      }
+    },
+    "The desktop is locked": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Desktop đang khoá"
+          }
+        }
+      }
+    },
+    "The desktop is on the display (%lld × %lld).": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Desktop đang hiện trên màn hình (%lld × %lld)."
+          }
+        }
+      }
+    },
+    "The download did not finish.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tải xuống không hoàn tất."
+          }
+        }
+      }
+    },
+    "The downloaded file is not an iDesk IPA.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "File tải về không phải IPA của iDesk."
+          }
+        }
+      }
+    },
+    "The file is not a ZIP/IPA.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "File không phải định dạng ZIP/IPA."
+          }
+        }
+      }
+    },
+    "The file is not a single-architecture 64-bit Mach-O.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "File không phải Mach-O 64-bit một kiến trúc."
+          }
+        }
+      }
+    },
+    "The file was never signed, so it has no room for a signature.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "File chưa từng được ký nên không có chỗ đặt chữ ký."
+          }
+        }
+      }
+    },
+    "The guest app and iDesk are signed with different Team IDs.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "App khách và iDesk được ký bằng hai Team ID khác nhau."
+          }
+        }
+      }
+    },
+    "The guest app is not signed.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "App khách chưa được ký."
+          }
+        }
+      }
+    },
+    "The guide is open on the iPhone.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hướng dẫn đang mở trên iPhone."
+          }
+        }
+      }
+    },
+    "The iPhone is getting hot. Close windows you don't need, take it out of its case or lower the display resolution.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iPhone đang nóng lên. Đóng bớt cửa sổ không dùng, tháo ốp hoặc giảm độ phân giải màn hình."
+          }
+        }
+      }
+    },
+    "The iPhone is the trackpad": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iPhone là trackpad"
+          }
+        }
+      }
+    },
+    "The iPhone is very hot and will slow down. Close some windows and let it cool.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iPhone rất nóng và sẽ chạy chậm lại. Đóng bớt cửa sổ và để máy nguội."
+          }
+        }
+      }
+    },
+    "The imported certificate (Team %@) differs from the one signing iDesk (Team %@). iOS only loads apps signed by the same Team as iDesk. Re-sign iDesk in ESign with this certificate, or import the certificate used to sign iDesk.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chứng chỉ đã nhập (Team %@) khác chứng chỉ đang ký iDesk (Team %@). iOS chỉ cho nạp app ký cùng Team với iDesk. Hãy ký lại iDesk trong ESign bằng đúng chứng chỉ này, hoặc nhập chứng chỉ đã dùng để ký iDesk."
+          }
+        }
+      }
+    },
+    "The mouse only reaches iDesk through AssistiveTouch. Use mouse mode (the corner button on the trackpad) to point straight at the desktop.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chuột chỉ tới được iDesk qua AssistiveTouch. Dùng chế độ chuột (nút ở góc trackpad) để trỏ thẳng vào desktop."
+          }
+        }
+      }
+    },
+    "The mouse works directly. AssistiveTouch is not needed.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chuột chạy trực tiếp, không cần AssistiveTouch."
+          }
+        }
+      }
+    },
+    "The page did not take the file.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Trang web không nhận file."
+          }
+        }
+      }
+    },
+    "The profile does not match this certificate.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hồ sơ không đi với chứng chỉ này."
+          }
+        }
+      }
+    },
+    "The recording could not be saved.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Không lưu được video ghi màn hình."
+          }
+        }
+      }
+    },
+    "This IPA has a tweak injected, with an old hook library that calls functions this iOS removed. Delete the app in iDesk and add the IPA again: newer iDesk versions patch this when adding. If it still fails or quits on launch, use an IPA without tweaks.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "IPA này có gắn tweak, kèm thư viện hook cũ gọi hàm mà iOS trên máy đã bỏ. Hãy xoá app này trong iDesk rồi Thêm IPA lại: bản iDesk mới tự vá chỗ này khi thêm. Nếu vẫn lỗi hoặc app thoát khi mở, dùng bản IPA không gắn tweak."
+          }
+        }
+      }
+    },
+    "This file is no longer in Files.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "File này không còn trong Tệp."
+          }
+        }
+      }
+    },
+    "This file is too big to drop on a page (40 MB at most).": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "File này quá lớn để thả vào trang (tối đa 40 MB)."
+          }
+        }
+      }
+    },
+    "This list": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Danh sách này"
+          }
+        }
+      }
+    },
+    "Three fingers: up for recent apps, down for the desktop, tap to go back.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ba ngón: vuốt lên xem app gần đây, vuốt xuống về màn hình nền, chạm để quay lại."
+          }
+        }
+      }
+    },
+    "Through AssistiveTouch": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Qua AssistiveTouch"
+          }
+        }
+      }
+    },
+    "Tile windows": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Xếp cạnh nhau"
+          }
+        }
+      }
+    },
+    "To get": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thành"
+          }
+        }
+      }
+    },
+    "Trackpad": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bàn di chuột"
+          }
+        }
+      }
+    },
+    "Trackpad (fingers)": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Trackpad (số ngón)"
+          }
+        }
+      }
+    },
+    "Trackpad on the iPhone": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Trackpad trên iPhone"
+          }
+        }
+      }
+    },
+    "Trackpad speed": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tốc độ vuốt trên trackpad"
+          }
+        }
+      }
+    },
+    "Traditional": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Truyền thống"
+          }
+        }
+      }
+    },
+    "Translate page": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dịch trang"
+          }
+        }
+      }
+    },
+    "Trash": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thùng rác"
+          }
+        }
+      }
+    },
+    "Turn on": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bật"
+          }
+        }
+      }
+    },
+    "Turns the iPhone landscape and fills the screen with the desktop to point at": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Giữ iPhone nằm ngang và hiện desktop kín màn hình để trỏ chuột vào"
+          }
+        }
+      }
+    },
+    "Type": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gõ"
+          }
+        }
+      }
+    },
+    "Type a site such as example.com.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hãy nhập một trang như vidu.com."
+          }
+        }
+      }
+    },
+    "Type an address or search": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nhập địa chỉ hoặc tìm kiếm"
+          }
+        }
+      }
+    },
+    "Type text to send to the page": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gõ chữ để gửi vào trang"
+          }
+        }
+      }
+    },
+    "Type to search": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gõ để tìm"
+          }
+        }
+      }
+    },
+    "Types what you copied on the iPhone into the page": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gõ vào trang thứ bạn đã sao chép trên iPhone"
+          }
+        }
+      }
+    },
+    "Typing": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gõ phím"
+          }
+        }
+      }
+    },
+    "Typing goes to the desktop.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gõ phím sẽ vào desktop."
+          }
+        }
+      }
+    },
+    "USB-C iPhone: a USB-C → HDMI cable (or a USB-C cable to a monitor with a USB-C video input). Lightning iPhone: Apple's Lightning → HDMI adapter. No cable: Control Center → Screen Mirroring → an Apple TV, an AirPlay TV or a Mac. Laptop: the “Use a laptop as the display” button.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iPhone cổng USB-C: cáp USB-C → HDMI (hoặc cáp USB-C nối thẳng màn hình có cổng USB-C nhận hình). iPhone cổng Lightning: bộ chuyển Lightning → HDMI của Apple. Không có cáp: Trung tâm điều khiển → Phản chiếu màn hình → Apple TV, TV có AirPlay hoặc máy Mac. Laptop: nút “Dùng laptop làm màn hình”."
+          }
+        }
+      }
+    },
+    "Unknown cause. Tap “Copy error” and send the full text so it can be looked into.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chưa rõ nguyên nhân. Bấm “Sao chép lỗi” và gửi nguyên văn để tìm cách xử lý."
+          }
+        }
+      }
+    },
+    "Unlock on the iPhone with %@": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mở khoá trên iPhone bằng %@"
+          }
+        }
+      }
+    },
+    "Unlock the desktop": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mở khoá desktop"
+          }
+        }
+      }
+    },
+    "Unlock with %@": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mở khoá bằng %@"
+          }
+        }
+      }
+    },
+    "Unpin": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bỏ ghim"
+          }
+        }
+      }
+    },
+    "Unpin from taskbar": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bỏ ghim khỏi thanh tác vụ"
+          }
+        }
+      }
+    },
+    "Unrecognized file%@. Choose an .ipa file, a certificate .zip, or cert.p12 / .mobileprovision / pass.txt.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Không nhận ra file đã chọn%@. Hãy chọn file .ipa, file .zip chứng chỉ, hoặc cert.p12 / .mobileprovision / pass.txt."
+          }
+        }
+      }
+    },
+    "Untitled.txt": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chưa đặt tên.txt"
+          }
+        }
+      }
+    },
+    "Unusable certificate: %@": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chứng chỉ không dùng được: %@"
+          }
+        }
+      }
+    },
+    "Up": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lên"
+          }
+        }
+      }
+    },
+    "Up to %lld windows can be open at once, so iDesk stays smooth. Close one to open another.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chỉ mở được tối đa %lld cửa sổ cùng lúc để iDesk chạy mượt. Đóng bớt một cửa sổ để mở cái mới."
+          }
+        }
+      }
+    },
+    "Upcoming events": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sự kiện sắp tới"
+          }
+        }
+      }
+    },
+    "Update": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cập nhật"
+          }
+        }
+      }
+    },
+    "Update to": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cập nhật lên"
+          }
+        }
+      }
+    },
+    "Update to %@": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cập nhật lên %@"
+          }
+        }
+      }
+    },
+    "Use a laptop as the display": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dùng laptop làm màn hình"
+          }
+        }
+      }
+    },
+    "Version": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Phiên bản"
+          }
+        }
+      }
+    },
+    "Voice": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Giọng nói"
+          }
+        }
+      }
+    },
+    "Voice typing": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gõ bằng giọng nói"
+          }
+        }
+      }
+    },
+    "Voice typing is not available for this language right now.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hiện chưa gõ bằng giọng nói được với ngôn ngữ này."
+          }
+        }
+      }
+    },
+    "Waiting to be installed into iDesk · %@": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chờ cài vào iDesk · %@"
+          }
+        }
+      }
+    },
+    "Wallpaper": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hình nền"
+          }
+        }
+      }
+    },
+    "Wallpaper %lld": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hình nền %lld"
+          }
+        }
+      }
+    },
+    "Weather": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thời tiết"
+          }
+        }
+      }
+    },
+    "Weather unavailable.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Không lấy được thời tiết."
+          }
+        }
+      }
+    },
+    "Web": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Web"
+          }
+        }
+      }
+    },
+    "Websites and web apps, in windows with tabs: YouTube, Gmail, Google Docs, Facebook, Zalo Web…": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Trang web và web app, trong cửa sổ có tab: YouTube, Gmail, Google Docs, Facebook, Zalo Web…"
+          }
+        }
+      }
+    },
+    "What opens on the desktop": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Màn hình nền mở được gì"
+          }
+        }
+      }
+    },
+    "Wheel": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bánh xe"
+          }
+        }
+      }
+    },
+    "Windows": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cửa sổ"
+          }
+        }
+      }
+    },
+    "Workspace %lld": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Màn hình ảo %lld"
+          }
+        }
+      }
+    },
+    "Workspaces (4 desktops)": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Workspaces (4 màn hình nền)"
+          }
+        }
+      }
+    },
+    "Yellow": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vàng"
+          }
+        }
+      }
+    },
+    "You have %@. Your iOS apps stay: they are put into the new version.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bạn đang dùng bản %@. Các app iOS vẫn được giữ: iDesk gộp chúng vào bản mới."
+          }
+        }
+      }
+    },
+    "Zoom %lld%%": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thu phóng %lld%%"
+          }
+        }
+      }
+    },
+    "Zoom in": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Phóng to"
+          }
+        }
+      }
+    },
+    "Zoom out": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thu nhỏ"
+          }
+        }
+      }
+    },
+    "Zoom the page in, out, back to 100 %": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Phóng to, thu nhỏ, về 100 % trang web"
+          }
+        }
+      }
+    },
+    "cannot parse the certificate.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "không phân tích được chứng chỉ."
+          }
+        }
+      }
+    },
+    "cannot read the .p12 file (code %@).": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "không đọc được file .p12 (mã %@)."
+          }
+        }
+      }
+    },
+    "cannot start the decompressor": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "không khởi tạo được bộ giải nén"
+          }
+        }
+      }
+    },
+    "central directory": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "mục lục"
+          }
+        }
+      }
+    },
+    "compressed data": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "dữ liệu nén"
+          }
+        }
+      }
+    },
+    "compression method %@": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "kiểu nén %@"
+          }
+        }
+      }
+    },
+    "example.com": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "vidu.com"
+          }
+        }
+      }
+    },
+    "iDesk": {
+      "shouldTranslate": false
+    },
+    "iDesk %@ is available": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đã có iDesk %@"
+          }
+        }
+      }
+    },
+    "iDesk %@ is available.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đã có iDesk %@."
+          }
+        }
+      }
+    },
+    "iDesk %@ is available: Settings → Help to download it.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đã có iDesk %@: vào Cài đặt → Trợ giúp để tải về."
+          }
+        }
+      }
+    },
+    "iDesk %@ is the latest version.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iDesk %@ là bản mới nhất."
+          }
+        }
+      }
+    },
+    "iDesk %@ with your apps is ready: pick ESign (or your signing app) on the iPhone.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iDesk %@ kèm các app của bạn đã sẵn sàng: chọn ESign (hoặc app ký của bạn) trên iPhone."
+          }
+        }
+      }
+    },
+    "iDesk closed unexpectedly last time, while %@ was open.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iDesk bị thoát lần trước, lúc đang mở %@."
+          }
+        }
+      }
+    },
+    "iDesk closed unexpectedly last time.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iDesk bị thoát lần trước."
+          }
+        }
+      }
+    },
+    "iDesk has get-task-allow (development certificate).": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iDesk có quyền get-task-allow (chứng chỉ phát triển)."
+          }
+        }
+      }
+    },
+    "iDesk is signed by Team: %@": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iDesk đang được ký bởi Team: %@"
+          }
+        }
+      }
+    },
+    "iDesk lacks get-task-allow: iOS may reject apps signed on this device; install them into iDesk through ESign instead.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iDesk không có quyền get-task-allow: tự ký trên máy có thể bị iOS từ chối, nên dùng nút Xuất cho ESign."
+          }
+        }
+      }
+    },
+    "iDesk needs iOS 17 or later. Update in Settings → General → Software Update.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iDesk cần iOS 17 trở lên. Cập nhật trong Cài đặt → Cài đặt chung → Cập nhật phần mềm."
+          }
+        }
+      }
+    },
+    "iDesk needs iOS 17 or later: this iPhone has it.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iDesk cần iOS 17 trở lên: máy này đủ."
+          }
+        }
+      }
+    },
+    "iDesk was paused while the iPhone was locked or showing another app. Keep iDesk open on the iPhone while you work.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iDesk đã tạm dừng khi iPhone bị khóa hoặc đang mở app khác. Hãy để iDesk mở trên iPhone khi làm việc."
+          }
+        }
+      }
+    },
+    "iDesk's list of ad and tracking servers": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Danh sách máy chủ quảng cáo và theo dõi của iDesk"
+          }
+        }
+      }
+    },
+    "iOS %@": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iOS %@"
+          }
+        }
+      }
+    },
+    "iOS apps come from decrypted IPA files: Apps → Add IPA files. The Apps page lists which apps others got working.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "App iOS lấy từ file IPA đã giải mã: Ứng dụng → Thêm file IPA. Trang Ứng dụng có danh sách app mọi người đã chạy được."
+          }
+        }
+      }
+    },
+    "iOS apps run only from decrypted IPA files added to iDesk (next page). Not every app works inside it.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "App iOS chỉ chạy từ file IPA đã giải mã được thêm vào iDesk (trang sau). Không phải app nào cũng chạy được."
+          }
+        }
+      }
+    },
+    "iOS only runs code inside an installed app, not from iDesk’s data folder.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iOS chỉ cho chạy mã nằm trong app đã cài, không cho nạp từ thư mục dữ liệu của iDesk."
+          }
+        }
+      }
+    },
+    "iOS only runs code that is inside an installed app, so new apps must be installed into iDesk once: tap the button above, pick ESign (or Feather, Scarlet… whichever signing app you use), then sign and install as usual. Reopen iDesk and the app runs.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iOS chỉ cho chạy mã nằm trong app đã cài, nên app mới phải được cài vào iDesk một lần: bấm nút trên, chọn ESign (hoặc Feather, Scarlet… app ký bạn dùng), ký và cài như cài app bình thường. Mở lại iDesk là app chạy."
+          }
+        }
+      }
+    },
+    "iOS rejected the guest app’s signature.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iOS từ chối chữ ký của app khách."
+          }
+        }
+      }
+    },
+    "iOS reports a mouse but sends iDesk no movement. Turn on AssistiveTouch to use it through its pointer.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iOS báo có chuột nhưng không gửi chuyển động nào cho iDesk. Hãy bật AssistiveTouch để dùng chuột qua con trỏ của nó."
+          }
+        }
+      }
+    },
+    "iOS reports no mouse to iDesk. On iPhone a mouse is turned on by AssistiveTouch: Settings → Accessibility → Touch → AssistiveTouch, then connect the mouse.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iOS không báo chuột nào cho iDesk. Trên iPhone, chuột được bật bằng AssistiveTouch: Cài đặt → Trợ năng → Cảm ứng → AssistiveTouch, rồi kết nối chuột."
+          }
+        }
+      }
+    },
+    "lines": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "dòng"
+          }
+        }
+      }
+    },
+    "min": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "phút"
+          }
+        }
+      }
+    },
+    "no .p12 file chosen.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "chưa chọn file .p12."
+          }
+        }
+      }
+    },
+    "of": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "/"
+          }
+        }
+      }
+    },
+    "password encryption": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "mã hoá bằng mật khẩu"
+          }
+        }
+      }
+    },
+    "replaced": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "chỗ đã thay"
+          }
+        }
+      }
+    },
+    "selected": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "đã chọn"
+          }
+        }
+      }
+    },
+    "the .mobileprovision file is damaged or in the wrong format.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "file .mobileprovision hỏng hoặc không đúng định dạng."
+          }
+        }
+      }
+    },
+    "the .p12 file has no private key.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "file .p12 không có khoá riêng."
+          }
+        }
+      }
+    },
+    "the certificate has no Team ID.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "chứng chỉ không có Team ID."
+          }
+        }
+      }
+    },
+    "the passcode": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "mật mã"
+          }
+        }
+      }
+    },
+    "the signature is larger than expected": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "chữ ký lớn hơn dự tính"
+          }
+        }
+      }
+    },
+    "unknown": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "không rõ"
+          }
+        }
+      }
+    },
+    "unreadable": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "không đọc được"
+          }
+        }
+      }
+    },
+    "words": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "từ"
+          }
+        }
+      }
+    },
+    "wrong password.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "sai mật khẩu."
+          }
+        }
+      }
+    },
+    "“%@” already exists here.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ở đây đã có “%@”."
+          }
+        }
+      }
+    },
+    "“%@” is no longer in Files.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "“%@” không còn trong Tệp."
+          }
+        }
+      }
+    },
+    "“%@” is not installed into iDesk yet. iOS only runs code inside an installed app: tap the box button → “Install new apps into iDesk”, pick ESign (or your signing app), then sign and install as usual. Reopen iDesk and it runs.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "“%@” chưa được cài vào iDesk. iOS chỉ cho chạy mã nằm trong app đã cài: mở nút hình hộp → “Cài app mới vào iDesk”, chọn ESign (hoặc app ký bạn dùng), ký và cài như bình thường. Mở lại iDesk là chạy."
+          }
+        }
+      }
+    },
+    "“%@” is not signed because iDesk has no certificate. Tap the box button → Import certificate and choose the certificate .zip (the one you used to install iDesk). You only need to do this once.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "“%@” chưa được ký vì iDesk chưa có chứng chỉ. Bấm nút hình hộp → Nhập chứng chỉ, chọn file .zip chứng chỉ (cùng file bạn dùng để cài iDesk). Chỉ cần làm một lần."
+          }
+        }
+      }
+    },
+    "“%@” is now an app on the desktop and in the app menu": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "“%@” giờ là app trên desktop và trong menu ứng dụng"
+          }
+        }
+      }
+    },
+    "“%@” no longer stays on top": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "“%@” không còn ở trên cùng"
+          }
+        }
+      }
+    },
+    "“%@” stays on top of other windows": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "“%@” luôn nằm trên các cửa sổ khác"
+          }
+        }
+      }
+    },
+    "↑ ↓ · Enter: paste · right-click: pin": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "↑ ↓ · Enter: dán · chuột phải: ghim"
+          }
+        }
+      }
+    },
+    "⌥ is the Option key. On a keyboard without ⌘ and ⌥, use the logo key (or Ctrl) and Alt.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "⌥ là phím Option. Bàn phím không có ⌘ và ⌥ thì dùng phím logo (hoặc Ctrl) và Alt."
+          }
+        }
+      }
+    },
+    "⚠️ The .mobileprovision file does not match this certificate.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "⚠️ File .mobileprovision không đi với chứng chỉ này."
+          }
+        }
+      }
+    },
+    "⚠️ The Team ID differs from the certificate signing iDesk (%@); iOS will refuse to load apps. Sign iDesk in ESign with this same certificate.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "⚠️ Team ID khác chứng chỉ đang ký iDesk (%@), iOS sẽ từ chối nạp app. Hãy ký iDesk trong ESign bằng chính chứng chỉ này."
+          }
+        }
+      }
+    },
+    "⚠️ The profile has expired.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "⚠️ Hồ sơ đã hết hạn."
+          }
+        }
+      }
+    }
+  },
+  "version": "1.0"
+}

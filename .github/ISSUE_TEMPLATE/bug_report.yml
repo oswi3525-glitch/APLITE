@@ -1,0 +1,41 @@
+name: Bug report / Báo lỗi
+description: Something does not work, or an app crashes inside iDesk. / Có gì đó không chạy, hoặc app bị crash trong iDesk.
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened? / Chuyện gì xảy ra?
+      description: What you did, what you expected, what you saw. / Bạn đã làm gì, mong đợi gì, thấy gì.
+    validations:
+      required: true
+  - type: input
+    id: app
+    attributes:
+      label: Guest app and version (if any) / App chạy trong iDesk và phiên bản (nếu có)
+      placeholder: "TikTok 47.7.0, YouTube 21.45.4…"
+  - type: textarea
+    id: report
+    attributes:
+      label: Error report / Báo cáo lỗi
+      description: |
+        If iDesk quit, open it again and tap **Copy error** (**Sao chép lỗi**), then paste it here.
+        Nếu iDesk bị thoát, mở lại iDesk, bấm **Sao chép lỗi** rồi dán vào đây.
+      render: text
+  - type: input
+    id: device
+    attributes:
+      label: iPhone and iOS version / iPhone và phiên bản iOS
+      placeholder: "iPhone 15 Pro, iOS 18.2"
+    validations:
+      required: true
+  - type: dropdown
+    id: install
+    attributes:
+      label: How iDesk was installed / Cách cài iDesk
+      options:
+        - Signing app (ESign, Feather, Scarlet…)
+        - Development certificate (SideStore, AltStore, Xcode)
+        - Simulator
+    validations:
+      required: true

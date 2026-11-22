@@ -1,0 +1,26 @@
+{
+  "updated": "2026-11-22",
+  "apps": [
+    {
+      "id": "com.google.ios.youtube",
+      "name": "YouTube",
+      "status": "partial",
+      "vi": "Bản gốc có thể không phát được video.",
+      "en": "The original app may not play video."
+    },
+    {
+      "id": "com.facebook.Facebook",
+      "name": "Facebook",
+      "status": "partial",
+      "vi": "Có thể bị hỏi captcha khi đăng nhập.",
+      "en": "May ask for a captcha at sign-in."
+    },
+    {
+      "id": "com.zhiliaoapp.musically",
+      "name": "TikTok",
+      "status": "works",
+      "vi": "Chạy tốt.",
+      "en": "Works."
+    }
+  ]
+}
