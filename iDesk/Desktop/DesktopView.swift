@@ -220,9 +220,9 @@ struct DesktopView: View {
 struct WallpaperView: View {
     let index: Int
     var image: UIImage?
-    var performance = false
     /// Softens a photo (Settings → Wallpaper → Blur). Gradients ignore it.
     var blur: CGFloat = 0
+    var performance = false
     var watermark = true
 
     var body: some View {
