@@ -2630,7 +2630,8 @@ final class DesktopModel: ObservableObject {
 
     /// A glass ripple at the press point. At most a few live at once; each removes itself.
     func addRipple(at point: CGPoint) {
-        guard !APLiteAnimation.reduced else { return }
+        // Off by default: the circular press ring was visually noisy. Users can re-enable it.
+        guard APLiteSettings.Personalization.pressRipples, !APLiteAnimation.reduced else { return }
         let ripple = PressRipple(point: point)
         APLiteAnimation.perform(APLiteAnimation.snappy) {
             if self.ripples.count >= 6 { self.ripples.removeFirst() }

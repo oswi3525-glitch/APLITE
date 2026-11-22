@@ -21,6 +21,7 @@ struct SystemSettingsView: View {
     @AppStorage("APLite.performance.warnPercent") private var warnPercent = 80
     @AppStorage("APLite.performance.releaseCaches") private var releaseCaches = true
     @AppStorage("APLite.performance.detectLeaks") private var detectLeaks = true
+    @AppStorage("APLite.personalization.pressRipples") private var pressRipples = false
 
     @State private var showPasscode = false
     @State private var showBuildCenter = false
@@ -33,6 +34,7 @@ struct SystemSettingsView: View {
                 Toggle("Reduce motion", isOn: $model.reduceMotion)
                 Toggle("Performance mode", isOn: $model.performanceMode)
                 Toggle("Clock and calendar widgets", isOn: $model.showWidgets)
+                Toggle("Circular press effect", isOn: $pressRipples)
             }
 
             Section(SettingsGroup.security.title) {

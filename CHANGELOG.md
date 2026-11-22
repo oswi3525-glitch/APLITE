@@ -3,6 +3,52 @@
 All notable changes to APLite are documented here. APLite is based on iDesk v0.6.3
 (upstream commit `2179dbd`); the original upstream history is not rewritten.
 
+## Unreleased — system expansion & independent modules (branch `fix/audio-and-hardening`)
+
+### Architecture
+
+- Added `iDesk/System/` with APLite-owned modules and a one-way internal API: `APLiteSettings`,
+  `SecurityManager`, `PowerManager`, `MemoryManager`, `CertificateManager`, `APLiteFileManager`,
+  `WindowCoordinator`, `BuildCenter`. APLiteSettings groups are Personalization, Security, Power,
+  Performance, Applications, Storage, Display, Input, Certificates and System.
+- `ARCHITECTURE.md` records the audit and the separation plan. Nothing was deleted and the Guest
+  Engine stays compatible.
+
+### Security / Power
+
+- Lock on launch, lock on sleep, authenticate on wake and configurable auto-lock.
+- APLite's own passcode is stored only as a salted SHA-256 hash + salt in the Keychain, with
+  exponential backoff (30 s → 2 min → 10 min → 1 h) after failed attempts. Device biometrics remain
+  available; the system passcode no longer bypasses APLite's own passcode.
+- Software Power Manager: Sleep, Wake and Shutdown close APLite windows, suspend guest apps,
+  cancel Quick Look media, release caches and save/restore session state. **No hardware power
+  control is claimed** — iOS does not allow it, and loaded code cannot be unloaded.
+
+### Memory / Certificates / Files / Windows
+
+- 1 GB management target, live/peak RAM display in Task Manager, warnings, bounded samples, cache
+  release under pressure and a leak *hint* heuristic (never presented as proof).
+- P12/PFX import now distinguishes damaged files, wrong passwords, missing private keys, missing
+  certificates and missing Team IDs. Reads from Files report specific errors; no secret is logged.
+- Files shows recursive folder sizes and metadata; APLite has its own managed file area with real
+  diagnostics reports. Sorting is deterministic and unit tested.
+- Window coordinator adds grid tiling, snapshot/restore and a reduced-motion-aware animation entry.
+  Fixed the Alt+Tab/recent-apps crash from the previous release.
+
+### Settings / Build Center / UI
+
+- Native grouped "System settings" on the iPhone with real controls for all ten groups.
+- Build Center analyses imported project files locally (sources, package/project files, Bundle ID,
+  dependencies) and talks to a **real** GitHub Actions macOS worker via the API with a Keychain
+  token. It only shows statuses returned by the runner and downloads artifacts from successful runs;
+  no local Xcode build is simulated.
+- Circular press ripple is off by default; a shared Liquid Glass button style is used by new screens.
+
+### Verification
+
+- **Pending**: CI build + `APLiteTests`, then the on-device checklist in `SYSTEM_TEST_PLAN.md` and
+  `AUDIO_DIAGNOSTICS.md`. No feature above is claimed tested on hardware yet.
+
 ## Unreleased — audio repair and hardening (branch `fix/audio-and-hardening`)
 
 ### Fixed — audio (highest priority)

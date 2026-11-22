@@ -57,6 +57,11 @@ enum APLiteSettings {
     }
     static func set(_ group: String, _ name: String, _ value: String) { store.set(value, forKey: key(group, name)) }
 
+    enum Personalization {
+        /// The old circular press ripple is off by default: users asked for cleaner controls.
+        static var pressRipples: Bool { get { APLiteSettings.bool("personalization", "pressRipples") } set { APLiteSettings.set("personalization", "pressRipples", newValue) } }
+    }
+
     enum Security {
         static var lockOnLaunch: Bool { get { APLiteSettings.bool("security", "lockOnLaunch") } set { APLiteSettings.set("security", "lockOnLaunch", newValue) } }
         static var lockWhenSleeping: Bool { get { APLiteSettings.bool("security", "lockOnSleep", default: true) } set { APLiteSettings.set("security", "lockOnSleep", newValue) } }

@@ -24,6 +24,7 @@ struct PasscodeSetupView: View {
                 Section {
                     Button(saveTitle) { save() }
                         .disabled(newCode.isEmpty)
+                        .buttonStyle(APLiteGlassButtonStyle())
                     if security.isConfigured {
                         Button("Remove passcode", role: .destructive) {
                             security.removePasscode()

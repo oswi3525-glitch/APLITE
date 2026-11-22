@@ -29,6 +29,7 @@ struct BuildCenterView: View {
                         } catch { self.error = error.localizedDescription }
                     }
                     .disabled(owner.isEmpty || repo.isEmpty || token.isEmpty)
+                    .buttonStyle(APLiteGlassButtonStyle())
                     LabeledContent("Configured", value: center.isConfigured ? "yes" : "no")
                 }
 
@@ -79,7 +80,7 @@ struct BuildCenterView: View {
                             Text("#\(build.id) · \(build.display)").font(.subheadline)
                             Text(build.createdAt).font(.caption2).foregroundStyle(.secondary)
                             if build.conclusion == "success" {
-                                Button("Download IPA artifact") {
+                                Button("Download IPA artifact (zip)") {
                                     Task {
                                         do { _ = try await center.downloadIPA(for: build); error = nil }
                                         catch { self.error = error.localizedDescription }
