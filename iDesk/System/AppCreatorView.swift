@@ -55,9 +55,9 @@ struct AppCreatorView: View {
                         if item == template { Image(systemName: "checkmark").foregroundStyle(.tint) }
                     }
                 }
-            } header: {
-                Text("Template")
             }
+        } header: {
+            Text("Template")
         }
     }
 
