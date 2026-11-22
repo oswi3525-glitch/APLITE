@@ -3,6 +3,12 @@
 All notable changes to APLite are documented here. APLite is based on iDesk v0.6.3
 (upstream commit `2179dbd`); the original upstream history is not rewritten.
 
+## 1.2.2 (unsigned development release)
+
+- Desktop Settings → About now has **Open system settings on iPhone**, which opens the native
+  System settings sheet (Security / Power / Performance / Certificates / Build Center / App Creator)
+  even while an external display is connected. CI run `45016913619` passed.
+
 ## 1.2.1 (unsigned development release)
 
 CI: `Build APLite` run `45015076389` — build + all unit test groups passed.
