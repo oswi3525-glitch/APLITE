@@ -20,7 +20,7 @@ enum APLiteFileManager {
 
         var summary: String {
             let date = modified.map { Self.dateFormatter.string(from: $0) } ?? String(localized: "unknown date")
-            return "\(kind) · \(Self.sizeText(size)) · \(date)"
+            return "\(kind) · \(APLiteFileManager.sizeText(size)) · \(date)"
         }
 
         private static let dateFormatter: DateFormatter = {

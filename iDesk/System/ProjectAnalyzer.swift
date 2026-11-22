@@ -83,8 +83,8 @@ enum ProjectAnalyzer {
         for pattern in [#".package\(\s*url\s*:\s*"([^"]+)""#, #"pod\s+'([^']+)'"#] {
             guard let regex = try? NSRegularExpression(pattern: pattern) else { continue }
             let range = NSRange(text.startIndex..., in: text)
-            for match in regex.matches(in: text, range: range) where match.numberOfRanges > 1,
-                                                                   let found = Range(match.range(at: 1), in: text) {
+            for match in regex.matches(in: text, range: range) {
+                guard match.numberOfRanges > 1, let found = Range(match.range(at: 1), in: text) else { continue }
                 result.append(String(text[found]))
             }
         }

@@ -236,9 +236,10 @@ enum CodeSigner {
         }
         guard let first = (items as? [[String: Any]])?.first,
               let identityRef = first[kSecImportItemIdentity as String],
-              let secIdentity = identityRef as? SecIdentity else {
+              CFGetTypeID(identityRef as CFTypeRef) == SecIdentityGetTypeID() else {
             throw Failure.p12MissingCertificate
         }
+        let secIdentity = identityRef as! SecIdentity
         var key: SecKey?
         var certificate: SecCertificate?
         let keyStatus = SecIdentityCopyPrivateKey(secIdentity, &key)

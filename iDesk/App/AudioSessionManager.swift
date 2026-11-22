@@ -33,6 +33,9 @@ final class AudioSessionManager: NSObject, ObservableObject {
 
     private var started = false
     private var recording = false
+    /// AVAudioSession has no public `isActive` property in the iOS SDK; the manager is the only
+    /// writer in this process, so it tracks the state it last requested.
+    private var sessionActive = false
     private var observers: [NSObjectProtocol] = []
     private var log = AudioEventLog()
     private let osLog = OSLog(subsystem: "com.hieuk.aplite", category: "Audio")
@@ -77,13 +80,14 @@ final class AudioSessionManager: NSObject, ObservableObject {
     func activatePlayback(reason: String = "manual") {
         let session = AVAudioSession.sharedInstance()
         do {
-            if session.isActive, session.category == .playback, session.mode == .default {
+            if sessionActive, session.category == .playback, session.mode == .default {
                 refresh()
                 return
             }
-            if session.isActive { try session.setActive(false, options: .notifyOthersOnDeactivation) }
+            if sessionActive { try session.setActive(false, options: .notifyOthersOnDeactivation) }
             try session.setCategory(.playback, mode: .default, options: [.mixWithOthers])
             try session.setActive(true)
+            sessionActive = true
             note(.playback, "Playback session activated (\(reason))")
             refresh()
             NotificationCenter.default.post(name: .apliteAudioDidResume, object: self)
@@ -97,10 +101,11 @@ final class AudioSessionManager: NSObject, ObservableObject {
     func beginRecording(reason: String = "voice typing") {
         let session = AVAudioSession.sharedInstance()
         do {
-            if session.isActive { try session.setActive(false, options: .notifyOthersOnDeactivation) }
+            if sessionActive { try session.setActive(false, options: .notifyOthersOnDeactivation) }
             try session.setCategory(.playAndRecord, mode: .measurement,
                                     options: [.duckOthers, .defaultToSpeaker, .allowBluetooth])
             try session.setActive(true)
+            sessionActive = true
             recording = true
             note(.recording, "Recording session activated (\(reason))")
             refresh()
@@ -152,6 +157,7 @@ final class AudioSessionManager: NSObject, ObservableObject {
         switch type {
         case .began:
             isInterrupted = true
+            sessionActive = false   // iOS deactivates the session during an interruption
             note(.interruption, "Interruption began")
             refresh()
         case .ended:
@@ -176,7 +182,7 @@ final class AudioSessionManager: NSObject, ObservableObject {
         // Unplugging headphones or a display can leave the session inactive without an interruption.
         // Re-activate without overriding a guest app that deliberately changed the category.
         let session = AVAudioSession.sharedInstance()
-        if !session.isActive, !recording, !isInterrupted {
+        if !sessionActive, !recording, !isInterrupted {
             activatePlayback(reason: "route change")
         }
     }
@@ -190,7 +196,7 @@ final class AudioSessionManager: NSObject, ObservableObject {
     private func currentSnapshot() -> AudioSnapshot {
         let s = AVAudioSession.sharedInstance()
         return AudioSnapshot(category: s.category.rawValue, mode: s.mode.rawValue,
-                             options: Self.optionNames(s.categoryOptions), isActive: s.isActive,
+                             options: Self.optionNames(s.categoryOptions), isActive: sessionActive,
                              outputVolume: s.outputVolume, sampleRate: s.sampleRate,
                              ioBufferDuration: s.ioBufferDuration,
                              outputs: Self.ports(s.currentRoute.outputs),

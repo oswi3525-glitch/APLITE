@@ -83,7 +83,10 @@ final class PowerManager: ObservableObject {
         guard !saved.isEmpty else { return }
         let model = DesktopModel.shared
         if model.windows.isEmpty {
-            for value in saved, let url = URL(string: value) { model.openWindow(url.absoluteString) }
+            for value in saved {
+                guard let url = URL(string: value) else { continue }
+                model.openWindow(url.absoluteString)
+            }
         }
         APLiteSettings.System.savedSession = []
     }
