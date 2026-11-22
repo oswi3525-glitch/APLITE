@@ -29,21 +29,32 @@ extension DesktopModel {
         return CGRect(x: row.maxX - 38, y: row.minY + 9, width: 30, height: 30)
     }
 
+    private var taskManagerFooterWidth: CGFloat { (taskManagerRect.width - 52) / 3 }
+
+    var taskManagerTileRect: CGRect {
+        let r = taskManagerRect
+        return CGRect(x: r.minX + 14, y: r.maxY - 44, width: taskManagerFooterWidth, height: 34)
+    }
+
     var taskManagerMinimizeAllRect: CGRect {
         let r = taskManagerRect
-        return CGRect(x: r.minX + 14, y: r.maxY - 44, width: (r.width - 36) / 2, height: 34)
+        return CGRect(x: taskManagerTileRect.maxX + 12, y: r.maxY - 44, width: taskManagerFooterWidth, height: 34)
     }
 
     var taskManagerCloseAllRect: CGRect {
         let r = taskManagerRect
-        return CGRect(x: r.minX + 22 + (r.width - 36) / 2, y: r.maxY - 44,
-                      width: (r.width - 36) / 2, height: 34)
+        return CGRect(x: taskManagerMinimizeAllRect.maxX + 12, y: r.maxY - 44, width: taskManagerFooterWidth, height: 34)
     }
 
     func clickTaskManager(at p: CGPoint) {
         guard taskManagerRect.contains(p) else { showTaskManager = false; return }
         for i in windows.indices where taskManagerCloseRect(i).contains(p) {
             close(windows[i])
+            return
+        }
+        if taskManagerTileRect.contains(p) {
+            WindowCoordinator.tile()
+            showToast(String(localized: "Windows arranged in a grid"))
             return
         }
         if taskManagerMinimizeAllRect.contains(p) {
@@ -128,6 +139,8 @@ struct TaskManagerView: View {
 
             ZStack(alignment: .topLeading) {
                 let footerY = r.maxY - TaskManagerLayout.footer
+                panelButton(String(localized: "Tile"),
+                            rect: model.taskManagerTileRect.offsetBy(dx: -r.minX, dy: -footerY), p: p)
                 panelButton(String(localized: "Minimize all"),
                             rect: model.taskManagerMinimizeAllRect.offsetBy(dx: -r.minX, dy: -footerY), p: p)
                 panelButton(String(localized: "Close all"),
