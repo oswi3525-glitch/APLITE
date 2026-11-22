@@ -16,7 +16,7 @@ struct SystemSettingsView: View {
     @AppStorage("APLite.security.authOnWake") private var authOnWake = true
     @AppStorage("APLite.security.autoLock") private var autoLock = 15
     @AppStorage("APLite.power.restoreSession") private var restoreSession = true
-    @AppStorage("APLite.power.closeGuests") private var closeGuests = true
+    @AppStorage("APLite.power.suspendWork") private var suspendWork = true
     @AppStorage("APLite.performance.memoryTargetMB") private var memoryTarget = 1024
     @AppStorage("APLite.performance.warnPercent") private var warnPercent = 80
     @AppStorage("APLite.performance.releaseCaches") private var releaseCaches = true
@@ -62,7 +62,7 @@ struct SystemSettingsView: View {
                 Button("Shut down APLite", role: .destructive) { power.shutdown() }
                 Button("Restart APLite") { power.boot() }
                 .disabled(power.state != .shutDown)
-                Toggle("Close guest apps on shutdown", isOn: $closeGuests)
+                Toggle("Suspend guest apps on sleep", isOn: $suspendWork)
                 Toggle("Restore the last session", isOn: $restoreSession)
                 Text("These control the APLite environment only. iOS does not allow an app to switch the iPhone or iPad off or on.")
                     .font(.footnote).foregroundStyle(.secondary)

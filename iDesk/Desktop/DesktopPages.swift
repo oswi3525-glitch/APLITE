@@ -134,6 +134,7 @@ enum DesktopPages {
             "workspaces": m.workspacesEnabled,
             "hotCorners": m.hotCorners,
             "lock": LockSettings.lockEnabled, "saver": LockSettings.saverMinutes, "biometry": LockSettings.biometryName,
+            "powerState": PowerManager.shared.state.label,
             "saverStyle": ScreenSaverSettings.style.rawValue,
             "saverMotion": ScreenSaverSettings.motion,
             "saverFade": ScreenSaverSettings.fade,
@@ -332,6 +333,11 @@ enum DesktopPages {
         case (.settings, "cookieExport"):
             if let file = CookieVault.exportFile() { ShareSheet.present(file) }
             else { m.showToast(String(localized: "No saved cookies to export.")) }
+        case (.settings, "sleep"): PowerManager.shared.sleep()
+        case (.settings, "wake"): PowerManager.shared.wake()
+        case (.settings, "shutdown"):
+            PowerManager.shared.shutdown()
+            m.showToast(String(localized: "APLite shut down. Use Restart in Settings or reopen the app."))
         case (.settings, "audioDiagnostics"):
             AudioSessionManager.shared.copyReportToPasteboard()
             m.showToast(String(localized: "Audio diagnostics copied to the iPhone clipboard"))
@@ -571,6 +577,10 @@ enum DesktopPages {
             "builtInList": String(localized: "APLite's list of ad and tracking servers"),
             "blockedSites": String(localized: "Always block"), "allowedSites": String(localized: "Never block on"),
             "sitePlaceholder": String(localized: "example.com"),
+            "power": String(localized: "Power"),
+            "sleep": String(localized: "Sleep"), "wake": String(localized: "Wake"),
+            "shutdown": String(localized: "Shut down APLite"),
+            "powerNote": String(localized: "These control the APLite environment. iOS does not let an app switch the iPhone or iPad off or on."),
             "sound": String(localized: "Sound"),
             "audioNote": String(localized: "Sound from guest apps, web pages and files follows the iPhone's audio route. Use the Sound button on the iPhone screen to pick AirPods, the speaker or the display."),
             "audioDiagnostics": String(localized: "Copy audio diagnostics"),
@@ -819,6 +829,11 @@ enum DesktopPages {
         + `<div class="row"><div class="label"></div><button onclick="send('resetSpeeds')">${esc(T.reset)}</button></div></div>`;
       h += `<h2>${esc(T.accessibility)}</h2><div class="card">` + toggle('mouseModeButton', s.mouseModeButton, T.mouseModeButton)
         + `</div>`;
+      h += `<h2>${esc(T.power)}</h2><div class="card"><div class="row"><div class="label">${esc(T.power)}</div><div class="note">${esc(s.powerState)}</div></div>`
+        + `<div class="row"><div class="label note" style="white-space:normal;padding:10px 0;line-height:1.5">${esc(T.powerNote)}</div></div>`
+        + `<div class="row"><div class="label"></div><button onclick="send('sleep')">${esc(T.sleep)}</button>`
+        + `<button onclick="send('wake')">${esc(T.wake)}</button>`
+        + `<button class="danger" onclick="send('shutdown')">${esc(T.shutdown)}</button></div></div>`;
       h += `<h2>${esc(T.sound)}</h2><div class="card"><div class="row"><div class="label note" style="white-space:normal;padding:10px 0;line-height:1.5">${esc(T.audioNote)}</div></div>`
         + `<div class="row"><div class="label"></div><button onclick="send('audioDiagnostics')">${esc(T.audioDiagnostics)}</button></div></div>`;
       h += `<h2>${esc(T.help)}</h2><div class="card"><div class="row"><div class="label">${esc(T.guideNote)}</div>`
