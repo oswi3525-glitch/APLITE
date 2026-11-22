@@ -96,6 +96,7 @@ targets:
       - iDesk/System/APLiteSettings.swift
       - iDesk/System/SecurityManager.swift
       - iDesk/System/MemoryHeuristics.swift
+      - iDesk/System/CertificateRules.swift
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.hieuk.aplite.tests

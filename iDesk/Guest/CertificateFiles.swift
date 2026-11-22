@@ -33,6 +33,8 @@ struct CertificateFiles {
     var passwordTexts: [String] = []
     var ipas: [URL] = []
     var unknown: [String] = []
+    /// Why a .p12 / .pfx could not be read from Files (never a password or key).
+    var readErrors: [String] = []
 
     var isEmpty: Bool { p12 == nil && profile == nil && ipas.isEmpty }
 
@@ -66,7 +68,13 @@ struct CertificateFiles {
                 .compactMap { $0 as? URL } ?? []
             for file in inside where !file.hasDirectoryPath { absorb(file, allowZip: false) }
         case "p12", "pfx":
-            p12 = try? Data(contentsOf: url)
+            do {
+                let data = try Data(contentsOf: url)
+                if data.isEmpty { readErrors.append("\(url.lastPathComponent): \(String(localized: "the file is empty."))") }
+                else { p12 = data }
+            } catch {
+                readErrors.append("\(url.lastPathComponent): \(error.localizedDescription)")
+            }
         case "mobileprovision", "provisionprofile":
             profile = try? Data(contentsOf: url)
         case "txt":
@@ -78,7 +86,10 @@ struct CertificateFiles {
 
     /// Opens the .p12: tries the typed password, then passwords read from pass.txt, then an empty one.
     func unlock(typed: String? = nil) throws -> (identity: CodeSigner.Identity, password: String) {
-        guard let p12 else { throw CodeSigner.Failure.badCertificate(String(localized: "no .p12 file chosen.")) }
+        guard let p12 else {
+            if let reason = readErrors.first { throw CodeSigner.Failure.badCertificate(reason) }
+            throw CodeSigner.Failure.badCertificate(String(localized: "no .p12 or .pfx file chosen."))
+        }
         var candidates: [String] = []
         for raw in (typed.map { [$0] } ?? []) + passwordTexts {
             candidates += [Self.cleanPassword(raw), raw.trimmingCharacters(in: .whitespacesAndNewlines)]
@@ -97,12 +108,5 @@ struct CertificateFiles {
     }
 
     /// "Password: abc123" or "pass = abc123" → "abc123". Sellers often add a label in pass.txt.
-    static func cleanPassword(_ raw: String) -> String {
-        let s = raw.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard let sep = s.firstIndex(where: { $0 == ":" || $0 == "=" }) else { return s }
-        let label = s[..<sep].trimmingCharacters(in: .whitespaces).lowercased()
-        let labels = ["password", "pass", "passwd", "pwd", "mật khẩu", "mat khau", "mk", "p12 password", "cert password"]
-        guard labels.contains(label) else { return s }
-        return s[s.index(after: sep)...].trimmingCharacters(in: .whitespaces)
-    }
+    static func cleanPassword(_ raw: String) -> String { CertificateRules.cleanPassword(raw) }
 }

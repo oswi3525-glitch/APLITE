@@ -14,6 +14,14 @@ enum CodeSigner {
         case noSignatureSlot
         case badCertificate(String)
         case signingFailed(String)
+        // Typed P12/PFX import errors: the UI can tell a damaged file from a wrong password
+        // from a certificate without a private key. No message contains a password or key.
+        case p12UnsupportedFormat
+        case p12Damaged
+        case p12WrongPassword
+        case p12MissingPrivateKey
+        case p12MissingCertificate
+        case p12NoTeamID
 
         var errorDescription: String? {
             switch self {
@@ -21,6 +29,12 @@ enum CodeSigner {
             case .noSignatureSlot: return String(localized: "The file was never signed, so it has no room for a signature.")
             case .badCertificate(let s): return String(localized: "Unusable certificate: \(s)")
             case .signingFailed(let s): return String(localized: "Signing failed: \(s)")
+            case .p12UnsupportedFormat: return String(localized: "This is not a .p12 or .pfx certificate file.")
+            case .p12Damaged: return String(localized: "The certificate file is damaged or truncated. Choose the original .p12 / .pfx again.")
+            case .p12WrongPassword: return String(localized: "The password is wrong. Passwords from pass.txt are also tried automatically.")
+            case .p12MissingPrivateKey: return String(localized: "The file has a certificate but no private key, so it cannot sign apps.")
+            case .p12MissingCertificate: return String(localized: "The file has no usable signing certificate.")
+            case .p12NoTeamID: return String(localized: "The certificate has no Team ID (Organizational Unit) and cannot sign an iOS app.")
             }
         }
     }
@@ -212,19 +226,25 @@ enum CodeSigner {
 
     /// Reads a .p12. Intermediate certificates come from iDesk's own signature if the .p12 lacks them.
     static func loadIdentity(p12: Data, password: String) throws -> Identity {
+        // A PKCS#12 blob always has some structure; a text file or an empty pick is "damaged",
+        // never "wrong password". This check keeps the two cases distinguishable.
+        guard p12.count >= 64 else { throw Failure.p12Damaged }
         var items: CFArray?
         let status = SecPKCS12Import(p12 as CFData, [kSecImportExportPassphrase as String: password] as CFDictionary, &items)
-        guard status == errSecSuccess, let first = (items as? [[String: Any]])?.first,
-              let identityRef = first[kSecImportItemIdentity as String] else {
-            throw Failure.badCertificate(status == errSecAuthFailed ? String(localized: "wrong password.") : String(localized: "cannot read the .p12 file (code \(String(status)))."))
+        guard status == errSecSuccess else {
+            throw status == errSecAuthFailed ? Failure.p12WrongPassword : Failure.p12Damaged
         }
-        let secIdentity = identityRef as! SecIdentity
+        guard let first = (items as? [[String: Any]])?.first,
+              let identityRef = first[kSecImportItemIdentity as String],
+              let secIdentity = identityRef as? SecIdentity else {
+            throw Failure.p12MissingCertificate
+        }
         var key: SecKey?
         var certificate: SecCertificate?
-        guard SecIdentityCopyPrivateKey(secIdentity, &key) == errSecSuccess, let key,
-              SecIdentityCopyCertificate(secIdentity, &certificate) == errSecSuccess, let certificate else {
-            throw Failure.badCertificate(String(localized: "the .p12 file has no private key."))
-        }
+        let keyStatus = SecIdentityCopyPrivateKey(secIdentity, &key)
+        let certStatus = SecIdentityCopyCertificate(secIdentity, &certificate)
+        guard keyStatus == errSecSuccess, let key else { throw Failure.p12MissingPrivateKey }
+        guard certStatus == errSecSuccess, let certificate else { throw Failure.p12MissingCertificate }
         let leaf = SecCertificateCopyData(certificate) as Data
         let fromP12 = ((first[kSecImportItemCertChain as String] as? [SecCertificate]) ?? [])
             .map { SecCertificateCopyData($0) as Data }
@@ -234,7 +254,7 @@ enum CodeSigner {
 
         let subject = DER.subjectFields(of: leaf)
         guard let team = subject["OU"], !team.isEmpty else {
-            throw Failure.badCertificate(String(localized: "the certificate has no Team ID."))
+            throw Failure.p12NoTeamID
         }
         return Identity(key: key, leaf: leaf, chain: chain, teamID: team, commonName: subject["CN"] ?? "?")
     }
