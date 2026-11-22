@@ -98,7 +98,8 @@ struct LockScreenView: View {
         TimelineView(.periodic(from: .now, by: 15)) { ctx in
             ZStack {
                 Color.black          // nothing of the desktop shows through the blur's edges
-                WallpaperView(index: model.wallpaper, image: model.customWallpaper, watermark: false)
+                WallpaperView(index: model.wallpaper, image: model.customWallpaper,
+                              blur: CGFloat(model.wallpaperBlur) + 18, watermark: false)
                     .blur(radius: 40, opaque: true)
                     .overlay(Color.black.opacity(0.35))
                 VStack(spacing: 10) {

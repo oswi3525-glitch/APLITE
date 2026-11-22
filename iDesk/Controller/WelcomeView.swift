@@ -25,13 +25,13 @@ struct WelcomeView: View {
             "Plug the iPhone into a monitor or TV with a USB-C → HDMI or DisplayPort cable (or a USB-C hub).",
             "A hub with a power port charges the iPhone while you work.",
             "The desktop appears on the display; the iPhone becomes its trackpad and keyboard.",
-            "Keep iDesk open on the iPhone while you work: locking it or opening another app pauses the desktop.",
+            "Keep APLite open on the iPhone while you work: locking it or opening another app pauses the desktop.",
         ]),
         Page(symbol: "checklist", title: "What opens on the desktop", lines: [
             "Websites and web apps, in windows with tabs: YouTube, Gmail, Google Docs, Facebook, Zalo Web…",
             "Files: downloads, photos, PDFs, videos and text files, with a text editor.",
             "Apps installed from the App Store can't appear: iOS doesn't let one app show another app's screen.",
-            "iOS apps run only from decrypted IPA files added to iDesk (next page). Not every app works inside it.",
+            "iOS apps run only from decrypted IPA files added to APLite (next page). Not every app works inside it.",
         ], cannot: [2], caveat: [3]),
         Page(symbol: "hand.point.up.left", title: "The iPhone is the trackpad", lines: [
             "Move one finger to move the pointer, tap to click, tap with two fingers to right-click.",
@@ -46,8 +46,8 @@ struct WelcomeView: View {
         Page(symbol: "shippingbox", title: "Adding an iOS app", lines: [
             "Get a decrypted IPA file of the app. Copies from the App Store are encrypted and can't run.",
             "Tap Apps on the trackpad (the box button), then add the IPA file.",
-            "Tap “Install new apps into iDesk” and pick ESign: it signs iDesk again with the apps inside and installs it.",
-            "Open iDesk again: the apps are in the app menu, and open as windows.",
+            "Tap “Install new apps into APLite” and pick ESign: it signs APLite again with the apps inside and installs it.",
+            "Open APLite again: the apps are in the app menu, and open as windows.",
         ], numbered: true),
     ]
 
@@ -69,7 +69,7 @@ struct WelcomeView: View {
                 Button {
                     if page < pages.count - 1 { withAnimation { page += 1 } } else { finish() }
                 } label: {
-                    Text(page < pages.count - 1 ? "Next" : "Start using iDesk")
+                    Text(page < pages.count - 1 ? "Next" : "Start using APLite")
                         .font(.headline)
                         .frame(maxWidth: .infinity, minHeight: 50)
                 }

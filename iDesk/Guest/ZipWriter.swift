@@ -31,7 +31,7 @@ final class ZipWriter {
     /// Total uncompressed bytes added so far (for progress by data processed).
     private(set) var bytesRead: UInt64 = 0
 
-    /// Adds a whole folder; paths inside the zip start with `prefix` (e.g. "Payload/iDesk.app").
+    /// Adds a whole folder; paths inside the zip start with `prefix` (e.g. "Payload/APLite.app").
     /// `skip`: relative paths to leave out (a skipped folder drops its contents too).
     /// `replace`: substitutes another file for a relative path.
     func addDirectory(_ directory: URL, as prefix: String,

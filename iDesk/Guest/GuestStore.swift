@@ -7,7 +7,7 @@ struct GuestApp: Identifiable, Equatable {
     let bundleURL: URL
     let icon: UIImage?
     /// Already bundled inside iDesk and signed together with it by a signing app (ESign…): opens right away.
-    /// false: just imported, lives in Documents, needs the "install into iDesk" step.
+    /// false: just imported, lives in Documents, needs the "install into APLite" step.
     let isBundled: Bool
     /// The copy in Documents is newer than the bundled one (re-imported): the next export replaces it.
     var hasPendingUpdate = false
@@ -26,14 +26,14 @@ struct GuestApp: Identifiable, Equatable {
         return (id, .muted)
         #else
         let size = ByteCountFormatter.string(fromByteCount: Int64(size), countStyle: .file)
-        if pendingRemoval { return (String(localized: "Removed when iDesk is reinstalled · \(size)"), .bad) }
+        if pendingRemoval { return (String(localized: "Removed when APLite is reinstalled · \(size)"), .bad) }
         if isBundled && !hasPendingUpdate { return (String(localized: "Ready · \(size)"), .good) }
         if GuestStore.canLoadOutsideBundle {
             return SigningStore.shared.identity == nil
                 ? (String(localized: "Needs a certificate (Advanced)"), .warn)
                 : (String(localized: "Ready (signed on device)"), .good)
         }
-        return (String(localized: "Waiting to be installed into iDesk · \(size)"), .warn)
+        return (String(localized: "Waiting to be installed into APLite · \(size)"), .warn)
         #endif
     }
 }
@@ -42,7 +42,7 @@ struct GuestApp: Identifiable, Equatable {
 ///
 /// With a normal certificate iOS only runs code that is part of an installed app, so:
 /// 1. Add IPA → unpack, patch the executable, keep it temporarily in Documents/GuestApps.
-/// 2. "Install into iDesk" → build an IPA = iDesk + the guest apps in iDesk.app/Frameworks.
+/// 2. "Install into APLite" → build an IPA = iDesk + the guest apps in iDesk.app/Frameworks.
 /// 3. The user signs it with a signing app (ESign…) and installs over iDesk → the guests are properly signed and load.
 /// After installing, the temporary copies and the exported file are deleted; apps marked for removal are dropped on the next install.
 final class GuestStore: ObservableObject {
@@ -344,7 +344,7 @@ final class GuestStore: ObservableObject {
 
     private func exportSync(base: URL?, progress: @escaping (Double) -> Void) throws -> URL {
         let own = base ?? Self.ownBundle
-        let appName = own.lastPathComponent                     // "iDesk.app"
+        let appName = own.lastPathComponent                     // "APLite.app"
         let payload = "Payload/" + appName
         let exportID = UUID().uuidString
         let work = fm.temporaryDirectory.appendingPathComponent("export-\(exportID)", isDirectory: true)
@@ -633,11 +633,11 @@ final class GuestStore: ObservableObject {
         var errorDescription: String? {
             switch self {
             case .needsInstall(let name):
-                return String(localized: "“\(name)” is not installed into iDesk yet. iOS only runs code inside an installed app: tap the box button → “Install new apps into iDesk”, pick ESign (or your signing app), then sign and install as usual. Reopen iDesk and it runs.")
+                return String(localized: "“\(name)” is not installed into APLite yet. iOS only runs code inside an installed app: tap the box button → “Install new apps into APLite”, pick ESign (or your signing app), then sign and install as usual. Reopen APLite and it runs.")
             case .noCertificate(let name):
-                return String(localized: "“\(name)” is not signed because iDesk has no certificate. Tap the box button → Import certificate and choose the certificate .zip (the one you used to install iDesk). You only need to do this once.")
+                return String(localized: "“\(name)” is not signed because APLite has no certificate. Tap the box button → Import certificate and choose the certificate .zip (the one you used to install APLite). You only need to do this once.")
             case let .teamMismatch(cert, idesk):
-                return String(localized: "The imported certificate (Team \(cert)) differs from the one signing iDesk (Team \(idesk)). iOS only loads apps signed by the same Team as iDesk. Re-sign iDesk in ESign with this certificate, or import the certificate used to sign iDesk.")
+                return String(localized: "The imported certificate (Team \(cert)) differs from the one signing APLite (Team \(idesk)). iOS only loads apps signed by the same Team as APLite. Re-sign APLite in ESign with this certificate, or import the certificate used to sign APLite.")
             }
         }
     }

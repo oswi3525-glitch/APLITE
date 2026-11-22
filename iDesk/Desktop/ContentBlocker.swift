@@ -101,7 +101,7 @@ enum ContentBlocker {
         store.lookUpContentRuleList(forIdentifier: id) { list, _ in
             if let list { finish(list, id: id); return }
             store.compileContentRuleList(forIdentifier: id, encodedContentRuleList: json) { list, error in
-                if let error { NSLog("iDesk: ad blocker rules failed: \(error)") }
+                if let error { NSLog("APLite: ad blocker rules failed: \(error)") }
                 finish(list, id: id)
             }
         }

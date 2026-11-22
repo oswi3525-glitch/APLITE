@@ -92,6 +92,11 @@ struct SettingsSheet: View {
                     Button { showCheck = true } label: {
                         Label("Check setup", systemImage: "checklist")
                     }
+                    NavigationLink {
+                        AboutView()
+                    } label: {
+                        Label("About APLite", systemImage: "info.circle")
+                    }
                 }
 
                 Section {
@@ -108,7 +113,7 @@ struct SettingsSheet: View {
                         .disabled(updates.checking)
                     }
                 } header: {
-                    Text(verbatim: "iDesk \(UpdateChecker.current)")
+                    Text(verbatim: "\(APLite.name) \(UpdateChecker.current)")
                 } footer: {
                     if let result = updates.lastResult, updates.available == nil { Text(verbatim: result) }
                 }

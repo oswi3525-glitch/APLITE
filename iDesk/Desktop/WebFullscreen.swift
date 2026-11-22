@@ -99,7 +99,7 @@ enum WebFullscreen {
         markAncestors(shown, true);
         document.documentElement.setAttribute('data-idesk-fullscreen-root', '');
         notify(true);
-        // Wait for iDesk to expand the window before telling the page, so it measures the right size.
+        // Wait for APLite to expand the window before telling the page, so it measures the right size.
         setTimeout(function () { fire(el); }, 120);
         return Promise.resolve();
       }

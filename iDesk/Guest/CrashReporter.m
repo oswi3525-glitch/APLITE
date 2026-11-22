@@ -251,7 +251,7 @@ void CrashReporterRecordExit(int code, const void *caller) {
     int fd = OpenReport();
     if (fd < 0) return;
     char line[600];
-    snprintf(line, sizeof line, "The guest app called exit(%d), so iDesk quit with it. Guest app: %s\n"
+    snprintf(line, sizeof line, "The guest app called exit(%d), so APLite quit with it. Guest app: %s\n"
              "Usually the app checked its environment (jailbreak, signature, running inside another app) and shut itself down.\n",
              code, gGuestName[0] ? gGuestName : "(none)");
     WriteString(fd, line);
@@ -555,13 +555,13 @@ static NSString *Symbolicate(NSString *report) {
     // the user closed it.
     if (heartbeat.length && [heartbeat containsString:@"state: foreground"] &&
         [heartbeat containsString:@"main thread: not responding"]) {
-        return Symbolicate([@"iDesk stopped responding: the main thread was blocked (frames below), then iOS or the "
-                             "user closed iDesk (SIGKILL). The image named in the first frames is usually the app "
+        return Symbolicate([@"APLite stopped responding: the main thread was blocked (frames below), then iOS or the "
+                             "user closed APLite (SIGKILL). The image named in the first frames is usually the app "
                              "that froze it.\nLast recorded state (every 2 seconds):\n" stringByAppendingString:heartbeat]);
     }
     // No report but the heartbeat is still there and iDesk was running: iOS killed the process (SIGKILL).
     if (heartbeat.length && [heartbeat containsString:@"state: foreground"]) {
-        return [@"No crash was caught: iOS killed iDesk (SIGKILL) while a guest app was running. "
+        return [@"No crash was caught: iOS killed APLite (SIGKILL) while a guest app was running. "
                  "Usually out of memory, or a tweak trying to modify code, which iOS does not allow.\n"
                  "Last recorded state (every 2 seconds):\n" stringByAppendingString:heartbeat];
     }

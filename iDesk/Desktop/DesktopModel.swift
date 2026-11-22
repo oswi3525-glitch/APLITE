@@ -11,7 +11,9 @@ enum Layout {
     static let titleBar: CGFloat = 34
     static let addressBar: CGFloat = 38            // web windows: back, forward, reload, address field
     static let bookmarksBar: CGFloat = 30          // under it, when there are bookmarks (Browsing.showsBookmarksBar)
-    static let taskbar: CGFloat = 48
+    /// The band at the bottom of the screen that holds the floating dock. The dock itself is
+    /// smaller and inset (see DesktopModel.dockRect); windows stop above this band.
+    static let taskbar: CGFloat = 64
     static let resizeGrip: CGFloat = 22
     static let edgeGrab: CGFloat = 10           // how far outside a window's edge it can still be grabbed to resize
     static let minWindowSize = CGSize(width: 360, height: 260)
@@ -70,26 +72,23 @@ enum Layout {
         return (rects, nil)
     }
 
-    // Taskbar
-    static let startX: CGFloat = 8
-    static let startWidth: CGFloat = 44
-    static let navX: CGFloat = 56                   // navigation buttons: Spotlight, Recent apps, Home, Back
-    static let navWidth: CGFloat = 40
+    // Taskbar / floating dock
+    static let dockMargin: CGFloat = 12             // from the screen's left / right edges
+    static let dockPadding: CGFloat = 7             // inside each glass pill
+    static let dockGap: CGFloat = 5                 // between the three pills
+    static let dockItemMin: CGFloat = 30
+    static let dockItemMax: CGFloat = 52
+    static let dockIconBase: CGFloat = 40
+    static let dockControl: CGFloat = 38
+    static let startWidth: CGFloat = 40
+    static let navWidth: CGFloat = 36
     static let navGap: CGFloat = 4
     static let navCount: CGFloat = 4                // Spotlight, Recent apps, Home, Back
-    static let workspaceX: CGFloat = navX + navCount * navWidth + (navCount - 1) * navGap + 8   // workspace switcher: 1 2 3 4
-    static let workspaceCell: CGFloat = 20
+    static let workspaceCell: CGFloat = 18
     static let workspaceWidth: CGFloat = 4 * workspaceCell
-    /// Where the window buttons start: after the workspace switcher when it is shown (Settings → Desktop).
-    static var taskItemX: CGFloat {
-        UserDefaults.standard.bool(forKey: DesktopModel.Keys.workspaces) ? workspaceX + workspaceWidth + 10 : workspaceX
-    }
-    static let taskItemMaxWidth: CGFloat = 200
-    static let taskItemGap: CGFloat = 6
-    static let pinnedWidth: CGFloat = 44           // a pinned app that is not open: icon only
-    static let buttonHeight: CGFloat = 40
-    static let trayWidth: CGFloat = 290
-    static let showDesktopWidth: CGFloat = 10
+    static let buttonHeight: CGFloat = 38
+    static let trayWidth: CGFloat = 280
+    static let showDesktopWidth: CGFloat = 12
 
     // App menu (grid)
     static let launcherColumns = 3
@@ -126,6 +125,9 @@ struct Shortcut {
     let symbol: String
     let url: String
     let hue: Double
+    /// Name of a bundled asset for APLite's own apps (nil for web pages and guest apps: those
+    /// draw the site's or the guest app's real icon).
+    var asset: String? = nil
     var app: GuestApp? = nil      // non-nil: an app installed from an IPA rather than a web page
     var file: String? = nil       // non-nil: a file in Files (its name in Downloads), put on the desktop
     var webApp = false            // a website installed as an app (WebApps): opens in its own window
@@ -224,10 +226,10 @@ final class DesktopModel: ObservableObject {
     static let shared = DesktopModel()
 
     static let shortcuts: [Shortcut] = [
-        Shortcut(name: String(localized: "Browser"), symbol: "globe", url: "https://www.google.com", hue: 0.60),
-        Shortcut(name: String(localized: "Files"), symbol: "folder.fill", url: DesktopPage.files.url.absoluteString, hue: 0.57),
-        Shortcut(name: String(localized: "Settings"), symbol: "gearshape.fill", url: DesktopPage.settings.url.absoluteString, hue: 0.0),
-        Shortcut(name: String(localized: "Trash"), symbol: "trash.fill", url: trashURL, hue: 0.0),
+        Shortcut(name: String(localized: "Browser"), symbol: "globe", url: "https://www.google.com", hue: 0.60, asset: "BrowserIcon"),
+        Shortcut(name: String(localized: "Files"), symbol: "folder.fill", url: DesktopPage.files.url.absoluteString, hue: 0.57, asset: "FilesIcon"),
+        Shortcut(name: String(localized: "Settings"), symbol: "gearshape.fill", url: DesktopPage.settings.url.absoluteString, hue: 0.0, asset: "SettingsIcon"),
+        Shortcut(name: String(localized: "Trash"), symbol: "trash.fill", url: trashURL, hue: 0.0, asset: "TrashIcon"),
     ]
     /// The Trash's desktop icon opens Files at the Trash (FilesExtras.swift).
     static let trashURL = "idesk-trash:"
@@ -345,6 +347,11 @@ final class DesktopModel: ObservableObject {
         }
     }
     @Published private(set) var customWallpaper: UIImage? = UIImage(contentsOfFile: DesktopModel.wallpaperFile.path)
+    /// Softens a photo wallpaper (0 = sharp, 20 = heavily blurred). Gradients ignore it.
+    @Published var wallpaperBlur: Double = DockSettings.clamp(
+        UserDefaults.standard.object(forKey: Keys.wallpaperBlur) as? Double ?? 0, to: 0...20) {
+        didSet { UserDefaults.standard.set(wallpaperBlur, forKey: Keys.wallpaperBlur) }
+    }
     /// External display brightness (0.2…1). Apps cannot change its backlight, so it is dimmed with an overlay.
     @Published var externalBrightness: Double = UserDefaults.standard.object(forKey: Keys.brightness) as? Double ?? 1 {
         didSet { UserDefaults.standard.set(externalBrightness, forKey: Keys.brightness) }
@@ -355,9 +362,28 @@ final class DesktopModel: ObservableObject {
     @Published var maxWindows: Int = UserDefaults.standard.object(forKey: Keys.maxWindows) as? Int ?? -1 {
         didSet { UserDefaults.standard.set(maxWindows, forKey: Keys.maxWindows) }
     }
-    /// The taskbar slides away and comes back when the pointer touches the bottom edge of the screen.
+    /// The dock slides away and comes back when the pointer touches the bottom edge of the screen.
     @Published var autoHideTaskbar: Bool = UserDefaults.standard.bool(forKey: Keys.autoHideTaskbar) {
         didSet { UserDefaults.standard.set(autoHideTaskbar, forKey: Keys.autoHideTaskbar); updateHover(cursor.position) }
+    }
+    /// Floating dock appearance (APLite). All of these are live: changing one redraws the desktop.
+    @Published var dockScale: Double = DockSettings.clamp(DockSettings.double(DockSettings.scaleKey, default: DockSettings.defaultScale), to: DockSettings.scaleRange) {
+        didSet { UserDefaults.standard.set(dockScale, forKey: DockSettings.scaleKey) }
+    }
+    @Published var dockIconScale: Double = DockSettings.clamp(DockSettings.double(DockSettings.iconScaleKey, default: DockSettings.defaultIconScale), to: DockSettings.iconScaleRange) {
+        didSet { UserDefaults.standard.set(dockIconScale, forKey: DockSettings.iconScaleKey) }
+    }
+    @Published var dockSpacing: Double = DockSettings.clamp(DockSettings.double(DockSettings.spacingKey, default: DockSettings.defaultSpacing), to: DockSettings.spacingRange) {
+        didSet { UserDefaults.standard.set(dockSpacing, forKey: DockSettings.spacingKey) }
+    }
+    @Published var dockOpacity: Double = DockSettings.clamp(DockSettings.double(DockSettings.opacityKey, default: DockSettings.defaultOpacity), to: DockSettings.opacityRange) {
+        didSet { UserDefaults.standard.set(dockOpacity, forKey: DockSettings.opacityKey) }
+    }
+    @Published var dockMagnification: Bool = UserDefaults.standard.object(forKey: DockSettings.magnificationKey) as? Bool ?? DockSettings.defaultMagnification {
+        didSet { UserDefaults.standard.set(dockMagnification, forKey: DockSettings.magnificationKey) }
+    }
+    @Published var dockAppearance: Int = UserDefaults.standard.object(forKey: DockSettings.appearanceKey) as? Int ?? DockSettings.defaultAppearance.rawValue {
+        didSet { UserDefaults.standard.set(dockAppearance, forKey: DockSettings.appearanceKey) }
     }
     @Published private(set) var taskbarRevealed = false
     /// A picture of the window under the pointer on the taskbar.
@@ -409,7 +435,7 @@ final class DesktopModel: ObservableObject {
         let machine = withUnsafeBytes(of: &model.machine) { String(decoding: $0.prefix { $0 != 0 }, as: UTF8.self) }
         let short = report.count > 3000 ? String(report.prefix(3000)) + "\n…" : report
         let body = """
-        **iDesk:** \(UpdateChecker.current)
+        **APLite:** \(UpdateChecker.current)
         **iPhone / iPad:** \(machine), iOS \(UIDevice.current.systemVersion)
         **App đang mở / App in use:** \(problemApp ?? "-")
         **Lúc đó đang làm gì? / What were you doing?**
@@ -419,8 +445,8 @@ final class DesktopModel: ObservableObject {
         \(short)
         ```
         """
-        var c = URLComponents(string: "https://github.com/itshieuk/iDesk/issues/new")!
-        c.queryItems = [URLQueryItem(name: "title", value: "[Crash] iDesk \(UpdateChecker.current)" + (problemApp.map { " · \($0)" } ?? "")),
+        var c = URLComponents(string: "https://github.com/\(APLite.repository)/issues/new")!
+        c.queryItems = [URLQueryItem(name: "title", value: "[Crash] APLite \(UpdateChecker.current)" + (problemApp.map { " · \($0)" } ?? "")),
                         URLQueryItem(name: "labels", value: "crash"),
                         URLQueryItem(name: "body", value: body)]
         return c.url
@@ -449,6 +475,7 @@ final class DesktopModel: ObservableObject {
     /// Where the settings are kept (UserDefaults).
     enum Keys {
         static let wallpaper = "iDesk.wallpaper"
+        static let wallpaperBlur = "APLite.wallpaperBlur"
         static let brightness = "iDesk.externalBrightness"
         static let session = "iDesk.session.v1"
         static let pinned = "iDesk.pinned"
@@ -586,8 +613,8 @@ final class DesktopModel: ObservableObject {
                 UserDefaults.standard.set(workedApps.filter { !bad.contains($0) }, forKey: Keys.workedApps)
             }
             crashReport = report.count > 6000 ? String(report.prefix(6000)) + "\n…" : report
-            notice = problemApp.map { String(localized: "iDesk closed unexpectedly last time, while \($0) was open.") }
-                ?? String(localized: "iDesk closed unexpectedly last time.")
+            notice = problemApp.map { String(localized: "APLite closed unexpectedly last time, while \($0) was open.") }
+                ?? String(localized: "APLite closed unexpectedly last time.")
         }
     }
 
@@ -932,7 +959,7 @@ final class DesktopModel: ObservableObject {
     private func resumed() {
         defer { pausedAt = nil }
         guard isExternalConnected, let pausedAt, Date().timeIntervalSince(pausedAt) > 3 else { return }
-        showToast(String(localized: "iDesk was paused while the iPhone was locked or showing another app. Keep iDesk open on the iPhone while you work."))
+        showToast(String(localized: "APLite was paused while the iPhone was locked or showing another app. Keep APLite open on the iPhone while you work."))
     }
 
     private func thermalChanged() {
@@ -1152,7 +1179,7 @@ final class DesktopModel: ObservableObject {
             case .fine:
                 return true
             case .low:
-                showToast(String(localized: "Memory is getting low (\(MemoryStatus.format(MemoryStatus.available)) left). Closing a window or two keeps iDesk smooth."))
+                showToast(String(localized: "Memory is getting low (\(MemoryStatus.format(MemoryStatus.available)) left). Closing a window or two keeps APLite smooth."))
                 return true
             case .critical:
                 showToast(String(localized: "Memory is almost full (\(MemoryStatus.format(MemoryStatus.available)) left). Close a window to open another."))
@@ -1161,7 +1188,7 @@ final class DesktopModel: ObservableObject {
             }
         }
         guard maxWindows > 0, windows.count >= maxWindows else { return true }
-        showToast(String(localized: "Up to \(maxWindows) windows can be open at once, so iDesk stays smooth. Close one to open another."))
+        showToast(String(localized: "Up to \(maxWindows) windows can be open at once, so APLite stays smooth. Close one to open another."))
         if recents == nil { showRecents() }
         return false
     }
@@ -1505,8 +1532,9 @@ final class DesktopModel: ObservableObject {
     }
 
     func workspaceCellRect(_ n: Int) -> CGRect {
-        CGRect(x: Layout.workspaceX + CGFloat(n) * Layout.workspaceCell, y: taskbarTop + 4,
-               width: Layout.workspaceCell, height: Layout.buttonHeight)
+        let first = navButtonRect(.back).maxX + 8
+        return CGRect(x: first + CGFloat(n) * Layout.workspaceCell, y: dockY + (dockHeight - 30) / 2,
+                      width: Layout.workspaceCell, height: 30)
     }
 
     func nextWallpaper() {
@@ -1522,6 +1550,22 @@ final class DesktopModel: ObservableObject {
     /// Sets a photo as wallpaper: scaled down to display size (less memory), then saved.
     func setCustomWallpaper(_ data: Data) {
         guard let image = UIImage(data: data) else { notice = String(localized: "Could not read this image."); return }
+        applyCustomWallpaper(image)
+    }
+
+    /// Picks a picture from Files. The document picker copies it into the app's temporary folder,
+    /// so the URL needs no security-scoped access; other callers may pass one anyway.
+    func setCustomWallpaper(contentsOf url: URL) {
+        let scoped = url.startAccessingSecurityScopedResource()
+        defer { if scoped { url.stopAccessingSecurityScopedResource() } }
+        guard let data = try? Data(contentsOf: url), let image = UIImage(data: data) else {
+            notice = String(localized: "Could not read this image.")
+            return
+        }
+        applyCustomWallpaper(image)
+    }
+
+    private func applyCustomWallpaper(_ image: UIImage) {
         let maxSide: CGFloat = 2560
         let scale = min(1, maxSide / max(image.size.width, image.size.height))
         let size = CGSize(width: image.size.width * scale, height: image.size.height * scale)
@@ -1564,45 +1608,75 @@ final class DesktopModel: ObservableObject {
 
     // MARK: Taskbar / app menu / icon geometry
 
+    /// Height of the floating dock and its top edge inside the taskbar band.
+    var dockHeight: CGFloat { min(56, max(42, 52 * CGFloat(dockScale))) }
+    var dockY: CGFloat { taskbarTop + (Layout.taskbar - dockHeight) / 2 }
+    private var dockControlY: CGFloat { dockY + (dockHeight - Layout.buttonHeight) / 2 }
+
     var startButtonRect: CGRect {
-        CGRect(x: Layout.startX, y: taskbarTop + 4, width: Layout.startWidth, height: Layout.buttonHeight)
+        CGRect(x: Layout.dockMargin + Layout.dockPadding, y: dockControlY,
+               width: Layout.startWidth, height: Layout.buttonHeight)
     }
 
     func navButtonRect(_ b: NavButton) -> CGRect {
         let i = CGFloat(NavButton.allCases.firstIndex(of: b)!)
-        return CGRect(x: Layout.navX + i * (Layout.navWidth + Layout.navGap), y: taskbarTop + 4,
-                      width: Layout.navWidth, height: Layout.buttonHeight)
+        let x = startButtonRect.maxX + 6 + i * (Layout.navWidth + Layout.navGap)
+        return CGRect(x: x, y: dockControlY, width: Layout.navWidth, height: Layout.buttonHeight)
     }
 
-    var trayRect: CGRect {
-        CGRect(x: screenSize.width - Layout.showDesktopWidth - Layout.trayWidth, y: taskbarTop,
-               width: Layout.trayWidth, height: Layout.taskbar)
+    /// The left glass pill: app menu, Spotlight, Recent apps, Home, Back and (optionally) workspaces.
+    var leftDockRect: CGRect {
+        let end = workspacesEnabled ? workspaceCellRect(Self.workspaceCount - 1).maxX : navButtonRect(.back).maxX
+        let x = Layout.dockMargin
+        return CGRect(x: x, y: dockY, width: end + Layout.dockPadding - x, height: dockHeight)
     }
 
     var showDesktopRect: CGRect {
-        CGRect(x: screenSize.width - Layout.showDesktopWidth, y: taskbarTop,
-               width: Layout.showDesktopWidth, height: Layout.taskbar)
+        CGRect(x: screenSize.width - Layout.dockMargin - Layout.dockPadding - Layout.showDesktopWidth,
+               y: dockY, width: Layout.showDesktopWidth, height: dockHeight)
     }
 
-    /// Taskbar entries and where they are: a pinned app that is not open is just an icon, an open window
-    /// gets a button with its title.
+    var trayRect: CGRect {
+        CGRect(x: showDesktopRect.minX - Layout.trayWidth, y: dockY,
+               width: Layout.trayWidth, height: dockHeight)
+    }
+
+    /// The right glass pill: recording / downloads when shown, the system tray and Show desktop.
+    var rightDockRect: CGRect {
+        let left = (recordButtonRect?.minX ?? downloadsButtonRect?.minX ?? trayRect.minX) - Layout.dockPadding
+        return CGRect(x: left, y: dockY, width: screenSize.width - Layout.dockMargin - left, height: dockHeight)
+    }
+
+    /// Dock entries and where they are. App icons sit in a centred glass pill between the two side
+    /// pills; with too many windows the icons shrink, then the ones that still do not fit are left
+    /// out (Recent apps and ⌘Tab reach them) rather than running under the tray.
     var taskLayout: [(entry: TaskEntry, rect: CGRect)] {
         let entries = taskEntries
-        let icons = entries.filter { $0.window == nil }.count
-        let buttons = entries.count - icons
-        let end = (recordButtonRect?.minX ?? downloadsButtonRect?.minX ?? trayRect.minX) - 8
-        let avail = end - Layout.taskItemX - CGFloat(icons) * (Layout.pinnedWidth + Layout.taskItemGap)
-        // Many windows: buttons shrink down to just the icon; those that still do not fit are left out (Recent
-        // apps and Alt+Tab reach them) rather than running under the tray.
-        let width = buttons == 0 ? 0 : max(Layout.pinnedWidth, min(Layout.taskItemMaxWidth,
-            (avail - Layout.taskItemGap * CGFloat(buttons - 1)) / CGFloat(buttons)))
-        var x = Layout.taskItemX
+        guard !entries.isEmpty else { return [] }
+        let gap = CGFloat(dockSpacing)
+        let n = CGFloat(entries.count)
+        let available = max(0, rightDockRect.minX - leftDockRect.maxX - Layout.dockGap * 2 - Layout.dockPadding * 2)
+        let base = min(Layout.dockItemMax, max(Layout.dockItemMin, Layout.dockIconBase * CGFloat(dockIconScale)))
+        var side = (available - gap * (n - 1)) / n
+        side = max(Layout.dockItemMin, min(base, side))
+        let total = n * side + (n - 1) * gap
+        let minX = leftDockRect.maxX + Layout.dockGap + Layout.dockPadding
+        let maxX = rightDockRect.minX - Layout.dockGap - Layout.dockPadding
+        let startX = min(max(minX, (screenSize.width - total) / 2), max(minX, maxX - total))
+        var x = startX
         return entries.compactMap { entry in
-            let w = entry.window == nil ? Layout.pinnedWidth : width
-            guard x + w <= end else { return nil }
-            defer { x += w + Layout.taskItemGap }
-            return (entry, CGRect(x: x, y: taskbarTop + 4, width: w, height: Layout.buttonHeight))
+            guard x + side <= maxX + 0.5 else { return nil }
+            defer { x += side + gap }
+            return (entry, CGRect(x: x, y: dockY + (dockHeight - side) / 2, width: side, height: side))
         }
+    }
+
+    /// The centred glass pill around the app icons (zero when there are no entries).
+    var dockRect: CGRect {
+        let items = taskLayout
+        guard let first = items.first, let last = items.last else { return .zero }
+        return CGRect(x: first.rect.minX - Layout.dockPadding, y: dockY,
+                      width: last.rect.maxX - first.rect.minX + Layout.dockPadding * 2, height: dockHeight)
     }
 
     var launcherRect: CGRect {
@@ -2891,7 +2965,7 @@ final class DesktopModel: ObservableObject {
             // Photos: says so when iOS refused (no permission), instead of claiming it was saved.
             Self.saveToPhotos(image) { [weak self] saved in
                 self?.showToast(saved ? String(localized: "Screenshot saved to Photos, Files, and copied")
-                    : String(localized: "Screenshot saved to Files and copied, not to Photos: allow iDesk to add photos in the iPhone's Settings → Privacy & Security → Photos."))
+                    : String(localized: "Screenshot saved to Files and copied, not to Photos: allow APLite to add photos in the iPhone's Settings → Privacy & Security → Photos."))
             }
             if let path = FileStore.relativePath(of: url) {
                 withAnimation(.easeOut(duration: 0.25)) { self.screenshotPreview = ScreenshotPreview(image: image, path: path) }
@@ -2929,7 +3003,7 @@ final class DesktopModel: ObservableObject {
     private func receiveGuestNotification(_ info: [String: String]) {
         let path = URL(fileURLWithPath: info["bundlePath"] ?? "").resolvingSymlinksInPath().path
         let app = apps.first { $0.bundleURL.resolvingSymlinksInPath().path == path }
-        let title = info["title"].flatMap { $0.isEmpty ? nil : $0 } ?? app?.name ?? "iDesk"
+        let title = info["title"].flatMap { $0.isEmpty ? nil : $0 } ?? app?.name ?? "APLite"
         let body = [info["subtitle"], info["body"]].compactMap { $0 }.filter { !$0.isEmpty }.joined(separator: "\n")
         let n = DeskNotification(app: app, title: title, body: body)
         notifications.insert(n, at: 0)

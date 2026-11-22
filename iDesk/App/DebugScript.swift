@@ -4,7 +4,7 @@ import UIKit
 /// `app:<name>` opens an installed iOS app, `focus:<title>` raises the window whose title starts with it,
 /// `page:apps|settings|files` opens one of iDesk's pages, `wait:<seconds>` pauses; also `open:<url>`, `spotlight`,
 /// `clipboard`, `area`, `shot`, `sticky`, `ontop`, `hot:on`, `type:<text>`, `copy:<text>`, `key:enter|esc|back|up|down`,
-/// `snapkey:left|right|up|down`, `move:x,y`, `click:x,y`, `rclick:x,y`, `press:x,y`, `release`, `max`, `scroll:<dy>`. Each step is logged with "[iDesk-script]".
+/// `snapkey:left|right|up|down`, `move:x,y`, `click:x,y`, `rclick:x,y`, `press:x,y`, `release`, `max`, `scroll:<dy>`. Each step is logged with "[APLite-script]".
 enum DebugScript {
     private static var started = false
 

@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>iDesk</string>
+	<string>APLite</string>
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
@@ -33,66 +33,70 @@
 	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>APLiteRepository</key>
+	<string>oswi3525-glitch/APLITE</string>
+	<key>APLiteUpstreamRepository</key>
+	<string>itshieuk/iDesk</string>
 	<key>LSSupportsOpeningDocumentsInPlace</key>
 	<false/>
 	<key>NFCReaderUsageDescription</key>
-	<string>An app running in iDesk needs this permission.</string>
+	<string>An app running in APLite needs this permission.</string>
 	<key>NSAppleMusicUsageDescription</key>
-	<string>An app running in iDesk needs this permission.</string>
+	<string>An app running in APLite needs this permission.</string>
 	<key>NSBluetoothAlwaysUsageDescription</key>
-	<string>An app running in iDesk needs this permission.</string>
+	<string>An app running in APLite needs this permission.</string>
 	<key>NSBluetoothPeripheralUsageDescription</key>
-	<string>An app running in iDesk needs this permission.</string>
+	<string>An app running in APLite needs this permission.</string>
 	<key>NSCalendarsFullAccessUsageDescription</key>
-	<string>Shows your upcoming events in the desktop widget, and lets apps running in iDesk use your calendars.</string>
+	<string>Shows your upcoming events in the desktop widget, and lets apps running in APLite use your calendars.</string>
 	<key>NSCalendarsUsageDescription</key>
-	<string>An app running in iDesk needs this permission.</string>
+	<string>An app running in APLite needs this permission.</string>
 	<key>NSCalendarsWriteOnlyAccessUsageDescription</key>
-	<string>An app running in iDesk needs this permission.</string>
+	<string>An app running in APLite needs this permission.</string>
 	<key>NSCameraUsageDescription</key>
-	<string>An app running in iDesk needs this permission.</string>
+	<string>An app running in APLite needs this permission.</string>
 	<key>NSContactsUsageDescription</key>
-	<string>An app running in iDesk needs this permission.</string>
+	<string>An app running in APLite needs this permission.</string>
 	<key>NSFaceIDUsageDescription</key>
-	<string>An app running in iDesk needs this permission.</string>
+	<string>An app running in APLite needs this permission.</string>
 	<key>NSFocusStatusUsageDescription</key>
-	<string>An app running in iDesk needs this permission.</string>
+	<string>An app running in APLite needs this permission.</string>
 	<key>NSHealthShareUsageDescription</key>
-	<string>An app running in iDesk needs this permission.</string>
+	<string>An app running in APLite needs this permission.</string>
 	<key>NSHealthUpdateUsageDescription</key>
-	<string>An app running in iDesk needs this permission.</string>
+	<string>An app running in APLite needs this permission.</string>
 	<key>NSHomeKitUsageDescription</key>
-	<string>An app running in iDesk needs this permission.</string>
+	<string>An app running in APLite needs this permission.</string>
 	<key>NSIdentityUsageDescription</key>
-	<string>An app running in iDesk needs this permission.</string>
+	<string>An app running in APLite needs this permission.</string>
 	<key>NSLocalNetworkUsageDescription</key>
-	<string>Shows the desktop in a laptop's browser on your Wi-Fi (Use a laptop as the display), and lets apps in iDesk reach devices on your network.</string>
+	<string>Shows the desktop in a laptop's browser on your Wi-Fi (Use a laptop as the display), and lets apps in APLite reach devices on your network.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>An app running in iDesk needs this permission.</string>
+	<string>An app running in APLite needs this permission.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>An app running in iDesk needs this permission.</string>
+	<string>An app running in APLite needs this permission.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Shows the weather where you are in the desktop widget, and lets apps running in iDesk use your location.</string>
+	<string>Shows the weather where you are in the desktop widget, and lets apps running in APLite use your location.</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>Voice typing on the desktop, and apps running in iDesk that use the microphone.</string>
+	<string>Voice typing on the desktop, and apps running in APLite that use the microphone.</string>
 	<key>NSMotionUsageDescription</key>
-	<string>An app running in iDesk needs this permission.</string>
+	<string>An app running in APLite needs this permission.</string>
 	<key>NSNearbyInteractionUsageDescription</key>
-	<string>An app running in iDesk needs this permission.</string>
+	<string>An app running in APLite needs this permission.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>Saves screenshots of the desktop, and photos from apps running in iDesk.</string>
+	<string>Saves screenshots of the desktop, and photos from apps running in APLite.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>An app running in iDesk needs this permission.</string>
+	<string>An app running in APLite needs this permission.</string>
 	<key>NSRemindersFullAccessUsageDescription</key>
-	<string>Shows your reminders in the desktop widget, and lets apps running in iDesk use your reminders.</string>
+	<string>Shows your reminders in the desktop widget, and lets apps running in APLite use your reminders.</string>
 	<key>NSRemindersUsageDescription</key>
-	<string>An app running in iDesk needs this permission.</string>
+	<string>An app running in APLite needs this permission.</string>
 	<key>NSSensorKitUsageDescription</key>
-	<string>An app running in iDesk needs this permission.</string>
+	<string>An app running in APLite needs this permission.</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>Turns what you say into text for voice typing on the desktop.</string>
 	<key>NSUserTrackingUsageDescription</key>
-	<string>An app running in iDesk needs this permission.</string>
+	<string>An app running in APLite needs this permission.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
@@ -122,7 +126,14 @@
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchScreen</key>
-	<dict/>
+	<dict>
+		<key>UIColorName</key>
+		<string>LaunchBackground</string>
+		<key>UIImageName</key>
+		<string>LaunchMark</string>
+		<key>UIImageRespectsSafeAreaInsets</key>
+		<true/>
+	</dict>
 	<key>UIRequiresFullScreen</key>
 	<true/>
 	<key>UISupportedInterfaceOrientations</key>

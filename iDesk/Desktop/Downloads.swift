@@ -187,7 +187,8 @@ extension DesktopModel {
     /// The taskbar button (left of the tray) while there are downloads.
     var downloadsButtonRect: CGRect? {
         guard !Downloads.shared.items.isEmpty else { return nil }
-        return CGRect(x: trayRect.minX - 46, y: taskbarTop + 4, width: 42, height: Layout.buttonHeight)
+        let h = min(38, dockHeight - 10)
+        return CGRect(x: trayRect.minX - 44, y: dockY + (dockHeight - h) / 2, width: 40, height: h)
     }
 
     var downloadsRect: CGRect {

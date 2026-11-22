@@ -19,7 +19,7 @@ enum MachOPatcher {
         var errorDescription: String? {
             switch self {
             case .notMachO: return String(localized: "The app’s executable is not a 64-bit Mach-O.")
-            case .encrypted: return String(localized: "The app is still FairPlay-encrypted (an IPA straight from the App Store). iDesk can only load decrypted IPAs.")
+            case .encrypted: return String(localized: "The app is still FairPlay-encrypted (an IPA straight from the App Store). APLite can only load decrypted IPAs.")
             case .noArm64: return String(localized: "The app has no arm64 slice.")
             case .noRoomForID: return String(localized: "The app’s executable has an unusual layout (no LC_LOAD_DYLINKER) and cannot be patched.")
             }

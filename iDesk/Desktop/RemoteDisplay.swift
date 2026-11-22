@@ -101,7 +101,7 @@ final class RemoteDisplay: ObservableObject {
     private func listenerChanged(_ state: NWListener.State) {
         guard case .failed(let error) = state else { return }
         DispatchQueue.main.async {
-            self.failure = String(localized: "Could not start: \(error.localizedDescription). Allow iDesk to use the local network in the iPhone's Settings → Privacy & Security → Local Network.")
+            self.failure = String(localized: "Could not start: \(error.localizedDescription). Allow APLite to use the local network in the iPhone's Settings → Privacy & Security → Local Network.")
         }
     }
 
@@ -268,7 +268,7 @@ final class RemoteDisplay: ObservableObject {
     // MARK: Page
 
     private static let page = #"""
-    <!doctype html><html><head><meta charset="utf-8"><title>iDesk</title>
+    <!doctype html><html><head><meta charset="utf-8"><title>APLite</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <style>
     html,body{margin:0;height:100%;background:#000;overflow:hidden;font:15px -apple-system,Segoe UI,sans-serif;color:#ccc}
@@ -277,7 +277,7 @@ final class RemoteDisplay: ObservableObject {
     #tip{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#000c;color:#ddd;padding:8px 14px;border-radius:10px;transition:opacity .6s}
     </style></head><body>
     <canvas id="c" width="1280" height="720"></canvas>
-    <div id="msg">Đang kết nối với iDesk trên iPhone…</div>
+    <div id="msg">Đang kết nối với APLite trên iPhone…</div>
     <div id="tip">Bấm vào màn hình để vào toàn màn hình · Esc để thoát</div>
     <textarea id="kb" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
       style="position:fixed;left:-1000px;top:0;width:10px;height:10px;opacity:0"></textarea>
@@ -290,7 +290,7 @@ final class RemoteDisplay: ObservableObject {
     const tellSize = () => send({t: 'size', w: innerWidth, h: innerHeight, r: devicePixelRatio || 1});
     addEventListener('resize', () => { clearTimeout(window.__rs); window.__rs = setTimeout(tellSize, 250); });
     async function draw(blob) {
-      // Only the newest frame is drawn; each drawn frame is acknowledged so iDesk never gets ahead of the network.
+      // Only the newest frame is drawn; each drawn frame is acknowledged so APLite never gets ahead of the network.
       if (drawing) { if (pending) send({t: 'ack'}); pending = blob; return; }   // a skipped frame is acknowledged too
       drawing = true;
       try {
@@ -306,7 +306,7 @@ final class RemoteDisplay: ObservableObject {
       ws = new WebSocket('ws://' + location.hostname + ':8081');
       ws.binaryType = 'blob';
       ws.onopen = () => { msg.style.display = 'none'; tellSize(); kb.focus(); setTimeout(() => tip.style.opacity = 0, 5000); };
-      ws.onclose = () => { msg.style.display = 'block'; msg.textContent = 'Mất kết nối. Mở iDesk trên iPhone, đang thử lại…'; setTimeout(connect, 1500); };
+      ws.onclose = () => { msg.style.display = 'block'; msg.textContent = 'Mất kết nối. Mở APLite trên iPhone, đang thử lại…'; setTimeout(connect, 1500); };
       ws.onmessage = e => {
         if (typeof e.data === 'string') { const m = JSON.parse(e.data); if (m.t === 'cursor') c.style.cursor = m.s; return; }
         draw(e.data);

@@ -89,7 +89,7 @@ struct ControllerView: View {
         .sheet(isPresented: $showMouseCheck) { MouseCheckView() }
         .fullScreenCover(isPresented: $showWelcome) { WelcomeView() }
         .onChange(of: showWelcome) { _, _ in updateKeyboardMode() }
-        .alert("iDesk", isPresented: Binding(get: { model.notice != nil && !showApps && !showSettings && !showWelcome },
+        .alert("APLite", isPresented: Binding(get: { model.notice != nil && !showApps && !showSettings && !showWelcome },
                                              set: { if !$0 { model.notice = nil } })) {
             let text = model.crashReport ?? model.notice ?? ""
             if let url = model.crashReportURL {
@@ -238,7 +238,7 @@ struct ControllerView: View {
                     .foregroundStyle(devices.mouseActive ? .green : devices.mouseConnected ? .orange : .secondary)
             }
             .buttonStyle(.plain)
-            .accessibilityHint("Shows what the mouse sends to iDesk")
+            .accessibilityHint("Shows what the mouse sends to APLite")
             Label(devices.keyboardConnected ? "Keyboard: connected" : "Keyboard: none",
                   systemImage: "keyboard")
                 .foregroundStyle(devices.keyboardConnected ? .green : .secondary)

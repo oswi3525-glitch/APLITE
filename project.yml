@@ -1,11 +1,11 @@
-name: iDesk
+name: APLite
 options:
   bundleIdPrefix: com.hieuk
   developmentLanguage: en
   deploymentTarget:
     iOS: "17.0"
 targets:
-  iDesk:
+  APLite:
     type: application
     platform: iOS
     sources: [iDesk]
@@ -16,7 +16,7 @@ targets:
         SWIFT_VERSION: "5.0"
         SWIFT_OBJC_BRIDGING_HEADER: iDesk/iDesk-Bridging-Header.h
         CODE_SIGN_STYLE: Automatic
-        MARKETING_VERSION: "0.6.3"
+        MARKETING_VERSION: "1.0.0"
         CURRENT_PROJECT_VERSION: "1"
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         SWIFT_EMIT_LOC_STRINGS: YES
@@ -24,48 +24,53 @@ targets:
     info:
       path: iDesk/Info.plist
       properties:
-        CFBundleDisplayName: iDesk
+        CFBundleDisplayName: APLite
         # From the build settings, so scripts/build-ipa.sh (VERSION / BUILD_NUMBER) and releases set them.
         CFBundleShortVersionString: $(MARKETING_VERSION)
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
-        UILaunchScreen: {}
+        UILaunchScreen:
+          UIColorName: LaunchBackground
+          UIImageName: LaunchMark
+          UIImageRespectsSafeAreaInsets: true
+        APLiteRepository: oswi3525-glitch/APLITE
+        APLiteUpstreamRepository: itshieuk/iDesk
         UIApplicationSupportsIndirectInputEvents: true
         UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait, UIInterfaceOrientationLandscapeLeft, UIInterfaceOrientationLandscapeRight]
         UISupportedInterfaceOrientations~ipad: [UIInterfaceOrientationPortrait, UIInterfaceOrientationPortraitUpsideDown, UIInterfaceOrientationLandscapeLeft, UIInterfaceOrientationLandscapeRight]
-        # iDesk takes the whole iPad screen (no Split View / Slide Over): the trackpad and the apps inside need it.
+        # APLite takes the whole iPad screen (no Split View / Slide Over): the trackpad and the apps inside need it.
         UIRequiresFullScreen: true
-        # Apps loaded into iDesk ask for permissions as iDesk: iOS terminates an app that requests one
+        # Apps loaded into APLite ask for permissions as APLite: iOS terminates an app that requests one
         # without its description in Info.plist, so declare them all.
-        NSCameraUsageDescription: An app running in iDesk needs this permission.
-        NSMicrophoneUsageDescription: Voice typing on the desktop, and apps running in iDesk that use the microphone.
-        NSPhotoLibraryUsageDescription: An app running in iDesk needs this permission.
-        NSPhotoLibraryAddUsageDescription: Saves screenshots of the desktop, and photos from apps running in iDesk.
-        NSLocationWhenInUseUsageDescription: Shows the weather where you are in the desktop widget, and lets apps running in iDesk use your location.
-        NSLocationAlwaysAndWhenInUseUsageDescription: An app running in iDesk needs this permission.
-        NSLocationAlwaysUsageDescription: An app running in iDesk needs this permission.
-        NSContactsUsageDescription: An app running in iDesk needs this permission.
-        NSCalendarsUsageDescription: An app running in iDesk needs this permission.
-        NSCalendarsFullAccessUsageDescription: Shows your upcoming events in the desktop widget, and lets apps running in iDesk use your calendars.
-        NSCalendarsWriteOnlyAccessUsageDescription: An app running in iDesk needs this permission.
-        NSRemindersUsageDescription: An app running in iDesk needs this permission.
-        NSRemindersFullAccessUsageDescription: Shows your reminders in the desktop widget, and lets apps running in iDesk use your reminders.
-        NSBluetoothAlwaysUsageDescription: An app running in iDesk needs this permission.
-        NSBluetoothPeripheralUsageDescription: An app running in iDesk needs this permission.
-        NSLocalNetworkUsageDescription: Shows the desktop in a laptop's browser on your Wi-Fi (Use a laptop as the display), and lets apps in iDesk reach devices on your network.
-        NSMotionUsageDescription: An app running in iDesk needs this permission.
+        NSCameraUsageDescription: An app running in APLite needs this permission.
+        NSMicrophoneUsageDescription: Voice typing on the desktop, and apps running in APLite that use the microphone.
+        NSPhotoLibraryUsageDescription: An app running in APLite needs this permission.
+        NSPhotoLibraryAddUsageDescription: Saves screenshots of the desktop, and photos from apps running in APLite.
+        NSLocationWhenInUseUsageDescription: Shows the weather where you are in the desktop widget, and lets apps running in APLite use your location.
+        NSLocationAlwaysAndWhenInUseUsageDescription: An app running in APLite needs this permission.
+        NSLocationAlwaysUsageDescription: An app running in APLite needs this permission.
+        NSContactsUsageDescription: An app running in APLite needs this permission.
+        NSCalendarsUsageDescription: An app running in APLite needs this permission.
+        NSCalendarsFullAccessUsageDescription: Shows your upcoming events in the desktop widget, and lets apps running in APLite use your calendars.
+        NSCalendarsWriteOnlyAccessUsageDescription: An app running in APLite needs this permission.
+        NSRemindersUsageDescription: An app running in APLite needs this permission.
+        NSRemindersFullAccessUsageDescription: Shows your reminders in the desktop widget, and lets apps running in APLite use your reminders.
+        NSBluetoothAlwaysUsageDescription: An app running in APLite needs this permission.
+        NSBluetoothPeripheralUsageDescription: An app running in APLite needs this permission.
+        NSLocalNetworkUsageDescription: Shows the desktop in a laptop's browser on your Wi-Fi (Use a laptop as the display), and lets apps in APLite reach devices on your network.
+        NSMotionUsageDescription: An app running in APLite needs this permission.
         NSSpeechRecognitionUsageDescription: Turns what you say into text for voice typing on the desktop.
-        NSFaceIDUsageDescription: An app running in iDesk needs this permission.
-        NSAppleMusicUsageDescription: An app running in iDesk needs this permission.
-        NSUserTrackingUsageDescription: An app running in iDesk needs this permission.
-        NSHealthShareUsageDescription: An app running in iDesk needs this permission.
-        NSHealthUpdateUsageDescription: An app running in iDesk needs this permission.
-        NSHomeKitUsageDescription: An app running in iDesk needs this permission.
-        NSNearbyInteractionUsageDescription: An app running in iDesk needs this permission.
-        NSSensorKitUsageDescription: An app running in iDesk needs this permission.
-        NFCReaderUsageDescription: An app running in iDesk needs this permission.
-        NSFocusStatusUsageDescription: An app running in iDesk needs this permission.
-        NSIdentityUsageDescription: An app running in iDesk needs this permission.
-        # Allow "Open in iDesk" for .ipa files
+        NSFaceIDUsageDescription: An app running in APLite needs this permission.
+        NSAppleMusicUsageDescription: An app running in APLite needs this permission.
+        NSUserTrackingUsageDescription: An app running in APLite needs this permission.
+        NSHealthShareUsageDescription: An app running in APLite needs this permission.
+        NSHealthUpdateUsageDescription: An app running in APLite needs this permission.
+        NSHomeKitUsageDescription: An app running in APLite needs this permission.
+        NSNearbyInteractionUsageDescription: An app running in APLite needs this permission.
+        NSSensorKitUsageDescription: An app running in APLite needs this permission.
+        NFCReaderUsageDescription: An app running in APLite needs this permission.
+        NSFocusStatusUsageDescription: An app running in APLite needs this permission.
+        NSIdentityUsageDescription: An app running in APLite needs this permission.
+        # Allow "Open in APLite" for .ipa files
         CFBundleDocumentTypes:
           - CFBundleTypeName: iOS App
             LSHandlerRank: Alternate

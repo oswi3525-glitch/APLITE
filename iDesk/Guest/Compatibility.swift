@@ -18,7 +18,7 @@ final class Compatibility: ObservableObject {
 
     @Published private(set) var entries: [Entry] = Compatibility.cached ?? Compatibility.builtIn
 
-    private static let url = URL(string: "https://raw.githubusercontent.com/itshieuk/iDesk/main/compat.json")!
+    private static let url = URL(string: "https://raw.githubusercontent.com/\(APLite.repository)/main/compat.json")!
     private static let cacheKey = "iDesk.compatList"
     private var fetched = false
 
@@ -29,7 +29,7 @@ final class Compatibility: ObservableObject {
         guard !fetched else { return }
         fetched = true
         var request = URLRequest(url: Self.url, timeoutInterval: 15)
-        request.setValue("iDesk", forHTTPHeaderField: "User-Agent")
+        request.setValue("APLite", forHTTPHeaderField: "User-Agent")
         URLSession.shared.dataTask(with: request) { data, _, _ in
             guard let data, let list = try? JSONDecoder().decode(List.self, from: data), !list.apps.isEmpty else { return }
             UserDefaults.standard.set(data, forKey: Self.cacheKey)
@@ -45,14 +45,14 @@ final class Compatibility: ObservableObject {
         let machine = withUnsafeBytes(of: &model.machine) { String(decoding: $0.prefix { $0 != 0 }, as: UTF8.self) }
         let body = """
         **App:** \(app.name) \(version) (\(app.id))
-        **iDesk:** \(UpdateChecker.current)
+        **APLite:** \(UpdateChecker.current)
         **iPhone / iPad:** \(machine), iOS \(UIDevice.current.systemVersion)
         **Bản gốc hay bản mod / Original or modded:**
 
         **Chạy thế nào? / How did it run?** (mở được, đăng nhập, phát video, văng… / opens, signs in, plays video, crashes…)
 
         """
-        var c = URLComponents(string: "https://github.com/itshieuk/iDesk/issues/new")!
+        var c = URLComponents(string: "https://github.com/\(APLite.repository)/issues/new")!
         c.queryItems = [URLQueryItem(name: "title", value: "[App] \(app.name) \(version)"),
                         URLQueryItem(name: "labels", value: "app-report"),
                         URLQueryItem(name: "body", value: body)]

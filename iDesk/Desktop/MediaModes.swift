@@ -179,7 +179,7 @@ enum WebVolume {
         if (!src || src.startsWith('blob:')) return true;
         try { return new URL(src, location.href).origin === location.origin || !!el.crossOrigin; } catch (e) { return false; }
       }
-      // The context starts only once sound may play (iDesk's clicks are not touches on the page): until then the
+      // The context starts only once sound may play (APLite's clicks are not touches on the page): until then the
       // volume waits, and is put on the video's sound as soon as it runs.
       function context() {
         if (!ctx) {

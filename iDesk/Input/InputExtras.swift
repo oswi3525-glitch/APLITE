@@ -27,7 +27,7 @@ final class VoiceTyping: ObservableObject {
             AVAudioApplication.requestRecordPermission { granted in
                 DispatchQueue.main.async {
                     guard status == .authorized, granted else {
-                        self.problem = String(localized: "Allow Microphone and Speech Recognition for iDesk in the iPhone's Settings.")
+                        self.problem = String(localized: "Allow Microphone and Speech Recognition for APLite in the iPhone's Settings.")
                         return
                     }
                     self.begin()

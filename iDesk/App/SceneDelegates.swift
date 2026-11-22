@@ -36,7 +36,7 @@ final class PhoneSceneDelegate: UIResponder, UIWindowSceneDelegate {
         GuestRuntime.forwardSceneEvent(#selector(UISceneDelegate.sceneWillEnterForeground(_:)), scene: scene)
     }
 
-    /// "Open in iDesk" from Files / a signing app: install the shared IPAs.
+    /// "Open in APLite" from Files / a signing app: install the shared IPAs.
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
         let ipas = URLContexts.map(\.url).filter { $0.pathExtension.lowercased() == "ipa" }
         GuestStore.shared.install(ipas: ipas) { results in

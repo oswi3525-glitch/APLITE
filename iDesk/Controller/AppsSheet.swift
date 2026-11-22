@@ -21,7 +21,7 @@ struct AppsSheet: View {
                     if store.apps.isEmpty {
                         VStack(alignment: .leading, spacing: 6) {
                             Text("No apps yet. Tap “Add IPA” to add one.")
-                            Text("The IPA file must be decrypted: copies from the App Store can't run. After adding it, tap “Install new apps into iDesk” and pick ESign. Apps installed from the App Store can't open on the desktop; use their website instead.")
+                            Text("The IPA file must be decrypted: copies from the App Store can't run. After adding it, tap “Install new apps into APLite” and pick ESign. Apps installed from the App Store can't open on the desktop; use their website instead.")
                                 .font(.footnote)
                         }
                         .foregroundStyle(.secondary)
@@ -33,7 +33,7 @@ struct AppsSheet: View {
                                     Button("Delete", role: .destructive) { store.remove(app) }
                                 } else {
                                     // The app is bundled inside iDesk: it can only be removed by reinstalling iDesk.
-                                    Button(app.pendingRemoval ? "Keep" : "Remove from iDesk",
+                                    Button(app.pendingRemoval ? "Keep" : "Remove from APLite",
                                            role: app.pendingRemoval ? nil : .destructive) { store.toggleRemoval(app) }
                                 }
                             }
@@ -55,7 +55,7 @@ struct AppsSheet: View {
                         if store.totalSize > 0 { Text(Self.format(store.totalSize)) }
                     }
                 } footer: {
-                    Text("Decrypted IPAs only. Swipe left to delete an app or remove it from iDesk to save space. Several apps can run at once; each one uses memory, so iOS may close iDesk if too many are open.")
+                    Text("Decrypted IPAs only. Swipe left to delete an app or remove it from APLite to save space. Several apps can run at once; each one uses memory, so iOS may close APLite if too many are open.")
                 }
 
                 #if !targetEnvironment(simulator)
@@ -70,15 +70,15 @@ struct AppsSheet: View {
                         } else {
                             Button(action: export) {
                                 Label(store.apps.contains(where: \.pendingRemoval) && !store.apps.contains(where: { !$0.isBundled || $0.hasPendingUpdate })
-                                      ? "Reinstall iDesk (remove selected apps)" : "Install new apps into iDesk",
+                                      ? "Reinstall APLite (remove selected apps)" : "Install new apps into APLite",
                                       systemImage: "square.and.arrow.down.on.square")
                                     .font(.headline)
                             }
                         }
                     } header: {
-                        Text("Install into iDesk")
+                        Text("Install into APLite")
                     } footer: {
-                        Text("iOS only runs code that is inside an installed app, so new apps must be installed into iDesk once: tap the button above, pick ESign (or Feather, Scarlet… whichever signing app you use), then sign and install as usual. Reopen iDesk and the app runs.")
+                        Text("iOS only runs code that is inside an installed app, so new apps must be installed into APLite once: tap the button above, pick ESign (or Feather, Scarlet… whichever signing app you use), then sign and install as usual. Reopen APLite and the app runs.")
                     }
                 }
 
@@ -96,7 +96,7 @@ struct AppsSheet: View {
                     }
                 } footer: {
                     if showAdvanced {
-                        Text("Only works when iDesk is installed with a development certificate (get-task-allow, e.g. through SideStore/AltStore). With a regular ESign certificate iOS blocks this; use “Install new apps into iDesk” instead.")
+                        Text("Only works when APLite is installed with a development certificate (get-task-allow, e.g. through SideStore/AltStore). With a regular ESign certificate iOS blocks this; use “Install new apps into APLite” instead.")
                     }
                 }
                 #endif
@@ -112,7 +112,7 @@ struct AppsSheet: View {
                 Button("Cancel", role: .cancel) { password = "" }
                 Button("Import") { importCertificate() }
             }
-            .alert("iDesk", isPresented: Binding(get: { message != nil }, set: { if !$0 { message = nil } })) {
+            .alert("APLite", isPresented: Binding(get: { message != nil }, set: { if !$0 { message = nil } })) {
                 let text = message ?? ""
                 Button("Copy") { UIPasteboard.general.string = text }
                 Button("OK", role: .cancel) {}
@@ -160,18 +160,18 @@ struct AppsSheet: View {
                 Text(identity.commonName)
                 Text("Team ID: \(identity.teamID)").font(.caption).foregroundStyle(.secondary)
                 if signing.matchesOwnTeam == false {
-                    Label("Different Team ID from iDesk (\(signing.ownTeamID ?? "?")): iOS will refuse to load the app.",
+                    Label("Different Team ID from APLite (\(signing.ownTeamID ?? "?")): iOS will refuse to load the app.",
                           systemImage: "exclamationmark.triangle.fill")
                         .font(.caption)
                         .foregroundStyle(.orange)
                 }
                 if identity.chain.isEmpty {
-                    Label("The Apple WWDR intermediate certificate is missing (not in the .p12 file nor in iDesk’s signature). iOS may reject the signature.",
+                    Label("The Apple WWDR intermediate certificate is missing (not in the .p12 file nor in APLite’s signature). iOS may reject the signature.",
                           systemImage: "exclamationmark.triangle.fill")
                         .font(.caption)
                         .foregroundStyle(.orange)
                 }
-                Text("iDesk is signed by Team: \(signing.ownTeamID ?? String(localized: "unreadable"))")
+                Text("APLite is signed by Team: \(signing.ownTeamID ?? String(localized: "unreadable"))")
                     .font(.caption).foregroundStyle(.secondary)
                 debugEntitlementStatus
                 profileStatus
@@ -190,8 +190,8 @@ struct AppsSheet: View {
     @ViewBuilder private var debugEntitlementStatus: some View {
         #if !targetEnvironment(simulator)
         Text(OwnSignature.getTaskAllow == true
-             ? "iDesk has get-task-allow (development certificate)."
-             : "iDesk lacks get-task-allow: iOS may reject apps signed on this device; install them into iDesk through ESign instead.")
+             ? "APLite has get-task-allow (development certificate)."
+             : "APLite lacks get-task-allow: iOS may reject apps signed on this device; install them into APLite through ESign instead.")
             .font(.caption).foregroundStyle(.secondary)
         #endif
     }
@@ -248,7 +248,7 @@ struct AppsSheet: View {
                 // Go straight to installing: package everything once, then open the share sheet for the signing app.
                 export()
             } else {
-                // Some failed: say which (the "Install new apps into iDesk" button packages the ones that worked).
+                // Some failed: say which (the "Install new apps into APLite" button packages the ones that worked).
                 message = GuestStore.summary(of: results)
             }
             #endif
@@ -318,7 +318,7 @@ struct AppsSheet: View {
             lines.append(String(localized: "⚠️ The .mobileprovision file does not match this certificate."))
         }
         if signing.matchesOwnTeam == false {
-            lines.append(String(localized: "⚠️ The Team ID differs from the certificate signing iDesk (\(signing.ownTeamID ?? "?")); iOS will refuse to load apps. Sign iDesk in ESign with this same certificate."))
+            lines.append(String(localized: "⚠️ The Team ID differs from the certificate signing APLite (\(signing.ownTeamID ?? "?")); iOS will refuse to load apps. Sign APLite in ESign with this same certificate."))
         }
         return lines.joined(separator: "\n\n")
     }

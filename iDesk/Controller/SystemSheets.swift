@@ -25,8 +25,13 @@ final class DocumentPicker: NSObject, UIDocumentPickerDelegate {
     /// Allows any file type (filtering by type often greys out .p12 / .mobileprovision).
     /// Files are copied into the app's temporary folder, so no security-scoped access is needed.
     static func present(completion: @escaping ([URL]) -> Void) {
+        present(types: [.item], completion: completion)
+    }
+
+    /// A picker limited to the given types (for example `.image` for a wallpaper).
+    static func present(types: [UTType], completion: @escaping ([URL]) -> Void) {
         guard let host = topViewController() else { return }
-        let picker = UIDocumentPickerViewController(forOpeningContentTypes: [.item], asCopy: true)
+        let picker = UIDocumentPickerViewController(forOpeningContentTypes: types, asCopy: true)
         // Several IPAs at once; or the certificate files (.p12, .mobileprovision, pass.txt) together.
         picker.allowsMultipleSelection = true
         let delegate = DocumentPicker(completion: completion)

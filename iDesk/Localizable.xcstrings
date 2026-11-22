@@ -11,12 +11,12 @@
         }
       }
     },
-    "%@ closed iDesk last time": {
+    "%@ closed APLite last time": {
       "localizations": {
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "%@ đã làm iDesk thoát lần trước"
+            "value": "%@ đã làm APLite thoát lần trước"
           }
         }
       }
@@ -382,42 +382,42 @@
         }
       }
     },
-    "Allow Calendars for iDesk in the iPhone's Settings.": {
+    "Allow Calendars for APLite in the iPhone's Settings.": {
       "localizations": {
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "Cho phép iDesk dùng Lịch trong Cài đặt của iPhone."
+            "value": "Cho phép APLite dùng Lịch trong Cài đặt của iPhone."
           }
         }
       }
     },
-    "Allow Location for iDesk in the iPhone's Settings to see the weather.": {
+    "Allow Location for APLite in the iPhone's Settings to see the weather.": {
       "localizations": {
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "Cho phép iDesk dùng Vị trí trong Cài đặt của iPhone để xem thời tiết."
+            "value": "Cho phép APLite dùng Vị trí trong Cài đặt của iPhone để xem thời tiết."
           }
         }
       }
     },
-    "Allow Microphone and Speech Recognition for iDesk in the iPhone's Settings.": {
+    "Allow Microphone and Speech Recognition for APLite in the iPhone's Settings.": {
       "localizations": {
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "Cho phép iDesk dùng Micro và Nhận dạng giọng nói trong Cài đặt của iPhone."
+            "value": "Cho phép APLite dùng Micro và Nhận dạng giọng nói trong Cài đặt của iPhone."
           }
         }
       }
     },
-    "Allow Reminders for iDesk in the iPhone's Settings.": {
+    "Allow Reminders for APLite in the iPhone's Settings.": {
       "localizations": {
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "Cho phép iDesk dùng Lời nhắc trong Cài đặt của iPhone."
+            "value": "Cho phép APLite dùng Lời nhắc trong Cài đặt của iPhone."
           }
         }
       }
@@ -557,7 +557,7 @@
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "Có app chưa cài vào iDesk"
+            "value": "Có app chưa cài vào APLite"
           }
         }
       }
@@ -1122,12 +1122,12 @@
         }
       }
     },
-    "Clear when iDesk reopens": {
+    "Clear when APLite reopens": {
       "localizations": {
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "Dọn khi mở lại iDesk"
+            "value": "Dọn khi mở lại APLite"
           }
         }
       }
@@ -1192,12 +1192,12 @@
         }
       }
     },
-    "Click “Install new apps into iDesk” and pick ESign on the iPhone: it signs iDesk again with the apps inside and installs it.": {
+    "Click “Install new apps into APLite” and pick ESign on the iPhone: it signs APLite again with the apps inside and installs it.": {
       "localizations": {
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "Bấm “Cài app mới vào iDesk” rồi chọn ESign trên iPhone: ESign ký lại iDesk kèm các app bên trong và cài đặt."
+            "value": "Bấm “Cài app mới vào APLite” rồi chọn ESign trên iPhone: ESign ký lại APLite kèm các app bên trong và cài đặt."
           }
         }
       }
@@ -1622,12 +1622,12 @@
         }
       }
     },
-    "Could not start: %@. Allow iDesk to use the local network in the iPhone's Settings → Privacy & Security → Local Network.": {
+    "Could not start: %@. Allow APLite to use the local network in the iPhone's Settings → Privacy & Security → Local Network.": {
       "localizations": {
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "Không khởi động được: %@. Cho phép iDesk dùng mạng cục bộ trong Cài đặt iPhone → Quyền riêng tư & Bảo mật → Mạng cục bộ."
+            "value": "Không khởi động được: %@. Cho phép APLite dùng mạng cục bộ trong Cài đặt iPhone → Quyền riêng tư & Bảo mật → Mạng cục bộ."
           }
         }
       }
@@ -1662,12 +1662,12 @@
         }
       }
     },
-    "Decrypted IPAs only. Swipe left to delete an app or remove it from iDesk to save space. Several apps can run at once; each one uses memory, so iOS may close iDesk if too many are open.": {
+    "Decrypted IPAs only. Swipe left to delete an app or remove it from APLite to save space. Several apps can run at once; each one uses memory, so iOS may close APLite if too many are open.": {
       "localizations": {
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "Chỉ nhận IPA đã giải mã. Vuốt sang trái để xoá hoặc gỡ app khỏi iDesk cho nhẹ. Chạy được nhiều app cùng lúc; mỗi app tốn RAM nên mở quá nhiều thì iOS có thể tắt iDesk."
+            "value": "Chỉ nhận IPA đã giải mã. Vuốt sang trái để xoá hoặc gỡ app khỏi APLite cho nhẹ. Chạy được nhiều app cùng lúc; mỗi app tốn RAM nên mở quá nhiều thì iOS có thể tắt APLite."
           }
         }
       }
@@ -1742,12 +1742,12 @@
         }
       }
     },
-    "Different Team ID from iDesk (%@): iOS will refuse to load the app.": {
+    "Different Team ID from APLite (%@): iOS will refuse to load the app.": {
       "localizations": {
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "Khác Team ID của iDesk (%@) - iOS sẽ từ chối nạp app."
+            "value": "Khác Team ID của APLite (%@) - iOS sẽ từ chối nạp app."
           }
         }
       }
@@ -1872,12 +1872,12 @@
         }
       }
     },
-    "Downloading iDesk %@…": {
+    "Downloading APLite %@…": {
       "localizations": {
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "Đang tải iDesk %@…"
+            "value": "Đang tải APLite %@…"
           }
         }
       }
@@ -2502,12 +2502,12 @@
         }
       }
     },
-    "In use when iDesk quit last time": {
+    "In use when APLite quit last time": {
       "localizations": {
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "Đang dùng khi iDesk bị thoát lần trước"
+            "value": "Đang dùng khi APLite bị thoát lần trước"
           }
         }
       }
@@ -2532,22 +2532,22 @@
         }
       }
     },
-    "Install into iDesk": {
+    "Install into APLite": {
       "localizations": {
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "Cài vào iDesk"
+            "value": "Cài vào APLite"
           }
         }
       }
     },
-    "Install new apps into iDesk": {
+    "Install new apps into APLite": {
       "localizations": {
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "Cài app mới vào iDesk"
+            "value": "Cài app mới vào APLite"
           }
         }
       }
@@ -2592,12 +2592,12 @@
         }
       }
     },
-    "Keep iDesk open on the iPhone while you work: locking it or opening another app pauses the desktop.": {
+    "Keep APLite open on the iPhone while you work: locking it or opening another app pauses the desktop.": {
       "localizations": {
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "Để iDesk mở trên iPhone khi làm việc: khóa máy hoặc mở app khác sẽ làm màn hình nền tạm dừng."
+            "value": "Để APLite mở trên iPhone khi làm việc: khóa máy hoặc mở app khác sẽ làm màn hình nền tạm dừng."
           }
         }
       }
@@ -2862,12 +2862,12 @@
         }
       }
     },
-    "Memory is getting low (%@ left). Closing a window or two keeps iDesk smooth.": {
+    "Memory is getting low (%@ left). Closing a window or two keeps APLite smooth.": {
       "localizations": {
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "Bộ nhớ đang thấp (còn %@). Đóng bớt một hai cửa sổ để iDesk chạy mượt."
+            "value": "Bộ nhớ đang thấp (còn %@). Đóng bớt một hai cửa sổ để APLite chạy mượt."
           }
         }
       }
@@ -3595,12 +3595,12 @@
         }
       }
     },
-    "On the Apps page, tap “Install new apps into iDesk” and pick ESign: iDesk is signed again with the apps inside.": {
+    "On the Apps page, tap “Install new apps into APLite” and pick ESign: APLite is signed again with the apps inside.": {
       "localizations": {
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "Ở trang Ứng dụng, bấm “Cài app mới vào iDesk” rồi chọn ESign: iDesk được ký lại kèm các app bên trong."
+            "value": "Ở trang Ứng dụng, bấm “Cài app mới vào APLite” rồi chọn ESign: APLite được ký lại kèm các app bên trong."
           }
         }
       }
@@ -3615,12 +3615,12 @@
         }
       }
     },
-    "Only works when iDesk is installed with a development certificate (get-task-allow, e.g. through SideStore/AltStore). With a regular ESign certificate iOS blocks this; use “Install new apps into iDesk” instead.": {
+    "Only works when APLite is installed with a development certificate (get-task-allow, e.g. through SideStore/AltStore). With a regular ESign certificate iOS blocks this; use “Install new apps into APLite” instead.": {
       "localizations": {
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "Chỉ dùng được khi iDesk được cài bằng chứng chỉ phát triển (có quyền get-task-allow, ví dụ cài qua SideStore/AltStore). Với chứng chỉ ESign thông thường iOS chặn cách này, hãy dùng “Cài app mới vào iDesk”."
+            "value": "Chỉ dùng được khi APLite được cài bằng chứng chỉ phát triển (có quyền get-task-allow, ví dụ cài qua SideStore/AltStore). Với chứng chỉ ESign thông thường iOS chặn cách này, hãy dùng “Cài app mới vào APLite”."
           }
         }
       }
@@ -3655,22 +3655,22 @@
         }
       }
     },
-    "Open iDesk again: the apps are in the app menu, and open as windows.": {
+    "Open APLite again: the apps are in the app menu, and open as windows.": {
       "localizations": {
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "Mở lại iDesk: các app nằm trong menu ứng dụng và mở thành cửa sổ."
+            "value": "Mở lại APLite: các app nằm trong menu ứng dụng và mở thành cửa sổ."
           }
         }
       }
     },
-    "Open iDesk again: the apps are in the app menu. Not every app works inside iDesk.": {
+    "Open APLite again: the apps are in the app menu. Not every app works inside APLite.": {
       "localizations": {
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "Mở lại iDesk: các app nằm trong menu ứng dụng. Không phải app nào cũng chạy được trong iDesk."
+            "value": "Mở lại APLite: các app nằm trong menu ứng dụng. Không phải app nào cũng chạy được trong APLite."
           }
         }
       }
@@ -3815,12 +3815,12 @@
         }
       }
     },
-    "Pick ESign (or your signing app) on the iPhone to install iDesk %@.": {
+    "Pick ESign (or your signing app) on the iPhone to install APLite %@.": {
       "localizations": {
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "Chọn ESign (hoặc app ký của bạn) trên iPhone để cài iDesk %@."
+            "value": "Chọn ESign (hoặc app ký của bạn) trên iPhone để cài APLite %@."
           }
         }
       }
@@ -4105,12 +4105,12 @@
         }
       }
     },
-    "Reinstall iDesk (remove selected apps)": {
+    "Reinstall APLite (remove selected apps)": {
       "localizations": {
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "Cài lại iDesk (gỡ app đã chọn)"
+            "value": "Cài lại APLite (gỡ app đã chọn)"
           }
         }
       }
@@ -4175,22 +4175,22 @@
         }
       }
     },
-    "Remove from iDesk": {
+    "Remove from APLite": {
       "localizations": {
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "Gỡ khỏi iDesk"
+            "value": "Gỡ khỏi APLite"
           }
         }
       }
     },
-    "Removed when iDesk is reinstalled · %@": {
+    "Removed when APLite is reinstalled · %@": {
       "localizations": {
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "Sẽ gỡ khi cài lại iDesk · %@"
+            "value": "Sẽ gỡ khi cài lại APLite · %@"
           }
         }
       }
@@ -4465,12 +4465,12 @@
         }
       }
     },
-    "Screenshot saved to Files and copied, not to Photos: allow iDesk to add photos in the iPhone's Settings → Privacy & Security → Photos.": {
+    "Screenshot saved to Files and copied, not to Photos: allow APLite to add photos in the iPhone's Settings → Privacy & Security → Photos.": {
       "localizations": {
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "Đã lưu ảnh chụp vào Tệp và sao chép, nhưng chưa lưu được vào Ảnh: cho phép iDesk thêm ảnh trong Cài đặt iPhone → Quyền riêng tư & Bảo mật → Ảnh."
+            "value": "Đã lưu ảnh chụp vào Tệp và sao chép, nhưng chưa lưu được vào Ảnh: cho phép APLite thêm ảnh trong Cài đặt iPhone → Quyền riêng tư & Bảo mật → Ảnh."
           }
         }
       }
@@ -4605,12 +4605,12 @@
         }
       }
     },
-    "Several apps can run at once; each one uses memory, so iOS may close iDesk if too many are open.": {
+    "Several apps can run at once; each one uses memory, so iOS may close APLite if too many are open.": {
       "localizations": {
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "Chạy được nhiều app cùng lúc; mỗi app tốn bộ nhớ, nên mở quá nhiều thì iOS có thể tắt iDesk."
+            "value": "Chạy được nhiều app cùng lúc; mỗi app tốn bộ nhớ, nên mở quá nhiều thì iOS có thể tắt APLite."
           }
         }
       }
@@ -4705,12 +4705,12 @@
         }
       }
     },
-    "Shows what the mouse sends to iDesk": {
+    "Shows what the mouse sends to APLite": {
       "localizations": {
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "Xem chuột gửi gì cho iDesk"
+            "value": "Xem chuột gửi gì cho APLite"
           }
         }
       }
@@ -4855,12 +4855,12 @@
         }
       }
     },
-    "Start using iDesk": {
+    "Start using APLite": {
       "localizations": {
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "Bắt đầu dùng iDesk"
+            "value": "Bắt đầu dùng APLite"
           }
         }
       }
@@ -5005,22 +5005,22 @@
         }
       }
     },
-    "Tap the box button → “Install new apps into iDesk”, pick ESign (or your signing app), then sign and install as usual.": {
+    "Tap the box button → “Install new apps into APLite”, pick ESign (or your signing app), then sign and install as usual.": {
       "localizations": {
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "Mở nút hình hộp → “Cài app mới vào iDesk”, chọn ESign (hoặc app ký bạn dùng), ký và cài như bình thường."
+            "value": "Mở nút hình hộp → “Cài app mới vào APLite”, chọn ESign (hoặc app ký bạn dùng), ký và cài như bình thường."
           }
         }
       }
     },
-    "Tap “Install new apps into iDesk” and pick ESign: it signs iDesk again with the apps inside and installs it.": {
+    "Tap “Install new apps into APLite” and pick ESign: it signs APLite again with the apps inside and installs it.": {
       "localizations": {
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "Bấm “Cài app mới vào iDesk” rồi chọn ESign: ESign ký lại iDesk kèm các app bên trong và cài đặt."
+            "value": "Bấm “Cài app mới vào APLite” rồi chọn ESign: ESign ký lại APLite kèm các app bên trong và cài đặt."
           }
         }
       }
@@ -5058,22 +5058,22 @@
         }
       }
     },
-    "The Apple WWDR intermediate certificate is missing (not in the .p12 file nor in iDesk’s signature). iOS may reject the signature.": {
+    "The Apple WWDR intermediate certificate is missing (not in the .p12 file nor in APLite’s signature). iOS may reject the signature.": {
       "localizations": {
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "Thiếu chứng chỉ trung gian Apple WWDR (file .p12 không kèm, chữ ký của iDesk cũng không có). iOS có thể từ chối chữ ký."
+            "value": "Thiếu chứng chỉ trung gian Apple WWDR (file .p12 không kèm, chữ ký của APLite cũng không có). iOS có thể từ chối chữ ký."
           }
         }
       }
     },
-    "The IPA file must be decrypted: copies from the App Store can't run. After adding it, tap “Install new apps into iDesk” and pick ESign. Apps installed from the App Store can't open on the desktop; use their website instead.": {
+    "The IPA file must be decrypted: copies from the App Store can't run. After adding it, tap “Install new apps into APLite” and pick ESign. Apps installed from the App Store can't open on the desktop; use their website instead.": {
       "localizations": {
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "File IPA phải được giải mã: bản từ App Store không chạy được. Thêm xong, bấm “Cài app mới vào iDesk” rồi chọn ESign. App cài từ App Store không mở được trên màn hình nền; hãy dùng trang web của app đó."
+            "value": "File IPA phải được giải mã: bản từ App Store không chạy được. Thêm xong, bấm “Cài app mới vào APLite” rồi chọn ESign. App cài từ App Store không mở được trên màn hình nền; hãy dùng trang web của app đó."
           }
         }
       }
@@ -5138,32 +5138,32 @@
         }
       }
     },
-    "The app is still FairPlay-encrypted (an IPA straight from the App Store). iDesk can only load decrypted IPAs.": {
+    "The app is still FairPlay-encrypted (an IPA straight from the App Store). APLite can only load decrypted IPAs.": {
       "localizations": {
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "App còn mã hoá FairPlay (IPA lấy thẳng từ App Store). iDesk chỉ nạp được IPA đã giải mã."
+            "value": "App còn mã hoá FairPlay (IPA lấy thẳng từ App Store). APLite chỉ nạp được IPA đã giải mã."
           }
         }
       }
     },
-    "The app is still encrypted (an IPA straight from the App Store). iDesk can only load decrypted IPAs.": {
+    "The app is still encrypted (an IPA straight from the App Store). APLite can only load decrypted IPAs.": {
       "localizations": {
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "App còn mã hoá (IPA lấy thẳng từ App Store). iDesk chỉ nạp được IPA đã giải mã."
+            "value": "App còn mã hoá (IPA lấy thẳng từ App Store). APLite chỉ nạp được IPA đã giải mã."
           }
         }
       }
     },
-    "The app needs a library (framework) iDesk cannot find or sign. The IPA may lack its Frameworks folder, or use a system library this iOS version does not have.": {
+    "The app needs a library (framework) APLite cannot find or sign. The IPA may lack its Frameworks folder, or use a system library this iOS version does not have.": {
       "localizations": {
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "App cần một thư viện (framework) mà iDesk không tìm thấy hoặc chưa ký được. IPA có thể thiếu thư mục Frameworks hoặc dùng thư viện của hệ thống mà iOS này không có."
+            "value": "App cần một thư viện (framework) mà APLite không tìm thấy hoặc chưa ký được. IPA có thể thiếu thư mục Frameworks hoặc dùng thư viện của hệ thống mà iOS này không có."
           }
         }
       }
@@ -5188,12 +5188,12 @@
         }
       }
     },
-    "The apps' caches are cleared the next time iDesk opens.": {
+    "The apps' caches are cleared the next time APLite opens.": {
       "localizations": {
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "Bộ nhớ đệm của các app sẽ được dọn lần tới khi mở iDesk."
+            "value": "Bộ nhớ đệm của các app sẽ được dọn lần tới khi mở APLite."
           }
         }
       }
@@ -5278,12 +5278,12 @@
         }
       }
     },
-    "The downloaded file is not an iDesk IPA.": {
+    "The downloaded file is not an APLite IPA.": {
       "localizations": {
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "File tải về không phải IPA của iDesk."
+            "value": "File tải về không phải IPA của APLite."
           }
         }
       }
@@ -5318,12 +5318,12 @@
         }
       }
     },
-    "The guest app and iDesk are signed with different Team IDs.": {
+    "The guest app and APLite are signed with different Team IDs.": {
       "localizations": {
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "App khách và iDesk được ký bằng hai Team ID khác nhau."
+            "value": "App khách và APLite được ký bằng hai Team ID khác nhau."
           }
         }
       }
@@ -5378,22 +5378,22 @@
         }
       }
     },
-    "The imported certificate (Team %@) differs from the one signing iDesk (Team %@). iOS only loads apps signed by the same Team as iDesk. Re-sign iDesk in ESign with this certificate, or import the certificate used to sign iDesk.": {
+    "The imported certificate (Team %@) differs from the one signing APLite (Team %@). iOS only loads apps signed by the same Team as APLite. Re-sign APLite in ESign with this certificate, or import the certificate used to sign APLite.": {
       "localizations": {
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "Chứng chỉ đã nhập (Team %@) khác chứng chỉ đang ký iDesk (Team %@). iOS chỉ cho nạp app ký cùng Team với iDesk. Hãy ký lại iDesk trong ESign bằng đúng chứng chỉ này, hoặc nhập chứng chỉ đã dùng để ký iDesk."
+            "value": "Chứng chỉ đã nhập (Team %@) khác chứng chỉ đang ký APLite (Team %@). iOS chỉ cho nạp app ký cùng Team với APLite. Hãy ký lại APLite trong ESign bằng đúng chứng chỉ này, hoặc nhập chứng chỉ đã dùng để ký APLite."
           }
         }
       }
     },
-    "The mouse only reaches iDesk through AssistiveTouch. Use mouse mode (the corner button on the trackpad) to point straight at the desktop.": {
+    "The mouse only reaches APLite through AssistiveTouch. Use mouse mode (the corner button on the trackpad) to point straight at the desktop.": {
       "localizations": {
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "Chuột chỉ tới được iDesk qua AssistiveTouch. Dùng chế độ chuột (nút ở góc trackpad) để trỏ thẳng vào desktop."
+            "value": "Chuột chỉ tới được APLite qua AssistiveTouch. Dùng chế độ chuột (nút ở góc trackpad) để trỏ thẳng vào desktop."
           }
         }
       }
@@ -5438,12 +5438,12 @@
         }
       }
     },
-    "This IPA has a tweak injected, with an old hook library that calls functions this iOS removed. Delete the app in iDesk and add the IPA again: newer iDesk versions patch this when adding. If it still fails or quits on launch, use an IPA without tweaks.": {
+    "This IPA has a tweak injected, with an old hook library that calls functions this iOS removed. Delete the app in APLite and add the IPA again: newer APLite versions patch this when adding. If it still fails or quits on launch, use an IPA without tweaks.": {
       "localizations": {
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "IPA này có gắn tweak, kèm thư viện hook cũ gọi hàm mà iOS trên máy đã bỏ. Hãy xoá app này trong iDesk rồi Thêm IPA lại: bản iDesk mới tự vá chỗ này khi thêm. Nếu vẫn lỗi hoặc app thoát khi mở, dùng bản IPA không gắn tweak."
+            "value": "IPA này có gắn tweak, kèm thư viện hook cũ gọi hàm mà iOS trên máy đã bỏ. Hãy xoá app này trong APLite rồi Thêm IPA lại: bản APLite mới tự vá chỗ này khi thêm. Nếu vẫn lỗi hoặc app thoát khi mở, dùng bản IPA không gắn tweak."
           }
         }
       }
@@ -5798,12 +5798,12 @@
         }
       }
     },
-    "Up to %lld windows can be open at once, so iDesk stays smooth. Close one to open another.": {
+    "Up to %lld windows can be open at once, so APLite stays smooth. Close one to open another.": {
       "localizations": {
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "Chỉ mở được tối đa %lld cửa sổ cùng lúc để iDesk chạy mượt. Đóng bớt một cửa sổ để mở cái mới."
+            "value": "Chỉ mở được tối đa %lld cửa sổ cùng lúc để APLite chạy mượt. Đóng bớt một cửa sổ để mở cái mới."
           }
         }
       }
@@ -5898,12 +5898,12 @@
         }
       }
     },
-    "Waiting to be installed into iDesk · %@": {
+    "Waiting to be installed into APLite · %@": {
       "localizations": {
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "Chờ cài vào iDesk · %@"
+            "value": "Chờ cài vào APLite · %@"
           }
         }
       }
@@ -6033,7 +6033,7 @@
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "Bạn đang dùng bản %@. Các app iOS vẫn được giữ: iDesk gộp chúng vào bản mới."
+            "value": "Bạn đang dùng bản %@. Các app iOS vẫn được giữ: APLite gộp chúng vào bản mới."
           }
         }
       }
@@ -6148,145 +6148,145 @@
         }
       }
     },
-    "iDesk": {
+    "APLite": {
       "shouldTranslate": false
     },
-    "iDesk %@ is available": {
+    "APLite %@ is available": {
       "localizations": {
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "Đã có iDesk %@"
+            "value": "Đã có APLite %@"
           }
         }
       }
     },
-    "iDesk %@ is available.": {
+    "APLite %@ is available.": {
       "localizations": {
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "Đã có iDesk %@."
+            "value": "Đã có APLite %@."
           }
         }
       }
     },
-    "iDesk %@ is available: Settings → Help to download it.": {
+    "APLite %@ is available: Settings → Help to download it.": {
       "localizations": {
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "Đã có iDesk %@: vào Cài đặt → Trợ giúp để tải về."
+            "value": "Đã có APLite %@: vào Cài đặt → Trợ giúp để tải về."
           }
         }
       }
     },
-    "iDesk %@ is the latest version.": {
+    "APLite %@ is the latest version.": {
       "localizations": {
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "iDesk %@ là bản mới nhất."
+            "value": "APLite %@ là bản mới nhất."
           }
         }
       }
     },
-    "iDesk %@ with your apps is ready: pick ESign (or your signing app) on the iPhone.": {
+    "APLite %@ with your apps is ready: pick ESign (or your signing app) on the iPhone.": {
       "localizations": {
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "iDesk %@ kèm các app của bạn đã sẵn sàng: chọn ESign (hoặc app ký của bạn) trên iPhone."
+            "value": "APLite %@ kèm các app của bạn đã sẵn sàng: chọn ESign (hoặc app ký của bạn) trên iPhone."
           }
         }
       }
     },
-    "iDesk closed unexpectedly last time, while %@ was open.": {
+    "APLite closed unexpectedly last time, while %@ was open.": {
       "localizations": {
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "iDesk bị thoát lần trước, lúc đang mở %@."
+            "value": "APLite bị thoát lần trước, lúc đang mở %@."
           }
         }
       }
     },
-    "iDesk closed unexpectedly last time.": {
+    "APLite closed unexpectedly last time.": {
       "localizations": {
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "iDesk bị thoát lần trước."
+            "value": "APLite bị thoát lần trước."
           }
         }
       }
     },
-    "iDesk has get-task-allow (development certificate).": {
+    "APLite has get-task-allow (development certificate).": {
       "localizations": {
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "iDesk có quyền get-task-allow (chứng chỉ phát triển)."
+            "value": "APLite có quyền get-task-allow (chứng chỉ phát triển)."
           }
         }
       }
     },
-    "iDesk is signed by Team: %@": {
+    "APLite is signed by Team: %@": {
       "localizations": {
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "iDesk đang được ký bởi Team: %@"
+            "value": "APLite đang được ký bởi Team: %@"
           }
         }
       }
     },
-    "iDesk lacks get-task-allow: iOS may reject apps signed on this device; install them into iDesk through ESign instead.": {
+    "APLite lacks get-task-allow: iOS may reject apps signed on this device; install them into APLite through ESign instead.": {
       "localizations": {
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "iDesk không có quyền get-task-allow: tự ký trên máy có thể bị iOS từ chối, nên dùng nút Xuất cho ESign."
+            "value": "APLite không có quyền get-task-allow: tự ký trên máy có thể bị iOS từ chối, nên dùng nút Xuất cho ESign."
           }
         }
       }
     },
-    "iDesk needs iOS 17 or later. Update in Settings → General → Software Update.": {
+    "APLite needs iOS 17 or later. Update in Settings → General → Software Update.": {
       "localizations": {
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "iDesk cần iOS 17 trở lên. Cập nhật trong Cài đặt → Cài đặt chung → Cập nhật phần mềm."
+            "value": "APLite cần iOS 17 trở lên. Cập nhật trong Cài đặt → Cài đặt chung → Cập nhật phần mềm."
           }
         }
       }
     },
-    "iDesk needs iOS 17 or later: this iPhone has it.": {
+    "APLite needs iOS 17 or later: this iPhone has it.": {
       "localizations": {
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "iDesk cần iOS 17 trở lên: máy này đủ."
+            "value": "APLite cần iOS 17 trở lên: máy này đủ."
           }
         }
       }
     },
-    "iDesk was paused while the iPhone was locked or showing another app. Keep iDesk open on the iPhone while you work.": {
+    "APLite was paused while the iPhone was locked or showing another app. Keep APLite open on the iPhone while you work.": {
       "localizations": {
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "iDesk đã tạm dừng khi iPhone bị khóa hoặc đang mở app khác. Hãy để iDesk mở trên iPhone khi làm việc."
+            "value": "APLite đã tạm dừng khi iPhone bị khóa hoặc đang mở app khác. Hãy để APLite mở trên iPhone khi làm việc."
           }
         }
       }
     },
-    "iDesk's list of ad and tracking servers": {
+    "APLite's list of ad and tracking servers": {
       "localizations": {
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "Danh sách máy chủ quảng cáo và theo dõi của iDesk"
+            "value": "Danh sách máy chủ quảng cáo và theo dõi của APLite"
           }
         }
       }
@@ -6311,32 +6311,32 @@
         }
       }
     },
-    "iOS apps run only from decrypted IPA files added to iDesk (next page). Not every app works inside it.": {
+    "iOS apps run only from decrypted IPA files added to APLite (next page). Not every app works inside it.": {
       "localizations": {
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "App iOS chỉ chạy từ file IPA đã giải mã được thêm vào iDesk (trang sau). Không phải app nào cũng chạy được."
+            "value": "App iOS chỉ chạy từ file IPA đã giải mã được thêm vào APLite (trang sau). Không phải app nào cũng chạy được."
           }
         }
       }
     },
-    "iOS only runs code inside an installed app, not from iDesk’s data folder.": {
+    "iOS only runs code inside an installed app, not from APLite’s data folder.": {
       "localizations": {
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "iOS chỉ cho chạy mã nằm trong app đã cài, không cho nạp từ thư mục dữ liệu của iDesk."
+            "value": "iOS chỉ cho chạy mã nằm trong app đã cài, không cho nạp từ thư mục dữ liệu của APLite."
           }
         }
       }
     },
-    "iOS only runs code that is inside an installed app, so new apps must be installed into iDesk once: tap the button above, pick ESign (or Feather, Scarlet… whichever signing app you use), then sign and install as usual. Reopen iDesk and the app runs.": {
+    "iOS only runs code that is inside an installed app, so new apps must be installed into APLite once: tap the button above, pick ESign (or Feather, Scarlet… whichever signing app you use), then sign and install as usual. Reopen APLite and the app runs.": {
       "localizations": {
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "iOS chỉ cho chạy mã nằm trong app đã cài, nên app mới phải được cài vào iDesk một lần: bấm nút trên, chọn ESign (hoặc Feather, Scarlet… app ký bạn dùng), ký và cài như cài app bình thường. Mở lại iDesk là app chạy."
+            "value": "iOS chỉ cho chạy mã nằm trong app đã cài, nên app mới phải được cài vào APLite một lần: bấm nút trên, chọn ESign (hoặc Feather, Scarlet… app ký bạn dùng), ký và cài như cài app bình thường. Mở lại APLite là app chạy."
           }
         }
       }
@@ -6351,22 +6351,22 @@
         }
       }
     },
-    "iOS reports a mouse but sends iDesk no movement. Turn on AssistiveTouch to use it through its pointer.": {
+    "iOS reports a mouse but sends APLite no movement. Turn on AssistiveTouch to use it through its pointer.": {
       "localizations": {
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "iOS báo có chuột nhưng không gửi chuyển động nào cho iDesk. Hãy bật AssistiveTouch để dùng chuột qua con trỏ của nó."
+            "value": "iOS báo có chuột nhưng không gửi chuyển động nào cho APLite. Hãy bật AssistiveTouch để dùng chuột qua con trỏ của nó."
           }
         }
       }
     },
-    "iOS reports no mouse to iDesk. On iPhone a mouse is turned on by AssistiveTouch: Settings → Accessibility → Touch → AssistiveTouch, then connect the mouse.": {
+    "iOS reports no mouse to APLite. On iPhone a mouse is turned on by AssistiveTouch: Settings → Accessibility → Touch → AssistiveTouch, then connect the mouse.": {
       "localizations": {
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "iOS không báo chuột nào cho iDesk. Trên iPhone, chuột được bật bằng AssistiveTouch: Cài đặt → Trợ năng → Cảm ứng → AssistiveTouch, rồi kết nối chuột."
+            "value": "iOS không báo chuột nào cho APLite. Trên iPhone, chuột được bật bằng AssistiveTouch: Cài đặt → Trợ năng → Cảm ứng → AssistiveTouch, rồi kết nối chuột."
           }
         }
       }
@@ -6551,22 +6551,22 @@
         }
       }
     },
-    "“%@” is not installed into iDesk yet. iOS only runs code inside an installed app: tap the box button → “Install new apps into iDesk”, pick ESign (or your signing app), then sign and install as usual. Reopen iDesk and it runs.": {
+    "“%@” is not installed into APLite yet. iOS only runs code inside an installed app: tap the box button → “Install new apps into APLite”, pick ESign (or your signing app), then sign and install as usual. Reopen APLite and it runs.": {
       "localizations": {
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "“%@” chưa được cài vào iDesk. iOS chỉ cho chạy mã nằm trong app đã cài: mở nút hình hộp → “Cài app mới vào iDesk”, chọn ESign (hoặc app ký bạn dùng), ký và cài như bình thường. Mở lại iDesk là chạy."
+            "value": "“%@” chưa được cài vào APLite. iOS chỉ cho chạy mã nằm trong app đã cài: mở nút hình hộp → “Cài app mới vào APLite”, chọn ESign (hoặc app ký bạn dùng), ký và cài như bình thường. Mở lại APLite là chạy."
           }
         }
       }
     },
-    "“%@” is not signed because iDesk has no certificate. Tap the box button → Import certificate and choose the certificate .zip (the one you used to install iDesk). You only need to do this once.": {
+    "“%@” is not signed because APLite has no certificate. Tap the box button → Import certificate and choose the certificate .zip (the one you used to install APLite). You only need to do this once.": {
       "localizations": {
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "“%@” chưa được ký vì iDesk chưa có chứng chỉ. Bấm nút hình hộp → Nhập chứng chỉ, chọn file .zip chứng chỉ (cùng file bạn dùng để cài iDesk). Chỉ cần làm một lần."
+            "value": "“%@” chưa được ký vì APLite chưa có chứng chỉ. Bấm nút hình hộp → Nhập chứng chỉ, chọn file .zip chứng chỉ (cùng file bạn dùng để cài APLite). Chỉ cần làm một lần."
           }
         }
       }
@@ -6631,12 +6631,12 @@
         }
       }
     },
-    "⚠️ The Team ID differs from the certificate signing iDesk (%@); iOS will refuse to load apps. Sign iDesk in ESign with this same certificate.": {
+    "⚠️ The Team ID differs from the certificate signing APLite (%@); iOS will refuse to load apps. Sign APLite in ESign with this same certificate.": {
       "localizations": {
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "⚠️ Team ID khác chứng chỉ đang ký iDesk (%@), iOS sẽ từ chối nạp app. Hãy ký iDesk trong ESign bằng chính chứng chỉ này."
+            "value": "⚠️ Team ID khác chứng chỉ đang ký APLite (%@), iOS sẽ từ chối nạp app. Hãy ký APLite trong ESign bằng chính chứng chỉ này."
           }
         }
       }
@@ -6647,6 +6647,156 @@
           "stringUnit": {
             "state": "translated",
             "value": "⚠️ Hồ sơ đã hết hạn."
+          }
+        }
+      }
+    },
+    "Choose a picture from Files…": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chọn ảnh từ Files…"
+          }
+        }
+      }
+    },
+    "Wallpaper saved.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đã lưu hình nền."
+          }
+        }
+      }
+    },
+    "Dock": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dock"
+          }
+        }
+      }
+    },
+    "Dock size": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kích thước Dock"
+          }
+        }
+      }
+    },
+    "Icon spacing": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Khoảng cách icon"
+          }
+        }
+      }
+    },
+    "Glass opacity": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Độ mờ của kính"
+          }
+        }
+      }
+    },
+    "Magnify icons on hover": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Phóng to icon khi di chuột"
+          }
+        }
+      }
+    },
+    "Dock appearance": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Giao diện Dock"
+          }
+        }
+      }
+    },
+    "About APLite": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Giới thiệu APLite"
+          }
+        }
+      }
+    },
+    "Attribution": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ghi nhận dự án"
+          }
+        }
+      }
+    },
+    "Original iDesk project": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dự án iDesk gốc"
+          }
+        }
+      }
+    },
+    "APLite repository": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kho mã APLite"
+          }
+        }
+      }
+    },
+    "Blur": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Làm mờ"
+          }
+        }
+      }
+    },
+    "Desktop icon size": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kích thước icon trên desktop"
+          }
+        }
+      }
+    },
+    "Auto-hide the dock": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tự động ẩn Dock"
           }
         }
       }

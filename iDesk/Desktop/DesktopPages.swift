@@ -1,6 +1,7 @@
 import UIKit
 import SwiftUI
 import WebKit
+import UniformTypeIdentifiers
 
 /// iDesk's own pages, shown in ordinary desktop windows so they work with the pointer and keyboard like any page:
 /// Files (idesk://files), Settings (idesk://settings), Apps (idesk://apps), Bookmarks and history (idesk://history).
@@ -117,7 +118,14 @@ enum DesktopPages {
             "night": NightFilter.mode.rawValue,
             "wallpapers": wallpapers,
             "custom": customWallpaperThumbnail() ?? NSNull(),
+            "wallpaperBlur": Int(m.wallpaperBlur.rounded()),
             "autoHide": m.autoHideTaskbar,
+            "dockScale": m.dockScale,
+            "dockIcon": m.dockIconScale,
+            "dockSpacing": m.dockSpacing,
+            "dockOpacity": m.dockOpacity,
+            "dockMagnify": m.dockMagnification,
+            "dockAppearance": m.dockAppearance,
             "widgets": m.showWidgets,
             "iconSize": m.iconSize,
             "workspaces": m.workspacesEnabled,
@@ -151,7 +159,7 @@ enum DesktopPages {
         let apps: [[String: Any]] = store.apps.map { app in
             var (status, tone) = app.status
             if app.name == m.problemApp {
-                status = String(localized: "In use when iDesk quit last time") + " · " + status
+                status = String(localized: "In use when APLite quit last time") + " · " + status
                 tone = .bad
             }
             let open = m.windows.contains { $0.guestApp == app }
@@ -266,7 +274,31 @@ enum DesktopPages {
         case (.settings, "photo"):
             PhotoPicker.present { data in m.setCustomWallpaper(data) }
             m.showToast(String(localized: "Choose a photo on the iPhone."))
+        case (.settings, "photoFiles"):
+            DocumentPicker.present(types: [.image]) { urls in
+                guard let url = urls.first else { return }
+                m.setCustomWallpaper(contentsOf: url)
+                m.showToast(String(localized: "Wallpaper saved."))
+            }
+            m.showToast(String(localized: "Choose a picture on the iPhone."))
+        case (.settings, "wallpaperBlur"):
+            m.wallpaperBlur = DockSettings.clamp(m.wallpaperBlur + (Double(value) ?? 0), to: 0...20)
         case (.settings, "autoHide"): m.autoHideTaskbar.toggle()
+        case (.settings, "dockScale"):
+            m.dockScale = DockSettings.clamp(m.dockScale + (Double(value) ?? 0), to: DockSettings.scaleRange)
+        case (.settings, "dockIcon"):
+            m.dockIconScale = DockSettings.clamp(m.dockIconScale + (Double(value) ?? 0), to: DockSettings.iconScaleRange)
+        case (.settings, "dockSpacing"):
+            m.dockSpacing = DockSettings.clamp(m.dockSpacing + (Double(value) ?? 0), to: DockSettings.spacingRange)
+        case (.settings, "dockOpacity"):
+            m.dockOpacity = DockSettings.clamp(m.dockOpacity + (Double(value) ?? 0), to: DockSettings.opacityRange)
+        case (.settings, "dockMagnify"): m.dockMagnification.toggle()
+        case (.settings, "dockAppearance"):
+            if let n = Int(value), DockAppearance(rawValue: n) != nil { m.dockAppearance = n }
+        case (.settings, "upstream"):
+            m.openWindow(APLite.upstreamURL)
+        case (.settings, "aplite"):
+            if let url = URL(string: "https://github.com/\(APLite.repository)") { m.openWindow(url) }
         case (.settings, "widgets"): m.showWidgets.toggle()
         case (.settings, "iconSize"): if let n = Int(value) { m.iconSize = min(max(n, 0), 2) }
         case (.settings, "dnd"): m.doNotDisturb.toggle()
@@ -348,7 +380,7 @@ enum DesktopPages {
         case (.apps, "clearCaches"):
             GuestStore.shared.clearCachesOnLaunch.toggle()
             if GuestStore.shared.clearCachesOnLaunch {
-                m.showToast(String(localized: "The apps' caches are cleared the next time iDesk opens."))
+                m.showToast(String(localized: "The apps' caches are cleared the next time APLite opens."))
             }
         case (.apps, "advanced"):
             m.phoneSheet = .apps
@@ -425,32 +457,39 @@ enum DesktopPages {
             "howTo": String(localized: "How to add an iOS app"),
             "step1": String(localized: "Get a decrypted IPA file of the app. Copies from the App Store are encrypted and can't run."),
             "step2": String(localized: "Click “Add IPA files…” above and choose it on the iPhone (or download it and click Install in Files)."),
-            "step3": String(localized: "Click “Install new apps into iDesk” and pick ESign on the iPhone: it signs iDesk again with the apps inside and installs it."),
-            "step4": String(localized: "Open iDesk again: the apps are in the app menu. Not every app works inside iDesk."),
+            "step3": String(localized: "Click “Install new apps into APLite” and pick ESign on the iPhone: it signs APLite again with the apps inside and installs it."),
+            "step4": String(localized: "Open APLite again: the apps are in the app menu. Not every app works inside APLite."),
             "webNote": String(localized: "App Store apps can't open here: use their websites."),
             "open": String(localized: "Open"), "focus": String(localized: "Show"),
             "pin": String(localized: "Pin"), "unpin": String(localized: "Unpin"),
-            "delete": String(localized: "Delete"), "remove": String(localized: "Remove from iDesk"),
+            "delete": String(localized: "Delete"), "remove": String(localized: "Remove from APLite"),
             "keep": String(localized: "Keep"), "confirm": String(localized: "Click again"),
-            "export": String(localized: "Install new apps into iDesk"),
-            "reinstall": String(localized: "Reinstall iDesk (remove selected apps)"),
+            "export": String(localized: "Install new apps into APLite"),
+            "reinstall": String(localized: "Reinstall APLite (remove selected apps)"),
             "preparing": String(localized: "Preparing the install file…"),
             "advanced": String(localized: "Certificate (advanced)…"),
             "caches": String(localized: "Apps' caches"),
             "report": String(localized: "Report"),
             "known": String(localized: "Apps others have tried"),
-            "clearCaches": String(localized: "Clear when iDesk reopens"), "cancelClear": String(localized: "Don't clear"),
+            "clearCaches": String(localized: "Clear when APLite reopens"), "cancelClear": String(localized: "Don't clear"),
         ] : [
             "title": String(localized: "Settings"),
             "display": String(localized: "Display"), "brightness": String(localized: "Brightness"),
             "resolution": String(localized: "Resolution"), "auto": String(localized: "Automatic"),
             "overscan": String(localized: "Fit the picture inside a TV's edges (overscan)"),
             "wallpaper": String(localized: "Wallpaper"), "photo": String(localized: "Choose a photo on the iPhone…"),
+            "photoFiles": String(localized: "Choose a picture from Files…"), "blur": String(localized: "Blur"),
             "nightFilter": String(localized: "Night filter"), "off": String(localized: "Off"),
             "schedule": String(localized: "21:00–7:00"), "always": String(localized: "Always"),
             "desktop": String(localized: "Desktop"),
-            "autoHide": String(localized: "Auto-hide the taskbar"),
-            "iconSize": String(localized: "Icon size"), "small": String(localized: "Small"),
+            "autoHide": String(localized: "Auto-hide the dock"),
+            "dock": String(localized: "Dock"),
+            "dockSize": String(localized: "Dock size"), "dockIconSize": String(localized: "Icon size"),
+            "dockSpacing": String(localized: "Icon spacing"), "dockOpacity": String(localized: "Glass opacity"),
+            "dockMagnify": String(localized: "Magnify icons on hover"),
+            "dockTheme": String(localized: "Dock appearance"), "dark": String(localized: "Dark"),
+            "light": String(localized: "Light"), "autoTheme": String(localized: "Automatic"),
+            "iconSize": String(localized: "Desktop icon size"), "small": String(localized: "Small"),
             "medium": String(localized: "Medium"), "large": String(localized: "Large"), "widgets": String(localized: "Clock and calendar widgets"),
             "dnd": String(localized: "Do not disturb (no notification pop-ups)"),
             "workspaces": String(localized: "Workspaces (4 desktops)"),
@@ -462,7 +501,7 @@ enum DesktopPages {
             "openBrowser": String(localized: "Open"),
             "blockAds": String(localized: "Block ads and trackers"),
             "darkPages": String(localized: "Dark pages"),
-            "builtInList": String(localized: "iDesk's list of ad and tracking servers"),
+            "builtInList": String(localized: "APLite's list of ad and tracking servers"),
             "blockedSites": String(localized: "Always block"), "allowedSites": String(localized: "Never block on"),
             "sitePlaceholder": String(localized: "example.com"),
             "help": String(localized: "Help"), "guide": String(localized: "Show the guide on the iPhone"),
@@ -485,6 +524,9 @@ enum DesktopPages {
             "accessibility": String(localized: "Accessibility"),
             "mouseModeButton": String(localized: "Always show the mouse mode button"),
             "about": String(localized: "Version"),
+            "aboutTitle": String(localized: "About APLite"),
+            "attribution": String(localized: "APLite is an independently developed project based on the original iDesk project by itshieuk.\n\nOriginal project:\nhttps://github.com/itshieuk/iDesk\n\nAPLite introduces independent design changes, improvements, modifications and additional features while acknowledging the original project’s author and contributors.\n\nAPLite is not an official release or endorsement of the original iDesk project."),
+            "upstream": String(localized: "Original project"), "apliteRepo": String(localized: "APLite repository"),
         ]
         let initial = json(state(page)), t = json(strings)
         return """
@@ -618,7 +660,9 @@ enum DesktopPages {
       });
       h += `<div class="wall ${s.wallpaper === -2 ? 'on' : ''}" style="background-image:linear-gradient(135deg, ${s.dynamic.join(',')})" onclick="send('wallpaper', -2)">🕒</div>`;
       if (s.custom) h += `<div class="wall ${s.wallpaper === -1 ? 'on' : ''}" style="background-image:url(${s.custom})" onclick="send('wallpaper', -1)"></div>`;
-      h += `</div><div class="row"><div class="label"></div><button onclick="send('photo')">${esc(T.photo)}</button></div></div>`;
+      h += `</div>` + stepper('wallpaperBlur', T.blur, s.wallpaperBlur + '%', 2)
+        + `<div class="row"><div class="label"></div><button onclick="send('photo')">${esc(T.photo)}</button>`
+        + `<button onclick="send('photoFiles')">${esc(T.photoFiles)}</button></div></div>`;
       h += `<div class="card"><div class="row"><div class="label">${esc(T.nightFilter)}</div><div class="seg">`
         + [[0, T.off], [1, T.schedule], [2, T.always]].map(([n, l]) =>
             `<button class="${s.night === n ? 'on' : ''}" onclick="send('night', ${n})">${esc(l)}</button>`).join('')
@@ -630,6 +674,16 @@ enum DesktopPages {
             `<button class="${s.iconSize === n ? 'on' : ''}" onclick="send('iconSize', ${n})">${esc(l)}</button>`).join('')
         + `</div></div>` + toggle('workspaces', s.workspaces, T.workspaces) + `</div>`
         + `<div class="card">` + toggle('hotCorners', s.hotCorners, T.hotCorners) + `</div>`;
+      h += `<h2>${esc(T.dock)}</h2><div class="card">`
+        + stepper('dockScale', T.dockSize, Number(s.dockScale).toFixed(2) + '×', 0.1)
+        + stepper('dockIcon', T.dockIconSize, Math.round(s.dockIcon * 100) + '%', 0.1)
+        + stepper('dockSpacing', T.dockSpacing, Math.round(s.dockSpacing) + ' px', 2)
+        + stepper('dockOpacity', T.dockOpacity, Math.round(s.dockOpacity * 100) + '%', 0.1)
+        + toggle('dockMagnify', s.dockMagnify, T.dockMagnify)
+        + `<div class="row"><div class="label">${esc(T.dockTheme)}</div><div class="seg">`
+        + [[0, T.dark], [1, T.light], [2, T.autoTheme]].map(([n, l]) =>
+            `<button class="${s.dockAppearance === n ? 'on' : ''}" onclick="send('dockAppearance', ${n})">${esc(l)}</button>`).join('')
+        + `</div></div></div>`;
       h += `<h2>${esc(T.security)}</h2><div class="card">` + toggle('lock', s.lock, T.lockToggle)
         + `<div class="row"><div class="label">${esc(T.saverLabel)}</div><div class="seg">`
         + [0, 5, 10, 15, 30].map(n => `<button class="${s.saver === n ? 'on' : ''}" onclick="send('saver', ${n})">${n ? n + ' ' + esc(T.min) : esc(T.never)}</button>`).join('')
@@ -661,7 +715,11 @@ enum DesktopPages {
         + (s.update ? `<button class="primary" onclick="send('downloadUpdate')">${esc(T.downloadUpdate)} ${esc(s.update)}</button>`
                     : `<button onclick="send('checkUpdate')">${esc(T.checkNow)}</button>`)
         + `</div></div>`;
-      h += `<p class="note">iDesk ${esc(T.about)} ${esc(s.version)}</p>`;
+      h += `<h2>${esc(T.aboutTitle)}</h2><div class="card">`
+        + `<div class="row"><div class="label"><b>APLite</b> · AirPlayLite<br><span class="note">${esc(T.about)} ${esc(s.version)}</span></div></div>`
+        + `<div class="row"><div class="label note" style="white-space:pre-line;padding:10px 0;line-height:1.5">${esc(T.attribution)}</div></div>`
+        + `<div class="row"><div class="label"></div><button onclick="send('upstream')">${esc(T.upstream)}</button>`
+        + `<button onclick="send('aplite')">${esc(T.apliteRepo)}</button></div></div>`;
       document.getElementById('root').innerHTML = h;
     }
     """#

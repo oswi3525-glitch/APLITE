@@ -19,7 +19,7 @@ final class UpdateChecker: ObservableObject {
         didSet { UserDefaults.standard.set(dismissedVersion, forKey: Self.dismissedKey) }
     }
 
-    private static let api = URL(string: "https://api.github.com/repos/itshieuk/iDesk/releases/latest")!
+    private static let api = URL(string: "https://api.github.com/repos/\(APLite.repository)/releases/latest")!
     private static let autoKey = "iDesk.checkUpdates", lastKey = "iDesk.lastUpdateCheck", dismissedKey = "iDesk.updateDismissed"
 
     static var current: String {
@@ -58,7 +58,7 @@ final class UpdateChecker: ObservableObject {
         checking = true
         var request = URLRequest(url: Self.api, timeoutInterval: 15)
         request.setValue("application/vnd.github+json", forHTTPHeaderField: "Accept")
-        request.setValue("iDesk", forHTTPHeaderField: "User-Agent")
+        request.setValue("APLite", forHTTPHeaderField: "User-Agent")
         URLSession.shared.dataTask(with: request) { data, _, _ in
             let json = data.flatMap { try? JSONSerialization.jsonObject(with: $0) as? [String: Any] }
             if let json, let tag = json["tag_name"] as? String,
@@ -77,9 +77,9 @@ final class UpdateChecker: ObservableObject {
 
     /// github.com/<repo>/releases/latest → …/releases/tag/vX.Y.Z; the IPA's name follows the release workflow.
     private func checkByRedirect(userAsked: Bool) {
-        var request = URLRequest(url: URL(string: "https://github.com/itshieuk/iDesk/releases/latest")!, timeoutInterval: 15)
+        var request = URLRequest(url: URL(string: "https://github.com/\(APLite.repository)/releases/latest")!, timeoutInterval: 15)
         request.httpMethod = "HEAD"
-        request.setValue("iDesk", forHTTPHeaderField: "User-Agent")
+        request.setValue("APLite", forHTTPHeaderField: "User-Agent")
         URLSession.shared.dataTask(with: request) { _, response, _ in
             let final = (response as? HTTPURLResponse)?.url
             DispatchQueue.main.async {
@@ -91,7 +91,7 @@ final class UpdateChecker: ObservableObject {
                 }
                 let tag = final.lastPathComponent
                 let version = tag.hasPrefix("v") ? String(tag.dropFirst()) : tag
-                let ipa = URL(string: "https://github.com/itshieuk/iDesk/releases/download/\(tag)/iDesk-\(version).ipa")
+                let ipa = URL(string: "https://github.com/\(APLite.repository)/releases/download/\(tag)/APLite-\(version).ipa")
                 self.found(tag: tag, page: final, ipa: ipa, userAsked: userAsked)
             }
         }.resume()
@@ -104,13 +104,13 @@ final class UpdateChecker: ObservableObject {
         if Self.isNewer(version, than: Self.current) {
             let isNew = available?.version != version
             available = Release(version: version, page: page, ipa: ipa)
-            lastResult = String(localized: "iDesk \(version) is available.")
+            lastResult = String(localized: "APLite \(version) is available.")
             if isNew || userAsked {
-                DesktopModel.shared.showToast(String(localized: "iDesk \(version) is available: Settings → Help to download it."))
+                DesktopModel.shared.showToast(String(localized: "APLite \(version) is available: Settings → Help to download it."))
             }
         } else {
             available = nil
-            lastResult = String(localized: "iDesk \(Self.current) is the latest version.")
+            lastResult = String(localized: "APLite \(Self.current) is the latest version.")
             if userAsked { DesktopModel.shared.showToast(lastResult ?? "") }
         }
     }
@@ -137,7 +137,7 @@ final class UpdateChecker: ObservableObject {
         guard let ipa = release.ipa else { UIApplication.shared.open(release.page); return }
         let model = DesktopModel.shared
         step = .downloading(0)
-        model.showToast(String(localized: "Downloading iDesk \(release.version)…"))
+        model.showToast(String(localized: "Downloading APLite \(release.version)…"))
         let task = URLSession.shared.downloadTask(with: ipa) { [weak self] temp, _, error in
             guard let self else { return }
             let fm = FileManager.default
@@ -172,7 +172,7 @@ final class UpdateChecker: ObservableObject {
         guard hasApps else {
             step = nil
             ShareSheet.present(ipa)
-            model.showToast(String(localized: "Pick ESign (or your signing app) on the iPhone to install iDesk \(version)."))
+            model.showToast(String(localized: "Pick ESign (or your signing app) on the iPhone to install APLite \(version)."))
             return
         }
         step = .packaging(0)
@@ -185,7 +185,7 @@ final class UpdateChecker: ObservableObject {
             DispatchQueue.main.async {
                 guard let app else {
                     self.step = nil
-                    model.showToast(String(localized: "The downloaded file is not an iDesk IPA."))
+                    model.showToast(String(localized: "The downloaded file is not an APLite IPA."))
                     return
                 }
                 GuestStore.shared.exportForESign(base: app, progress: { v in
@@ -197,7 +197,7 @@ final class UpdateChecker: ObservableObject {
                     switch result {
                     case .success(let file):
                         ShareSheet.present(file)
-                        model.showToast(String(localized: "iDesk \(version) with your apps is ready: pick ESign (or your signing app) on the iPhone."))
+                        model.showToast(String(localized: "APLite \(version) with your apps is ready: pick ESign (or your signing app) on the iPhone."))
                     case .failure(let error):
                         model.showToast(String(localized: "Could not package the update: \(error.localizedDescription)"))
                     }
@@ -224,7 +224,7 @@ struct UpdateBanner: View {
             HStack(spacing: 10) {
                 Image(systemName: "arrow.down.circle.fill").font(.title3).foregroundStyle(.tint)
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(verbatim: String(localized: "iDesk \(r.version) is available")).font(.callout.weight(.semibold))
+                    Text(verbatim: String(localized: "APLite \(r.version) is available")).font(.callout.weight(.semibold))
                     Text(verbatim: updates.stepText ?? String(localized: "You have \(UpdateChecker.current). Your iOS apps stay: they are put into the new version."))
                         .font(.caption).foregroundStyle(.secondary)
                 }

@@ -5,7 +5,7 @@ import WebKit
 /// which is an ordinary web window showing a page iDesk writes, so clicking, scrolling and typing work as in any page.
 enum FileStore {
     static let filesURL = URL(string: "idesk://files")!
-    private static let pageName = ".iDesk-files.html"
+    private static let pageName = ".APLite-files.html"
 
     /// A file in Files saved with an older path: the app's data folder gets a new name when iDesk is reinstalled or
     /// updated, so a file URL kept with the session points to the same file under the current Downloads folder.
@@ -559,7 +559,7 @@ final class FilesBridge: NSObject, WKScriptMessageHandler {
             let parent = file.deletingLastPathComponent()
             // Into a hidden folder first; then, when everything is inside one folder already, that folder moves out
             // (no "Name/Name"), otherwise the hidden folder becomes one named after the archive.
-            let temp = parent.appendingPathComponent(".iDesk-unzip-\(UUID().uuidString)")
+            let temp = parent.appendingPathComponent(".APLite-unzip-\(UUID().uuidString)")
             model.showToast(String(localized: "Extracting \(file.lastPathComponent)…"))
             DispatchQueue.global(qos: .userInitiated).async {
                 let fm = FileManager.default

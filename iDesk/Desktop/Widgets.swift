@@ -121,7 +121,7 @@ final class WidgetStore: NSObject, ObservableObject, CLLocationManagerDelegate {
         if let last = lastWeather, Date().timeIntervalSince(last) < 20 * 60, weather != nil { return }
         switch location.authorizationStatus {
         case .notDetermined: location.requestWhenInUseAuthorization()
-        case .denied, .restricted: weatherNote = String(localized: "Allow Location for iDesk in the iPhone's Settings to see the weather.")
+        case .denied, .restricted: weatherNote = String(localized: "Allow Location for APLite in the iPhone's Settings to see the weather.")
         default: location.requestLocation()
         }
     }
@@ -130,7 +130,7 @@ final class WidgetStore: NSObject, ObservableObject, CLLocationManagerDelegate {
         if isOn(.weather), manager.authorizationStatus == .authorizedWhenInUse || manager.authorizationStatus == .authorizedAlways {
             manager.requestLocation()
         } else if manager.authorizationStatus == .denied {
-            weatherNote = String(localized: "Allow Location for iDesk in the iPhone's Settings to see the weather.")
+            weatherNote = String(localized: "Allow Location for APLite in the iPhone's Settings to see the weather.")
         }
     }
 
@@ -198,7 +198,7 @@ final class WidgetStore: NSObject, ObservableObject, CLLocationManagerDelegate {
                 events = found.map { Event(title: $0.title ?? "", start: $0.startDate, allDay: $0.isAllDay, color: $0.calendar.cgColor) }
                 calendarNote = nil
             default:
-                calendarNote = String(localized: "Allow Calendars for iDesk in the iPhone's Settings.")
+                calendarNote = String(localized: "Allow Calendars for APLite in the iPhone's Settings.")
             }
         }
         if isOn(.reminders) {
@@ -212,7 +212,7 @@ final class WidgetStore: NSObject, ObservableObject, CLLocationManagerDelegate {
                     DispatchQueue.main.async { self.reminders = titles; self.remindersNote = nil }
                 }
             default:
-                remindersNote = String(localized: "Allow Reminders for iDesk in the iPhone's Settings.")
+                remindersNote = String(localized: "Allow Reminders for APLite in the iPhone's Settings.")
             }
         }
     }

@@ -68,11 +68,11 @@ struct MouseCheckView: View {
             return String(localized: "The mouse works directly. AssistiveTouch is not needed.")
         }
         if c.pointerHover > 0 || c.pointerPresses > 0 {
-            return String(localized: "The mouse only reaches iDesk through AssistiveTouch. Use mouse mode (the corner button on the trackpad) to point straight at the desktop.")
+            return String(localized: "The mouse only reaches APLite through AssistiveTouch. Use mouse mode (the corner button on the trackpad) to point straight at the desktop.")
         }
         if c.miceFound > 0 || c.connects > 0 {
-            return String(localized: "iOS reports a mouse but sends iDesk no movement. Turn on AssistiveTouch to use it through its pointer.")
+            return String(localized: "iOS reports a mouse but sends APLite no movement. Turn on AssistiveTouch to use it through its pointer.")
         }
-        return String(localized: "iOS reports no mouse to iDesk. On iPhone a mouse is turned on by AssistiveTouch: Settings → Accessibility → Touch → AssistiveTouch, then connect the mouse.")
+        return String(localized: "iOS reports no mouse to APLite. On iPhone a mouse is turned on by AssistiveTouch: Settings → Accessibility → Touch → AssistiveTouch, then connect the mouse.")
     }
 }

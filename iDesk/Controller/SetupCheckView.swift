@@ -21,8 +21,8 @@ struct SetupCheckView: View {
         let major = Int(UIDevice.current.systemVersion.split(separator: ".").first ?? "0") ?? 0
         list.append(Item(state: major >= 17 ? .ok : .warn,
                          title: String(localized: "iOS \(UIDevice.current.systemVersion)"),
-                         detail: major >= 17 ? String(localized: "iDesk needs iOS 17 or later: this iPhone has it.")
-                                             : String(localized: "iDesk needs iOS 17 or later. Update in Settings → General → Software Update.")))
+                         detail: major >= 17 ? String(localized: "APLite needs iOS 17 or later: this iPhone has it.")
+                                             : String(localized: "APLite needs iOS 17 or later. Update in Settings → General → Software Update.")))
         if model.isExternalConnected {
             let size = model.screenSize
             list.append(Item(state: .ok, title: String(localized: "Display connected"),
@@ -59,17 +59,17 @@ struct SetupCheckView: View {
         }
         if store.apps.contains(where: { !$0.isBundled || $0.hasPendingUpdate }) {
             list.append(Item(state: .warn, title: String(localized: "Apps waiting to be installed"),
-                             detail: String(localized: "On the Apps page, tap “Install new apps into iDesk” and pick ESign: iDesk is signed again with the apps inside.")))
+                             detail: String(localized: "On the Apps page, tap “Install new apps into APLite” and pick ESign: APLite is signed again with the apps inside.")))
         } else {
             list.append(Item(state: .info, title: String(localized: "\(store.apps.count) iOS apps"),
                              detail: String(localized: "iOS apps come from decrypted IPA files: Apps → Add IPA files. The Apps page lists which apps others got working.")))
         }
         if let app = model.problemApp {
-            list.append(Item(state: .warn, title: String(localized: "\(app) closed iDesk last time"),
+            list.append(Item(state: .warn, title: String(localized: "\(app) closed APLite last time"),
                              detail: String(localized: "Open it on its own, without other heavy apps, and report it from the Apps page if it happens again.")))
         }
         if let r = updates.available {
-            list.append(Item(state: .info, title: String(localized: "iDesk \(r.version) is available"),
+            list.append(Item(state: .info, title: String(localized: "APLite \(r.version) is available"),
                              detail: String(localized: "Settings → Help → Update: your apps stay.")))
         }
         return list
