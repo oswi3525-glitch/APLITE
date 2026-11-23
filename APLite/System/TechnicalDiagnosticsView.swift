@@ -103,7 +103,7 @@ struct TechnicalDiagnosticsView: View {
         Web apps: \(WebApps.shared.all.count), guest apps: \(GuestStore.shared.apps.count)
         Memory: \(memory.report())
         Audio: \(audio.report())
-        Thermal: \(ThermalMonitor.shared.state.rawValue); main-thread worst gap: \(String(format: "%.2f", probe.worstGap))s
+        Thermal: \(ThermalMonitor.shared.detailLines.joined(separator: " | ")); main-thread worst gap: \(String(format: "%.2f", probe.worstGap))s
         \(findings.map { "[\($0.severity.rawValue)] \($0.title): \($0.detail)" }.joined(separator: "\n"))
         """)
         checkedAt = Date()

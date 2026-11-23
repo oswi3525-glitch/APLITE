@@ -16,7 +16,7 @@ targets:
         SWIFT_VERSION: "5.0"
         SWIFT_OBJC_BRIDGING_HEADER: APLite/APLite-Bridging-Header.h
         CODE_SIGN_STYLE: Automatic
-        MARKETING_VERSION: "1.2.8"
+        MARKETING_VERSION: "1.2.9"
         CURRENT_PROJECT_VERSION: "1"
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         SWIFT_EMIT_LOC_STRINGS: YES
@@ -93,6 +93,8 @@ targets:
     sources:
       - Tests
       - APLite/App/AudioDiagnostics.swift
+      - APLite/System/ThermalMath.swift
+      - APLite/System/WindowListMath.swift
       - APLite/System/APLiteSettings.swift
       - APLite/System/SecurityManager.swift
       - APLite/System/MemoryHeuristics.swift

@@ -133,6 +133,17 @@ iPhone/iPad before any item is marked complete. Status today: **not tested on ha
 - [ ] WebApp title bar shows − / current % / +; clicks change zoom, 100% persists, other WebApps unaffected.
 - [ ] Dragging a bundled guest app to Trash only marks it for reinstall; dropping twice stays marked; Trash icon cannot be hidden; last removed WebApp restores from the desktop menu.
 
+## 1.2.9 — patch release
+
+- [ ] Enable the desktop keyboard, click a field, drag its title bar: the panel follows the pointer and keeps its place after hiding and re-showing.
+- [ ] − collapses the keyboard to a strip, + expands it, the corner × and Esc close it; the next field tap brings it back.
+- [ ] At 130% size on a 1280×720 display every key is visible and clickable (nothing off the right edge).
+- [ ] Window button on the dock opens the list; a row focuses/restores a minimized window, × closes it, Tile and Show desktop work on one click.
+- [ ] With more than 7 windows, only 7 rows are shown and the footer is still clickable.
+- [ ] The window list closes on workspace switch, display disconnect, lock, Esc and Back.
+- [ ] Tray/quick panel show a live pressure index with trend; Technical Diagnostics contains the full breakdown; no °C value is claimed.
+- [ ] Settings → System has one "Advanced tools" page; Build Center, certificates and diagnostics are reachable there; no saved value is lost after the upgrade.
+
 ## Known unresolved issues
 
 Record any failures here before merging to `main`. Do not mark a feature complete on the strength of

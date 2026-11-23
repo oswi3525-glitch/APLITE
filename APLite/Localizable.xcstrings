@@ -1772,6 +1772,33 @@
         }
       }
     },
+    "Personalization": {
+      "localizations": { "vi": { "stringUnit": { "state": "translated", "value": "Cá nhân hóa" } } }
+    },
+    "Security": {
+      "localizations": { "vi": { "stringUnit": { "state": "translated", "value": "Bảo mật" } } }
+    },
+    "Power": {
+      "localizations": { "vi": { "stringUnit": { "state": "translated", "value": "Nguồn điện" } } }
+    },
+    "Performance": {
+      "localizations": { "vi": { "stringUnit": { "state": "translated", "value": "Hiệu năng" } } }
+    },
+    "Applications": {
+      "localizations": { "vi": { "stringUnit": { "state": "translated", "value": "Ứng dụng" } } }
+    },
+    "Storage": {
+      "localizations": { "vi": { "stringUnit": { "state": "translated", "value": "Lưu trữ" } } }
+    },
+    "Input": {
+      "localizations": { "vi": { "stringUnit": { "state": "translated", "value": "Đầu vào" } } }
+    },
+    "Certificates": {
+      "localizations": { "vi": { "stringUnit": { "state": "translated", "value": "Chứng chỉ" } } }
+    },
+    "System": {
+      "localizations": { "vi": { "stringUnit": { "state": "translated", "value": "Hệ thống" } } }
+    },
     "Display connected": {
       "localizations": {
         "vi": {
@@ -4291,6 +4318,103 @@
           "stringUnit": {
             "state": "translated",
             "value": "Về mặc định"
+          }
+        }
+      }
+    },
+    "Reset keyboard position": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đặt lại vị trí bàn phím"
+          }
+        }
+      }
+    },
+    "Drag the title bar · × hides": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kéo thanh tiêu đề để di chuyển · × để ẩn"
+          }
+        }
+      }
+    },
+    "Collapsed · + to expand": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đã thu nhỏ · + để mở rộng"
+          }
+        }
+      }
+    },
+    "Advanced tools": {
+      "localizations": { "vi": { "stringUnit": { "state": "translated", "value": "Công cụ nâng cao" } } }
+    },
+    "Build Center & App Creator": {
+      "localizations": { "vi": { "stringUnit": { "state": "translated", "value": "Build Center & App Creator" } } }
+    },
+    "Developer": {
+      "localizations": { "vi": { "stringUnit": { "state": "translated", "value": "Nhà phát triển" } } }
+    },
+    "Diagnostics": {
+      "localizations": { "vi": { "stringUnit": { "state": "translated", "value": "Chẩn đoán" } } }
+    },
+    "Other workspace": {
+      "localizations": { "vi": { "stringUnit": { "state": "translated", "value": "Không gian làm việc khác" } } }
+    },
+    "Tile": {
+      "localizations": { "vi": { "stringUnit": { "state": "translated", "value": "Xếp ô" } } }
+    },
+    "open": {
+      "localizations": { "vi": { "stringUnit": { "state": "translated", "value": "đang mở" } } }
+    },
+    "Remove certificate?": {
+      "localizations": { "vi": { "stringUnit": { "state": "translated", "value": "Xóa chứng chỉ?" } } }
+    },
+    "Advanced": {
+      "localizations": { "vi": { "stringUnit": { "state": "translated", "value": "Nâng cao" } } }
+    },
+    "Certificate": {
+      "localizations": { "vi": { "stringUnit": { "state": "translated", "value": "Chứng chỉ" } } }
+    },
+    "None": {
+      "localizations": { "vi": { "stringUnit": { "state": "translated", "value": "Không có" } } }
+    },
+    "Import .p12 / .pfx from Files": {
+      "localizations": { "vi": { "stringUnit": { "state": "translated", "value": "Nhập .p12 / .pfx từ Files" } } }
+    },
+    "Remove certificate": {
+      "localizations": { "vi": { "stringUnit": { "state": "translated", "value": "Xóa chứng chỉ" } } }
+    },
+    "Save a diagnostics report": {
+      "localizations": { "vi": { "stringUnit": { "state": "translated", "value": "Lưu báo cáo chẩn đoán" } } }
+    },
+    "Diagnostics saved in APLite's file area.": {
+      "localizations": { "vi": { "stringUnit": { "state": "translated", "value": "Đã lưu báo cáo chẩn đoán trong khu vực tệp của APLite." } } }
+    },
+    "Analyse projects and send them to a macOS CI worker. No build runs on the iPhone.": {
+      "localizations": { "vi": { "stringUnit": { "state": "translated", "value": "Phân tích dự án và gửi tới worker CI macOS. Không biên dịch trên iPhone." } } }
+    },
+    "The imported signing certificate will be removed from the Keychain.": {
+      "localizations": { "vi": { "stringUnit": { "state": "translated", "value": "Chứng chỉ ký đã nhập sẽ bị xóa khỏi Keychain." } } }
+    },
+    "Enter the password for the .p12 / .pfx file. It is stored in the Keychain and never logged.": {
+      "localizations": { "vi": { "stringUnit": { "state": "translated", "value": "Nhập mật khẩu cho tệp .p12 / .pfx. Mật khẩu được lưu trong Keychain và không bao giờ bị ghi log." } } }
+    },
+    "The desktop keyboard appears when you click a field. Drag it by its title bar, collapse or close it with the corner controls. See the page above for every key.": {
+      "localizations": { "vi": { "stringUnit": { "state": "translated", "value": "Bàn phím xuất hiện khi bạn nhấn vào một ô nhập liệu. Kéo thanh tiêu đề để di chuyển, dùng các nút ở góc để thu nhỏ hoặc đóng. Xem trang bên trên để biết tất cả các phím." } } }
+    },
+    "The keyboard appears on the external display only when you click an input field (or another text field such as the address bar). Drag its title bar to move it, use − to collapse it to a strip and the corner × to close it — the next field you click brings it back. Esc also closes it. Shift changes case for one key, Caps Lock keeps it, and 123 switches to the symbol layer.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bàn phím chỉ xuất hiện trên màn hình ngoài khi bạn nhấn vào một ô nhập liệu (hoặc thanh địa chỉ). Kéo thanh tiêu đề để di chuyển, dùng − để thu nhỏ thành thanh nhỏ và nút × ở góc để đóng — lần nhấn tiếp vào một ô nhập liệu sẽ mở lại. Esc cũng đóng bàn phím. Shift đổi chữ hoa cho một phím, Caps Lock giữ chữ hoa, còn 123 chuyển sang lớp ký hiệu."
           }
         }
       }

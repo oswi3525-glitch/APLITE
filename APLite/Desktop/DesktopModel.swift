@@ -360,6 +360,13 @@ final class DesktopModel: ObservableObject {
     @Published var virtualKeyboardShift = false
     @Published var virtualKeyboardCaps = false
     @Published var virtualKeyboardSymbols = false
+    /// Collapsed to a title strip until the expand control is clicked.
+    @Published private(set) var virtualKeyboardMinimized = false
+    /// A dragged position, persisted across launches. `nil` uses the automatic bottom-centre spot.
+    @Published private(set) var virtualKeyboardOrigin: CGPoint? =
+        APLiteSettings.Input.keyboardOriginX >= 0 && APLiteSettings.Input.keyboardOriginY >= 0
+            ? CGPoint(x: APLiteSettings.Input.keyboardOriginX, y: APLiteSettings.Input.keyboardOriginY)
+            : nil
     /// Last tap into a guest app: its native fields cannot be observed, so this stands in for focus.
     private var lastGuestTap: Date = .distantPast
 
@@ -367,6 +374,8 @@ final class DesktopModel: ObservableObject {
     @Published var showDownloads = false
     /// Task Manager: running windows, memory pressure and close controls.
     @Published var showTaskManager = false
+    /// Compact window list opened from the dock's Window button.
+    @Published var showWindowList = false
     /// Presentation mode (MediaModes.swift): the window being presented, and the laser pointer on it.
     @Published var presentation: PresentationState?
     @Published var laser: CGPoint?
@@ -572,6 +581,7 @@ final class DesktopModel: ObservableObject {
         case filePending(from: CGPoint)      // pressed in Files: waiting for the page to say which file is there
         case sticky(UUID, offset: CGPoint)   // moving a sticky note by its top strip
         case widget(WidgetKind, offset: CGPoint)   // moving a desktop widget
+        case keyboard(offset: CGPoint)       // dragging the on-screen keyboard by its title strip
     }
     enum Snap {
         case left, right, maximize, topLeft, topRight, bottomLeft, bottomRight
@@ -1240,6 +1250,7 @@ final class DesktopModel: ObservableObject {
         trashDropHighlight = false
         contextMenu = nil
         snapPreview = nil
+        showWindowList = false
     }
 
     // MARK: Windows
@@ -1729,6 +1740,7 @@ final class DesktopModel: ObservableObject {
         drag = .none
         contextMenu = nil
         showLauncher = false
+        showWindowList = false
         closeRecents()
         hiddenByShowDesktop = []
         APLiteAnimation.perform(APLiteAnimation.gentle) { self.workspace = n }
@@ -1907,6 +1919,12 @@ final class DesktopModel: ObservableObject {
                       width: 36, height: h)
     }
 
+    /// The Window button: left of Task Manager, opens the compact window list.
+    var windowListButtonRect: CGRect {
+        let t = taskManagerButtonRect
+        return CGRect(x: t.minX - 6 - t.width, y: t.minY, width: t.width, height: t.height)
+    }
+
     var trayRect: CGRect {
         CGRect(x: showDesktopRect.minX - Layout.trayWidth, y: dockY,
                width: Layout.trayWidth, height: dockHeight)
@@ -1914,7 +1932,7 @@ final class DesktopModel: ObservableObject {
 
     /// The right glass pill: recording / downloads when shown, the system tray and Show desktop.
     var rightDockRect: CGRect {
-        let left = (recordButtonRect?.minX ?? downloadsButtonRect?.minX ?? taskManagerButtonRect.minX) - Layout.dockPadding
+        let left = (recordButtonRect?.minX ?? downloadsButtonRect?.minX ?? windowListButtonRect.minX) - Layout.dockPadding
         return CGRect(x: left, y: dockY, width: screenSize.width - Layout.dockMargin - left, height: dockHeight)
     }
 
@@ -2071,6 +2089,12 @@ final class DesktopModel: ObservableObject {
             }
         case .filePending:
             break
+        case let .keyboard(offset):
+            let base = virtualKeyboardBaseRect
+            let next = KeyboardLayout.clampOrigin(CGPoint(x: p.x - offset.x, y: p.y - offset.y),
+                                                  size: base.size, screen: screenSize,
+                                                  taskbarTop: taskbarTop)
+            if virtualKeyboardOrigin != next { virtualKeyboardOrigin = next }
         case let .widget(kind, offset):
             let next = CGPoint(x: p.x - offset.x, y: p.y - offset.y)
             if WidgetStore.shared.positions[kind] != next {
@@ -2088,11 +2112,19 @@ final class DesktopModel: ObservableObject {
     /// Updates the pointer shape and sends hover events to the page under the pointer.
     private func updateHover(_ p: CGPoint) {
         updateTaskPreview(p)
+        if virtualKeyboardVisible, virtualKeyboardRect.contains(p) {
+            switch KeyboardLayout.headerTarget(at: p, in: virtualKeyboardRect, minimized: virtualKeyboardMinimized) {
+            case .drag: cursor.setStyle(.grab)
+            case .minimize, .expand, .close: cursor.setStyle(.pointer)
+            case .none: cursor.setStyle(.arrow)
+            }
+            return
+        }
         if quickLook != nil || contextMenu != nil || recents != nil || (showLauncher && launcherRect.contains(p)) || p.y >= taskbarHitTop
             || showSpotlight || showClipboard || showEmoji || (showDownloads && downloadsRect.contains(p)) || fillSuggestion.map({ fillArea($0).contains(p) }) == true
             || stickyIndex(at: p) != nil
             || (showQuickPanel && quickPanelRect.contains(p)) || (banner != nil && bannerRect.contains(p))
-             || (virtualKeyboardVisible && virtualKeyboardRect.contains(p)) {
+             || (showWindowList && windowListRect.contains(p)) {
             cursor.setStyle(.arrow); return
         }
         guard let w = pointerWindow(at: p) else { cursor.setStyle(.arrow); return }
@@ -2165,8 +2197,18 @@ final class DesktopModel: ObservableObject {
         cursor.isPressed = true
         let p = cursor.position
         if capture != nil { capture = CaptureState(start: p, rect: CGRect(origin: p, size: .zero)); return }
-        // Pressing a virtual key must not start a drag of the window underneath it.
-        if virtualKeyboardVisible, virtualKeyboardRect.contains(p) { return }
+        // The keyboard's title strip drags the whole panel; keys and buttons still only act on click.
+        // Pressing there must never start a drag of the window underneath it.
+        if virtualKeyboardVisible, virtualKeyboardRect.contains(p) {
+            let rect = virtualKeyboardRect
+            if KeyboardLayout.headerTarget(at: p, in: rect, minimized: virtualKeyboardMinimized) == .drag {
+                let base = virtualKeyboardBaseRect
+                drag = .keyboard(offset: CGPoint(x: p.x - base.minX, y: p.y - base.minY))
+                cursor.setStyle(.grab)
+            }
+            return
+        }
+        if showWindowList, windowListRect.contains(p) { return }
         if showSpotlight || showClipboard { return }
         if let f = fillSuggestion, !fillArea(f).contains(p) { fillSuggestion = nil }
         // A widget (not on the timer's buttons): dragging moves it.
@@ -2262,6 +2304,7 @@ final class DesktopModel: ObservableObject {
             trashDropHighlight = false
         }
         if case .widget = drag { WidgetStore.shared.savePositions() }
+        if case .keyboard = drag { saveKeyboardPosition() }
         drag = .none
         snapTarget = nil
         snapPreview = nil
@@ -2330,6 +2373,7 @@ final class DesktopModel: ObservableObject {
         if showSpotlight { clickSpotlight(at: p); return }
         if showClipboard { clickClipboard(at: p); return }
         if showDownloads { clickDownloads(at: p); return }
+        if showWindowList { clickWindowList(at: p); return }
         if showTaskManager { clickTaskManager(at: p); return }
         if showEmoji { clickEmoji(at: p); return }
         if let f = fillSuggestion {
@@ -2469,6 +2513,7 @@ final class DesktopModel: ObservableObject {
         if navButtonRect(.recents).contains(p) { toggleRecents(); return }
         if let r = recordButtonRect, r.contains(p) { ScreenRecorder.shared.stop(); return }
         if let r = downloadsButtonRect, r.contains(p) { let open = !showDownloads; closePanels(); showDownloads = open; return }
+        if windowListButtonRect.contains(p) { let open = !showWindowList; closePanels(); showWindowList = open; return }
         if taskManagerButtonRect.contains(p) { let open = !showTaskManager; closePanels(); showTaskManager = open; return }
         if trayRect.contains(p) { showQuickPanel = true; return }
         if navButtonRect(.home).contains(p) { goHome(); return }
@@ -3126,9 +3171,20 @@ final class DesktopModel: ObservableObject {
 
     var keyboardShiftActive: Bool { virtualKeyboardShift != virtualKeyboardCaps }
 
+    /// The full panel, whether it is currently expanded or collapsed. Drag and key hit testing use it.
+    var virtualKeyboardBaseRect: CGRect {
+        let scale = CGFloat(APLiteSettings.Input.keyboardSize) / 100
+        if let origin = virtualKeyboardOrigin {
+            return KeyboardLayout.panelRect(at: origin, screen: screenSize,
+                                            taskbarTop: taskbarTop, scale: scale)
+        }
+        return KeyboardLayout.panelRect(screen: screenSize, taskbarTop: taskbarTop, scale: scale)
+    }
+
+    /// The rectangle that actually receives clicks: a small strip when minimized.
     var virtualKeyboardRect: CGRect {
-        KeyboardLayout.panelRect(screen: screenSize, taskbarTop: taskbarTop,
-                                 scale: CGFloat(APLiteSettings.Input.keyboardSize) / 100)
+        virtualKeyboardMinimized ? KeyboardLayout.minimizedRect(from: virtualKeyboardBaseRect)
+                                 : virtualKeyboardBaseRect
     }
 
     /// The key below the pointer, using the same geometry as the view that draws it.
@@ -3148,7 +3204,15 @@ final class DesktopModel: ObservableObject {
     }
 
     func clickVirtualKeyboard(at p: CGPoint) {
-        guard let key = virtualKey(at: p) else { return }
+        // Title-strip controls win over keys. In the collapsed strip the primary control expands.
+        let rect = virtualKeyboardRect
+        switch KeyboardLayout.headerTarget(at: p, in: rect, minimized: virtualKeyboardMinimized) {
+        case .close: hideVirtualKeyboard(); return
+        case .minimize: virtualKeyboardMinimized = true; return
+        case .expand: virtualKeyboardMinimized = false; return
+        case .drag, .none: break
+        }
+        guard !virtualKeyboardMinimized, let key = virtualKey(at: p) else { return }
         if APLiteSettings.Input.keyboardFeedback {
             UISelectionFeedbackGenerator().selectionChanged()   // tiny tick on the iPhone, never on the display
         }
@@ -3164,20 +3228,36 @@ final class DesktopModel: ObservableObject {
         case .enter: pressEnter()
         case .tab: sendKey("Tab", 9, keyboardShiftActive)
         case .escape:
-            virtualKeyboardDismissed = true
-            virtualKeyboardShift = false
+            hideVirtualKeyboard()
         case .shift: virtualKeyboardShift.toggle()
         case .capsLock: virtualKeyboardCaps.toggle()
         case .symbols: virtualKeyboardSymbols.toggle()
         case .hide:
-            // "Put the keyboard away" — the next tap into a field brings it back.
-            virtualKeyboardDismissed = true
-            virtualKeyboardShift = false
-            virtualKeyboardSymbols = false
+            hideVirtualKeyboard()
         case .selectAll: selectAll()
         case .copy: copySelection()
         case .paste: paste()
         }
+    }
+
+    /// The × control, the hide key and Esc all use the same path; the next field tap brings it back.
+    func hideVirtualKeyboard() {
+        virtualKeyboardDismissed = true
+        virtualKeyboardMinimized = false
+        virtualKeyboardShift = false
+        virtualKeyboardSymbols = false
+    }
+
+    private func saveKeyboardPosition() {
+        guard let origin = virtualKeyboardOrigin else { return }
+        APLiteSettings.Input.keyboardOriginX = Int(origin.x.rounded())
+        APLiteSettings.Input.keyboardOriginY = Int(origin.y.rounded())
+    }
+
+    /// Settings → "Reset keyboard position": back to the automatic bottom-centre spot.
+    func resetKeyboardPosition() {
+        virtualKeyboardOrigin = nil
+        APLiteSettings.Input.resetKeyboardPosition()
     }
 
     // MARK: Keyboard & navigation (act on the focused window)
@@ -3269,6 +3349,7 @@ final class DesktopModel: ObservableObject {
         if let w = focused, w.findQuery != nil { closeFind(w); return }
         if recents != nil { closeRecents(); return }
         if showQuickPanel { showQuickPanel = false; return }
+        if showWindowList { showWindowList = false; return }
         if contextMenu != nil { contextMenu = nil; return }
         if showLauncher { showLauncher = false; return }
         guard let w = focused, w.isShown else { return }
@@ -3310,6 +3391,7 @@ final class DesktopModel: ObservableObject {
         showDownloads = false
         showEmoji = false
         showTaskManager = false
+        showWindowList = false
     }
     func minimizeFocused() { if let w = focused { minimize(w) } }
     func sendKey(_ key: String, _ code: Int, _ shift: Bool) {
@@ -3736,6 +3818,7 @@ final class DesktopModel: ObservableObject {
         if showSpotlight { showSpotlight = false; return }
         if showClipboard { showClipboard = false; return }
         if showDownloads { showDownloads = false; return }
+        if showWindowList { showWindowList = false; return }
         if showEmoji { showEmoji = false; return }
         if fillSuggestion != nil { fillSuggestion = nil; return }
         if editingSticky != nil { editingSticky = nil; return }

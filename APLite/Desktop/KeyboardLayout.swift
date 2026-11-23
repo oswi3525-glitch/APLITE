@@ -30,6 +30,9 @@ enum KeyboardLayout {
     static let gap: CGFloat = 6
     static let header: CGFloat = 28
     static let maxWidth: CGFloat = 980
+    /// Title-strip controls (minimize / expand and close).
+    static let headerButton: CGFloat = 20
+    static let minimizedWidth: CGFloat = 280
 
     private static func key(_ label: String, _ action: Action, units: Double = 1,
                             shifted: String? = nil, id: String? = nil) -> Key {
@@ -131,20 +134,72 @@ enum KeyboardLayout {
 
     // MARK: Geometry
 
+    /// What the pointer is over in the keyboard's title strip. The external display's scene receives
+    /// no touches, so drawing and hit testing share this one pure description.
+    enum HeaderTarget: Equatable {
+        case none, drag, minimize, expand, close
+    }
+
     static func unitWidth(for panelWidth: CGFloat) -> CGFloat {
         max(22, (panelWidth - 2 * padding - gap * CGFloat(columns - 1)) / CGFloat(columns))
     }
 
     static func keyHeight(forUnit unit: CGFloat) -> CGFloat { min(56, max(32, unit)) }
 
+    /// Keep the whole panel reachable after a resolution change or a stale saved position.
+    static func clampOrigin(_ origin: CGPoint, size: CGSize, screen: CGSize, taskbarTop: CGFloat) -> CGPoint {
+        CGPoint(x: min(max(origin.x, 8), max(8, screen.width - size.width - 8)),
+                y: min(max(origin.y, 8), max(8, taskbarTop - size.height - 8)))
+    }
+
     /// Centred on the screen, anchored just above the dock. `scale` comes from the keyboard-size setting.
     static func panelRect(screen: CGSize, taskbarTop: CGFloat, scale: CGFloat = 1) -> CGRect {
-        let width = min(maxWidth, screen.width - 24) * min(1.4, max(0.6, scale))
+        let scaled = min(maxWidth, screen.width - 24) * min(1.4, max(0.6, scale))
+        // Scale must never push keys off the external display: it cannot receive touches, so an
+        // unreachable key would be impossible to click. Keep an 8 pt margin on each side.
+        let width = min(max(120, scaled), max(120, screen.width - 16))
         let unit = unitWidth(for: width)
         let height = padding * 2 + header + CGFloat(rows(symbols: false).count) * (keyHeight(forUnit: unit) + gap) - gap
-        return CGRect(x: max(8, (screen.width - width) / 2),
-                      y: max(8, taskbarTop - height - 12),
-                      width: width, height: height)
+        let size = CGSize(width: width, height: height)
+        return CGRect(origin: clampOrigin(CGPoint(x: (screen.width - width) / 2,
+                                                  y: taskbarTop - height - 12),
+                                         size: size, screen: screen, taskbarTop: taskbarTop),
+                      size: size)
+    }
+
+    /// A dragged panel keeps its size; only its origin is clamped to the visible desktop.
+    static func panelRect(at origin: CGPoint, screen: CGSize, taskbarTop: CGFloat, scale: CGFloat) -> CGRect {
+        let base = panelRect(screen: screen, taskbarTop: taskbarTop, scale: scale)
+        return CGRect(origin: clampOrigin(origin, size: base.size, screen: screen, taskbarTop: taskbarTop),
+                      size: base.size)
+    }
+
+    /// Collapsed to a strip that keeps the panel's position, so expanding restores the same place.
+    static func minimizedRect(from panel: CGRect) -> CGRect {
+        CGRect(x: panel.minX, y: panel.minY,
+               width: min(minimizedWidth, panel.width), height: header + 8)
+    }
+
+    static func headerRect(in panel: CGRect) -> CGRect {
+        CGRect(x: panel.minX, y: panel.minY, width: panel.width, height: header)
+    }
+
+    /// The two controls at the right end of the title strip.
+    static func headerButtons(in panel: CGRect) -> (primary: CGRect, close: CGRect) {
+        let y = panel.minY + 4
+        let close = CGRect(x: panel.maxX - padding - headerButton, y: y,
+                           width: headerButton, height: headerButton)
+        let primary = CGRect(x: close.minX - 6 - headerButton, y: y,
+                             width: headerButton, height: headerButton)
+        return (primary, close)
+    }
+
+    static func headerTarget(at point: CGPoint, in panel: CGRect, minimized: Bool) -> HeaderTarget {
+        let buttons = headerButtons(in: panel)
+        if buttons.close.contains(point) { return .close }
+        if buttons.primary.contains(point) { return minimized ? .expand : .minimize }
+        if headerRect(in: panel).contains(point) { return .drag }
+        return .none
     }
 
     static func keyRects(in panel: CGRect, symbols: Bool) -> [(key: Key, rect: CGRect)] {

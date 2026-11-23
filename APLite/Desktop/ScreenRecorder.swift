@@ -128,7 +128,7 @@ extension DesktopModel {
     /// The red stop button on the taskbar while recording (left of the downloads button and the tray).
     var recordButtonRect: CGRect? {
         guard ScreenRecorder.shared.isRecording else { return nil }
-        let right = downloadsButtonRect?.minX ?? taskManagerButtonRect.minX
+        let right = downloadsButtonRect?.minX ?? windowListButtonRect.minX
         let h = min(36, dockHeight - 10)
         return CGRect(x: right - 88, y: dockY + (dockHeight - h) / 2, width: 84, height: h)
     }

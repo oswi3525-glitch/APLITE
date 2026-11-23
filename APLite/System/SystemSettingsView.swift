@@ -9,7 +9,6 @@ struct SystemSettingsView: View {
     @ObservedObject private var security = SecurityManager.shared
     @ObservedObject private var power = PowerManager.shared
     @ObservedObject private var memory = MemoryManager.shared
-    @ObservedObject private var certificates = CertificateManager.shared
 
     @AppStorage("APLite.security.lockOnLaunch") private var lockOnLaunch = false
     @AppStorage("APLite.security.lockOnSleep") private var lockOnSleep = true
@@ -19,17 +18,12 @@ struct SystemSettingsView: View {
     @AppStorage("APLite.power.suspendWork") private var suspendWork = true
     @AppStorage("APLite.performance.memoryTargetMB") private var memoryTarget = 1024
     @AppStorage("APLite.performance.warnPercent") private var warnPercent = 80
-    @AppStorage("APLite.performance.releaseCaches") private var releaseCaches = true
     @AppStorage("APLite.performance.detectLeaks") private var detectLeaks = true
     @AppStorage("APLite.personalization.pressRipples") private var pressRipples = false
     @AppStorage("APLite.input.virtualKeyboard") private var virtualKeyboard = false
     @AppStorage("APLite.personalization.settingsAppearance") private var settingsAppearance = 0
 
     @State private var showPasscode = false
-    @State private var showBuildCenter = false
-    @State private var showCertificatePassword = false
-    @State private var certificatePassword = ""
-    @State private var pendingCertificate: Data?
     @State private var resolution = ""
     @State private var pendingAction: (() -> Void)?
     @State private var confirmMessage = ""
@@ -111,7 +105,6 @@ struct SystemSettingsView: View {
                 Picker("Warn at", selection: $warnPercent) {
                     ForEach([60, 70, 80, 90], id: \.self) { Text("\($0)%") }
                 }
-                Toggle("Release caches when idle", isOn: $releaseCaches)
                 Toggle("Detect possible memory leaks", isOn: $detectLeaks)
                 Text(memory.report()).font(.footnote).foregroundStyle(.secondary)
                 Button("Release caches now") {
@@ -187,30 +180,17 @@ struct SystemSettingsView: View {
                 } label: {
                     Label("Keyboard settings & all keys", systemImage: "keyboard")
                 }
-                Text("The desktop keyboard appears only when you click a text field. It has a hide key, and every key is configurable in the page above.")
+                Text("The desktop keyboard appears when you click a field. Drag it by its title bar, collapse or close it with the corner controls. See the page above for every key.")
                     .font(.footnote).foregroundStyle(.secondary)
             }
 
-            Section(header: Label(SettingsGroup.certificates.title, systemImage: SettingsGroup.certificates.symbol)) {
-                LabeledContent("Certificate", value: certificates.identityName ?? String(localized: "None"))
-                if let error = certificates.lastError { Text(error).foregroundStyle(APLiteColors.red).font(.footnote) }
-                Button("Import .p12 / .pfx from Files") { importCertificate() }
-                if certificates.hasIdentity {
-                    Button("Remove certificate", role: .destructive) {
-                    confirmMessage = "The imported signing certificate will be removed from the Keychain."
-                    pendingAction = { certificates.remove() }
-                }
-                }
-            }
-
             Section(header: Label(SettingsGroup.system.title, systemImage: SettingsGroup.system.symbol)) {
-                NavigationLink { TechnicalDiagnosticsView(model: model) } label: {
-                    Label("Technical Diagnostics", systemImage: "stethoscope")
+                NavigationLink { AdvancedSettingsView(model: model) } label: {
+                    Label("Advanced tools", systemImage: "wrench.and.screwdriver")
                 }
                 NavigationLink { SystemChangelogView() } label: { Label("What's new", systemImage: "sparkles") }
                 LabeledContent("Version", value: APLite.displayVersion)
                 LabeledContent("Last clean shutdown", value: APLiteSettings.System.lastShutdown?.formatted() ?? String(localized: "never"))
-                Button("Build Center") { showBuildCenter = true }
                 NavigationLink { AboutView() } label: { Label("Attribution", systemImage: "info.circle") }
             }
         }
@@ -220,30 +200,12 @@ struct SystemSettingsView: View {
         .preferredColorScheme(settingsScheme)
         .onAppear { resolution = ExternalDisplay.resolution.map(ExternalDisplay.name(of:)) ?? "" }
         .sheet(isPresented: $showPasscode) { PasscodeSetupView() }
-        .sheet(isPresented: $showBuildCenter) { BuildCenterView() }
         .alert("Confirm action", isPresented: Binding(get: { pendingAction != nil },
                                                      set: { if !$0 { pendingAction = nil } })) {
             Button("Cancel", role: .cancel) { pendingAction = nil }
             Button("Continue", role: .destructive) { pendingAction?(); pendingAction = nil }
         } message: {
             Text(confirmMessage)
-        }
-        .alert("Certificate password", isPresented: $showCertificatePassword) {
-            SecureField("Password", text: $certificatePassword)
-            Button("Cancel", role: .cancel) { pendingCertificate = nil }
-            Button("Import") {
-                guard let data = pendingCertificate else { return }
-                do {
-                    try certificates.import(p12: data, password: certificatePassword)
-                    model.showToast(String(localized: "Certificate imported."))
-                } catch {
-                    model.showToast(error.localizedDescription)
-                }
-                pendingCertificate = nil
-                certificatePassword = ""
-            }
-        } message: {
-            Text("Enter the password for the .p12 / .pfx file. It is stored in the Keychain and never logged.")
         }
     }
 
@@ -259,18 +221,6 @@ struct SystemSettingsView: View {
         minutes == 0 ? String(localized: "Never") : "\(minutes) min"
     }
 
-    private func importCertificate() {
-        DocumentPicker.present { urls in
-            guard let url = urls.first else { return }
-            do {
-                pendingCertificate = try CertificateManager.shared.readCertificate(from: url)
-                certificatePassword = ""
-                showCertificatePassword = true
-            } catch {
-                model.showToast(error.localizedDescription)
-            }
-        }
-    }
 }
 
 extension InputSettings {

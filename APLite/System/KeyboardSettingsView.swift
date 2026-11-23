@@ -19,7 +19,8 @@ struct KeyboardSettingsView: View {
                     ForEach(APLiteSettings.Input.keyboardSizes, id: \.self) { Text("\($0)%").tag($0) }
                 }
                 Toggle("Click feedback on iPhone", isOn: $feedback)
-                Text("The keyboard appears on the external display only when you click an input field (or another text field such as the address bar). Use the × key or Esc to put it away; the next field you click brings it back. Shift changes case for one key, Caps Lock keeps it, and 123 switches to the symbol layer.")
+                Button("Reset keyboard position") { model.resetKeyboardPosition() }
+                Text("The keyboard appears on the external display only when you click an input field (or another text field such as the address bar). Drag its title bar to move it, use − to collapse it to a strip and the corner × to close it — the next field you click brings it back. Esc also closes it. Shift changes case for one key, Caps Lock keeps it, and 123 switches to the symbol layer.")
                     .font(.footnote).foregroundStyle(.secondary)
             } header: {
                 Text("On-screen keyboard")

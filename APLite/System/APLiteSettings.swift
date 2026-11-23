@@ -112,6 +112,20 @@ enum APLiteSettings {
             set { APLiteSettings.set("input", "keyboardSize", min(140, max(60, newValue))) }
         }
         static let keyboardSizes = [70, 85, 100, 115, 130]
+        /// Where the user dragged the keyboard. `-1, -1` means the automatic bottom-centre position;
+        /// the DesktopModel clamps any other value to the current display before drawing.
+        static var keyboardOriginX: Int {
+            get { store.object(forKey: key("input", "keyboardOriginX")) as? Int ?? -1 }
+            set { store.set(newValue, forKey: key("input", "keyboardOriginX")) }
+        }
+        static var keyboardOriginY: Int {
+            get { store.object(forKey: key("input", "keyboardOriginY")) as? Int ?? -1 }
+            set { store.set(newValue, forKey: key("input", "keyboardOriginY")) }
+        }
+        static func resetKeyboardPosition() {
+            store.removeObject(forKey: key("input", "keyboardOriginX"))
+            store.removeObject(forKey: key("input", "keyboardOriginY"))
+        }
         /// A soft tick on the iPhone when an on-screen key is pressed.
         static var keyboardFeedback: Bool {
             get { APLiteSettings.bool("input", "keyboardFeedback", default: true) }

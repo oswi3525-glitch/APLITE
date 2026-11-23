@@ -11,6 +11,12 @@ enum SystemChangelog {
     }
 
     static let entries: [Entry] = [
+        Entry(version: "1.2.9", date: "2026-11-23", items: [
+            "Desktop keyboard: drag its title bar to move it, −/× in the corner to collapse or close, and Reset keyboard position in Settings → Input.",
+            "New Window button on the dock: a compact list of open windows; click to focus/restore, × to close, plus Tile and Show desktop.",
+            "Thermal readout: a 0–100% pressure index with trend, time in state and session peak in the tray, quick panel and diagnostics. iOS has no public °C API — this is an index, not a temperature sensor.",
+            "Settings trimmed: Build Center/App Creator, certificates and diagnostics now live on one Advanced page; the no-op idle-cache toggle is gone.",
+        ]),
         Entry(version: "1.2.8", date: "2026-11-23", items: [
             "Audio: popup web views now inherit media settings and bridges; guest audio is no longer cut by the idle timer; category changes and voice-typing interruptions recover correctly.",
             "New Technical Diagnostics page, reachable only from Settings → System — no desktop icon, dock item or launcher entry.",

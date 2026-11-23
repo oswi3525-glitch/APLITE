@@ -3,6 +3,33 @@
 All notable changes to APLite are documented here. APLite is based on iDesk v0.6.3
 (upstream commit `2179dbd`); the original upstream history is not rewritten.
 
+## 1.2.9 (unsigned development release)
+
+Patch release on the 1.2.8 architecture. Bundle ID, persistence keys, Guest Engine, attribution and unsigned build path are unchanged.
+
+- **Draggable on-screen keyboard:** drag its title strip anywhere on the external display (the
+  position is remembered and clamped to the current display, including the largest size setting),
+  collapse it to a strip with −, expand with +, or close it with the corner × / Esc. Keys and controls
+  are hit-tested in the model because the display's scene receives no touches. Settings → Input has
+  "Reset keyboard position"; the title strip and keycaps were restyled and hover/press feedback added.
+- **Richer thermal readout:** `ThermalMonitor` now publishes a smoothed 0–100% pressure index, its
+  trend, time in the current state, session peak, battery/charging state and Low Power Mode, sampling
+  faster only while warm. The tray and quick panel show the index; Technical Diagnostics includes the
+  full breakdown. This remains a proxy derived from Apple's public thermal state — iOS does not give
+  third-party apps a temperature in °C, and no such claim is made.
+- **Window button on the dock:** a new Window control to the left of Task Manager opens a compact
+  list of open windows — click a row to focus/restore it, × to close, plus Tile and Show desktop.
+  Geometry is shared with unit tests; dock buttons for downloads/recording shift with it.
+- **Simpler Settings:** Build Center/App Creator, certificate management and Technical Diagnostics are
+  now one "Advanced tools" page instead of scattered rows; the no-op "Release caches when idle"
+  toggle was removed. Keys and code are preserved, so no saved setting is lost.
+- **Audit follow-ups:** the weather widget's geocoder/network results now pass through a locked box
+  instead of shared mutable captures; the thermal timer is now scheduled even when the device starts
+  nominal; missing Vietnamese strings for Settings groups, the keyboard controls, the window list and
+  Advanced tools were added.
+- Verification: pure unit tests were added for the new keyboard geometry and thermal maths. Xcode
+  build, simulator tests and on-device verification remain pending (CI is the source of truth).
+
 ## 1.2.8 (unsigned development release)
 
 Patch release on the 1.2.7 architecture. Bundle ID, persistence keys, Guest Engine, attribution and unsigned build path are unchanged.

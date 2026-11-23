@@ -2,6 +2,27 @@ import SwiftUI
 import EventKit
 import CoreLocation
 
+/// Thread-safe hand-off between the geocoder callback and the weather network callback.
+private final class WeatherFetchBox {
+    typealias Reading = (Double, Int, Double, Double)   // temperature, code, high, low
+    private let lock = NSLock()
+    private var storedPlace = ""
+    private var storedReading: Reading?
+
+    var place: String {
+        get { lock.lock(); defer { lock.unlock() }; return storedPlace }
+        set { lock.lock(); storedPlace = newValue; lock.unlock() }
+    }
+    var reading: Reading? {
+        get { lock.lock(); defer { lock.unlock() }; return storedReading }
+        set { lock.lock(); storedReading = newValue; lock.unlock() }
+    }
+    func snapshot() -> (String, Reading?) {
+        lock.lock(); defer { lock.unlock() }
+        return (storedPlace, storedReading)
+    }
+}
+
 /// Desktop widgets: clock, month, weather, upcoming events, reminders, a Pomodoro timer. Each can be shown or hidden
 /// (desktop menu → Widgets) and dragged anywhere on the desktop; places are kept.
 enum WidgetKind: String, CaseIterable, Codable {
@@ -144,15 +165,16 @@ final class WidgetStore: NSObject, ObservableObject, CLLocationManagerDelegate {
         guard let url = URL(string: "https://api.open-meteo.com/v1/forecast?latitude=\(lat)&longitude=\(lon)"
                              + "&current=temperature_2m,weather_code&daily=temperature_2m_max,temperature_2m_min&timezone=auto&forecast_days=1")
         else { return }
-        var place = ""
+        // Geocoding and the network response finish on different background queues. Keep their
+        // results in one locked box instead of capturing mutable locals from both closures.
+        let box = WeatherFetchBox()
         let group = DispatchGroup()
         group.enter()
         CLGeocoder().reverseGeocodeLocation(loc) { marks, _ in
-            place = marks?.first?.locality ?? marks?.first?.administrativeArea ?? ""
+            box.place = marks?.first?.locality ?? marks?.first?.administrativeArea ?? ""
             group.leave()
         }
         group.enter()
-        var parsed: (Double, Int, Double, Double)?
         URLSession.shared.dataTask(with: url) { data, _, _ in
             defer { group.leave() }
             guard let data, let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
@@ -160,9 +182,10 @@ final class WidgetStore: NSObject, ObservableObject, CLLocationManagerDelegate {
                   let t = current["temperature_2m"] as? Double, let code = current["weather_code"] as? Int,
                   let hi = (daily["temperature_2m_max"] as? [Double])?.first, let lo = (daily["temperature_2m_min"] as? [Double])?.first
             else { return }
-            parsed = (t, code, hi, lo)
+            box.reading = (t, code, hi, lo)
         }.resume()
         group.notify(queue: .main) {
+            let (place, parsed) = box.snapshot()
             guard let p = parsed else { if self.weather == nil { self.weatherNote = String(localized: "Weather unavailable.") }; return }
             self.weather = Weather(place: place, temp: p.0, code: p.1, high: p.2, low: p.3)
             self.weatherNote = nil

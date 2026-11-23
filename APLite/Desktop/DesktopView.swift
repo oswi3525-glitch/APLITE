@@ -115,6 +115,12 @@ struct DesktopView: View {
                         .animation(.spring(response: 0.34, dampingFraction: 0.82), value: model.showTaskManager)
                 }
 
+                if model.showWindowList {
+                    WindowListView(model: model, cursor: model.cursor)
+                        .transition(.scale(scale: 0.94, anchor: .topTrailing).combined(with: .opacity))
+                        .animation(APLiteAnimation.spring, value: model.showWindowList)
+                }
+
                 if model.showEmoji {
                     EmojiPanelView(model: model, cursor: model.cursor)
                 }
@@ -1097,6 +1103,9 @@ private struct TaskbarView: View {
                             .frame(width: r.width, height: r.height)
                             .offset(x: r.minX - right.minX, y: r.minY - right.minY)
                     }
+                    let wl = model.windowListButtonRect
+                    control("rectangle.stack", rect: wl, in: right, palette: palette,
+                            active: model.showWindowList, hovered: wl.contains(p))
                     let tm = model.taskManagerButtonRect
                     Image(systemName: "gauge.with.dots.needle.33percent")
                         .font(.system(size: 14, weight: .semibold))
@@ -1342,10 +1351,14 @@ private struct TrayView: View {
                 Image(systemName: network.symbol)
                     .font(.system(size: 13, weight: .medium))
                     .foregroundStyle(network.kind == .offline ? palette.secondary : palette.primary)
-                // Thermal pressure from the public API: always visible, coloured by state.
-                Image(systemName: thermal.symbol)
-                    .font(.system(size: 13, weight: .medium))
-                    .foregroundStyle(Color(thermal.color))
+                // Thermal pressure index from the public API: state colour + continuous 0–100% reading.
+                HStack(spacing: 3) {
+                    Image(systemName: thermal.symbol)
+                        .font(.system(size: 13, weight: .medium))
+                    Text(verbatim: "\(thermal.pressurePercent)%")
+                        .font(.system(size: 11, weight: .medium).monospacedDigit())
+                }
+                .foregroundStyle(Color(thermal.color))
                 let level = UIDevice.current.batteryLevel
                 if level >= 0 {
                     HStack(spacing: 4) {
@@ -1512,12 +1525,20 @@ private struct ThermalBadge: View {
     @ObservedObject private var thermal = ThermalMonitor.shared
 
     var body: some View {
-        HStack(spacing: 6) {
-            Image(systemName: thermal.symbol)
-                .font(.system(size: 13, weight: .semibold))
-            Text(thermal.label)
-                .font(.system(size: 10.5, weight: .medium))
-                .lineLimit(1)
+        VStack(alignment: .leading, spacing: 1) {
+            HStack(spacing: 4) {
+                Image(systemName: thermal.symbol)
+                    .font(.system(size: 12, weight: .semibold))
+                Text(thermal.label)
+                    .font(.system(size: 10, weight: .medium))
+                    .lineLimit(1)
+            }
+            HStack(spacing: 3) {
+                Text(verbatim: "\(thermal.pressurePercent)%")
+                    .font(.system(size: 10, weight: .semibold).monospacedDigit())
+                Text(thermal.trendSymbol)
+                    .font(.system(size: 9, weight: .bold))
+            }
         }
         .foregroundStyle(Color(thermal.color))
         .padding(.horizontal, 9)

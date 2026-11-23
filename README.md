@@ -6,7 +6,7 @@ windows, a floating Liquid-Glass dock, a browser, files, widgets and iOS apps in
 becomes the trackpad and keyboard.
 
 > Experimental: APLite uses private UIKit APIs, is meant to be sideloaded, and a future iOS may
-> break parts of it. Latest unsigned build: **1.2.8** (CI build + unit tests passed; on-device
+> break parts of it. Latest unsigned build: **1.2.9** (CI build + unit tests passed; on-device
 > verification is still pending).
 
 ## Attribution — original project
@@ -45,21 +45,27 @@ The original MIT license and copyright notice are preserved in [LICENSE](LICENSE
   exported as JSON. iOS does not expose Safari's jar to other apps, so imported values are copied by
   you and stay on the device.
 - **On-screen keyboard:** a full keyboard for the desktop can be enabled in Settings. It appears only
-  when a text field is tapped, supports Shift / Caps Lock / symbol layers, arrows and editing keys,
-  and has a hide key. A dedicated iPhone settings page lists every key.
+  when a text field is tapped, supports Shift / Caps Lock / symbol layers, arrows and editing keys.
+  Drag its title bar to move it (the position is remembered), use − to collapse it to a strip, or the
+  corner × / Esc to close it; tapping another field brings it back. A dedicated iPhone settings page
+  lists every key and can reset the saved position.
 - **Clean Facebook web app:** an optional facebook.com-only stylesheet tidies the feed, hides side
   rails on narrow windows and marks sponsored units, without touching other sites.
 - **Screen saver:** choose the delay (1–60 min or off), style (drifting clock, APLite gradient or
   blurred wallpaper), drift on/off and fade duration in Settings → Security.
-- **Task Manager:** a dock-button panel listing open windows with memory pressure and per-window
-  close controls, plus minimize-all / close-all.
+- **Window button & Task Manager:** the dock's Window button opens a compact list of open windows
+  (click to focus/restore, × to close, Tile / Show desktop); the adjacent Task Manager adds memory
+  pressure, minimize-all / close-all. Rarely used tools (Build Center/App Creator, certificates,
+  technical diagnostics) live together on one Advanced page in Settings instead of cluttering it.
 - **Window close animation:** windows fly back to their dock icon when closed.
 - **Live configuration:** a small JSON manifest refreshes wallpaper palettes and an announcement
   without downloading or re-signing an IPA. Native code still requires a signed rebuild.
 - **Performance mode:** lower-resolution frames, lighter shadows and no magnification for AirPlay
   or slow Wi-Fi.
-- **Thermal monitor:** public iOS thermal-pressure API shown in the tray and quick panel, with
-  battery level and colour-coded warnings (no private API, no °C claim).
+- **Thermal monitor:** the public iOS thermal-pressure API becomes a live 0–100% pressure index with
+  a rising/falling trend, time in the current state, session peak, battery/charging and Low Power Mode,
+  shown in the tray and quick panel. iOS gives third-party apps no °C sensor reading, so this is an
+  honest pressure *index*, not a temperature measurement (no private API).
 - **Redrawn assets:** app icon, launch mark, lock mark and all built-in app icons regenerated in a
   single navy/teal glass style; the lock screen now uses one blur pass instead of two.
 - **Animation system:** liquid-glass dock with hover magnification, open bounce, press feedback and
