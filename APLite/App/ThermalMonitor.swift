@@ -72,7 +72,7 @@ final class ThermalMonitor: ObservableObject {
 
     var color: UIColor {
         switch state {
-        case .critical: return .systemRed
+        case .critical: return APLiteColors.redUI
         case .serious: return .systemOrange
         case .fair: return .systemYellow
         default: return .systemGreen

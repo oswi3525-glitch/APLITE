@@ -260,7 +260,8 @@ enum DesktopPages {
     private static func cssColor(_ color: Color) -> String {
         var r: CGFloat = 0, g: CGFloat = 0, b: CGFloat = 0, a: CGFloat = 0
         UIColor(color).getRed(&r, green: &g, blue: &b, alpha: &a)
-        return "rgb(\(Int(r * 255)),\(Int(g * 255)),\(Int(b * 255)))"
+        let c = { (v: CGFloat) in Int(max(0, min(1, v)) * 255) }
+        return "rgb(\(c(r)),\(c(g)),\(c(b)))"
     }
 
     // MARK: Updating open pages
@@ -702,7 +703,7 @@ enum DesktopPages {
         button:hover { background: #45454c; }
         button.primary { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #04212b; font-weight: 600; }
         button.primary:hover { filter: brightness(1.12); }
-        button.danger { color: #ff8a80; }
+        button.danger { color: #ff0000; }
         button:disabled { opacity: .45; }
         .round { width: 34px; height: 34px; padding: 0; border-radius: 17px; font-size: 18px; }
         .value { min-width: 56px; text-align: center; font-variant-numeric: tabular-nums; color: #ccc; }
@@ -723,7 +724,7 @@ enum DesktopPages {
         .app .info { flex: 1; min-width: 0; }
         .app .name { font-weight: 600; }
         .app .status { font-size: 12px; margin-top: 3px; }
-        .good { color: #30d158; } .warn { color: #ff9f0a; } .bad { color: #ff6961; } .muted { color: #8e8e93; }
+        .good { color: #30d158; } .warn { color: #ff9f0a; } .bad { color: #ff0000; } .muted { color: #8e8e93; }
         .actions { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
         .head { display: flex; align-items: flex-end; gap: 12px; }
         .head .grow { flex: 1; }

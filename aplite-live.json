@@ -1,6 +1,6 @@
 {
-  "version": 5,
-  "notice": "APLite 1.2.6: accounts from web windows save automatically, desktop on-screen keyboard, cleaner tabs and Facebook.",
+  "version": 6,
+  "notice": "APLite 1.2.7: real Safari browser identity for Gmail, fixed red colors, drag apps to Trash, per-WebApp zoom and cleaner branding.",
   "wallpapers": null,
   "accent": null
 }

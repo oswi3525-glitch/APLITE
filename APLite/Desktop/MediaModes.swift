@@ -101,10 +101,10 @@ extension DesktopModel {
 struct LaserDot: View {
     let point: CGPoint
     var body: some View {
-        Circle().fill(Color.red)
+        Circle().fill(APLiteColors.red)
             .frame(width: 16, height: 16)
-            .shadow(color: .red, radius: 10)
-            .shadow(color: .red.opacity(0.6), radius: 22)
+            .shadow(color: APLiteColors.red, radius: 10)
+            .shadow(color: APLiteColors.red.opacity(0.6), radius: 22)
             .offset(x: point.x - 8, y: point.y - 8)
             .allowsHitTesting(false)
     }

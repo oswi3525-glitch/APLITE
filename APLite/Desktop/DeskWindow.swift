@@ -4,6 +4,11 @@ import WebKit
 /// A window on the desktop: a browser with tabs, one of APLite's own apps (Settings, Files…), or an app installed
 /// from an IPA.
 final class DeskWindow: NSObject, ObservableObject, Identifiable, WKUIDelegate, WKNavigationDelegate {
+    /// One process pool for every web view: fewer WebContent processes, less memory and fewer kills.
+    private static let processPool = WKProcessPool()
+    /// Tabs already reloaded after a WebContent termination (one automatic retry, then leave it to the user).
+    private var recoveredTabs = Set<ObjectIdentifier>()
+
     enum Kind: Equatable {
         /// Web pages: address bar, tabs, back / forward / reload.
         case browser
@@ -19,6 +24,12 @@ final class DeskWindow: NSObject, ObservableObject, Identifiable, WKUIDelegate, 
     /// A website installed as an app (WebApps): a browser without the address bar, and without tabs unless a page
     /// opened one (a sign-in popup).
     var isWebApp = false
+    /// Stable identity for per-app zoom. Never use currentURL/title — redirects change them.
+    var webAppKey: String? {
+        guard isWebApp else { return nil }
+        let key = initialURL.absoluteString
+        return WebApps.shared.all.first { Browsing.same($0.url, key) }?.url ?? key
+    }
     var showsAddressBar: Bool { isBrowser && !isWebApp && floatingRestore == nil }
     var showsBookmarksBar: Bool {
         showsAddressBar && Browsing.shared.showsBookmarksBar && !Browsing.shared.bookmarks.isEmpty
@@ -272,13 +283,22 @@ final class DeskWindow: NSObject, ObservableObject, Identifiable, WKUIDelegate, 
     }
 
     deinit {
-        for tab in tabs { Self.detachAll(tab) }
+        // Same sharing guard as detach(_:): a popup may still use a controller owned by this window.
+        for tab in tabs where !tabs.contains(where: {
+            $0 !== tab && $0.configuration.userContentController === tab.configuration.userContentController
+        }) { Self.detachAll(tab) }
     }
 
     // MARK: Tabs
 
     func newTab(_ url: URL, activate: Bool = true) {
         let config = WKWebViewConfiguration()
+        // A real, versioned Safari identity (derived from iOS) and one shared WebContent process pool.
+        // Without applicationNameForUserAgent, WebKit's desktop UA omits Version/Safari and Google
+        // classifies APLite as an unsupported browser.
+        config.applicationNameForUserAgent = BrowserUserAgent.applicationName(
+            systemVersion: UIDevice.current.systemVersion)
+        config.processPool = Self.processPool
         config.allowsInlineMediaPlayback = true
         // Pages may start sound from APLite's clicks (which are not touches on the page) and use Web Audio for volume.
         config.mediaTypesRequiringUserActionForPlayback = []
@@ -298,6 +318,8 @@ final class DeskWindow: NSObject, ObservableObject, Identifiable, WKUIDelegate, 
         config.userContentController.addUserScript(WebInputFocusBridge.script)
         config.userContentController.add(inputFocusBridge, name: WebInputFocusBridge.messageName)
         let tab = WKWebView(frame: CGRect(origin: .zero, size: frame.size), configuration: config)
+        // Set before the first load: no flash of unzoomed content, survives all navigations.
+        PageZoom.apply(to: tab, appKey: webAppKey)
         Self.load(url, in: tab)
         add(tab, activate: activate)
     }
@@ -338,6 +360,8 @@ final class DeskWindow: NSObject, ObservableObject, Identifiable, WKUIDelegate, 
         var n = 0
         for (i, tab) in tabs.enumerated() where (i != activeTab || !isShown) && discarded[ObjectIdentifier(tab)] == nil {
             guard let url = tab.url, Browsing.isWebPage(url) else { continue }
+            // A sign-in popup owns live OAuth state; discarding it can orphan window.opener.
+            if url.host?.lowercased() == "accounts.google.com" { continue }
             discarded[ObjectIdentifier(tab)] = (url, tab.title ?? "")
             tab.loadHTMLString("<html><body style='background:#111'></body></html>", baseURL: nil)
             n += 1
@@ -373,6 +397,7 @@ final class DeskWindow: NSObject, ObservableObject, Identifiable, WKUIDelegate, 
         tab.stopLoading()
         PageZoom.forget(tab)
         editingTabs.remove(ObjectIdentifier(tab))
+        recoveredTabs.remove(ObjectIdentifier(tab))
         discarded.removeValue(forKey: ObjectIdentifier(tab))
         let wasActive = i == activeTab
         if wasActive { findQuery = nil }  // the find bar belongs to a page, not to the window
@@ -529,12 +554,13 @@ final class DeskWindow: NSObject, ObservableObject, Identifiable, WKUIDelegate, 
     /// History: every page that finishes loading.
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         if let url = webView.url { Browsing.shared.record(url, title: webView.title) }
+        recoveredTabs.remove(ObjectIdentifier(webView))   // a later crash may be retried once again
         // The user script is baked into the tab configuration when it is created; re-apply the
         // current Clean Facebook choice on every new navigation.
         if let host = webView.url?.host?.lowercased(), host.hasSuffix("facebook.com") {
             webView.evaluateJavaScript("window.__apliteFB && window.__apliteFB(\(FacebookEnhancements.enabled))")
         }
-        PageZoom.apply(to: webView)
+        PageZoom.apply(to: webView, appKey: webAppKey)
         if webView === self.webView { updateFavicon(webView) }
         if let url = webView.url, FileStore.isFilesPage(url) { refreshFilesPages() }
     }
@@ -542,7 +568,16 @@ final class DeskWindow: NSObject, ObservableObject, Identifiable, WKUIDelegate, 
     // Navigating while in fullscreen: the new page is no longer fullscreen.
     func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
         if isFullscreen, webView === self.webView { onFullscreen?(false) }
-        PageZoom.apply(to: webView)
+        PageZoom.apply(to: webView, appKey: webAppKey)
+    }
+
+    /// iOS kills WebContent processes under memory pressure. Without this the tab stays blank until
+    /// the user notices and reloads manually. Reload once per tab, then leave it alone (no loop).
+    func webViewWebContentProcessDidTerminate(_ webView: WKWebView) {
+        let id = ObjectIdentifier(webView)
+        guard !recoveredTabs.contains(id), tabs.contains(where: { $0 === webView }) else { return }
+        recoveredTabs.insert(id)
+        DispatchQueue.main.async { webView.reload() }
     }
 
     // target=_blank links and window.open: a new tab, as in a desktop browser. The tab is the web view WebKit asks
@@ -555,7 +590,14 @@ final class DeskWindow: NSObject, ObservableObject, Identifiable, WKUIDelegate, 
             if let url = navigationAction.request.url { DesktopModel.shared.openWindow(url) }
             return nil
         }
+        // The configuration comes from WebKit (it carries window.opener for OAuth). Re-assert our
+        // policy on it before creating the popup so sign-in popups get the same real UA and pool.
+        configuration.applicationNameForUserAgent = BrowserUserAgent.applicationName(
+            systemVersion: UIDevice.current.systemVersion)
+        configuration.processPool = Self.processPool
+        configuration.defaultWebpagePreferences.preferredContentMode = .desktop
         let tab = WKWebView(frame: CGRect(origin: .zero, size: frame.size), configuration: configuration)
+        PageZoom.apply(to: tab, appKey: webAppKey)   // sign-in popups inherit the app's zoom
         add(tab, activate: true)
         return tab
     }

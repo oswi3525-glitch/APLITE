@@ -13,7 +13,9 @@ final class MemoryManager: ObservableObject {
     @Published private(set) var available: UInt64 = 0
     @Published private(set) var warning = false
     @Published private(set) var suspectedLeak = false
-    @Published private(set) var samples: [UInt64] = []
+    /// Internal history for the leak heuristic — not published: appending every 10 s would repaint
+    /// every observer even though no user-visible value changed.
+    private var samples: [UInt64] = []
     @Published private(set) var lastRelease = Date.distantPast
 
     private var timer: Timer?
@@ -27,7 +29,7 @@ final class MemoryManager: ObservableObject {
     var usedFraction: Double { targetBytes > 0 ? min(1, Double(used) / Double(targetBytes)) : 0 }
     var warningThreshold: Double { Double(APLiteSettings.Performance.warningPercent) / 100 }
 
-    /// Sample every 5 seconds. Cheap enough to run while idle; no per-frame work.
+    /// Sample every 10 seconds. Cheap enough to run while idle; no per-frame work.
     func start() {
         guard timer == nil else { return }
         sample()
@@ -41,13 +43,17 @@ final class MemoryManager: ObservableObject {
         let current = MemoryStatus.used
         let left = MemoryStatus.available
         DispatchQueue.main.async {
-            self.used = current
-            self.available = left
-            self.peak = max(self.peak, current)
+            // Only publish real changes: the tray and Task Manager observe this object, and an
+            // unconditional write every 10 s repaints them for no visible reason.
+            if self.used != current { self.used = current }
+            if self.available != left { self.available = left }
+            if current > self.peak { self.peak = current }
             self.samples.append(current)
             if self.samples.count > self.maxSamples { self.samples.removeFirst(self.samples.count - self.maxSamples) }
-            self.warning = self.usedFraction >= self.warningThreshold
-            self.suspectedLeak = APLiteSettings.Performance.detectLeaks ? self.looksLikeLeak(self.samples) : false
+            let warning = self.usedFraction >= self.warningThreshold
+            if self.warning != warning { self.warning = warning }
+            let leak = APLiteSettings.Performance.detectLeaks ? self.looksLikeLeak(self.samples) : false
+            if self.suspectedLeak != leak { self.suspectedLeak = leak }
             if self.suspectedLeak {
                 os_log("[APLiteMemory] sustained growth — possible leak (used=%{public}llu)", log: self.log, type: .info, current)
             }

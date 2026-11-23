@@ -98,7 +98,7 @@ struct VoiceTypingBanner: View {
             HStack(spacing: 10) {
                 Image(systemName: voice.isListening ? "waveform" : "exclamationmark.triangle")
                     .symbolEffect(.variableColor.iterative, isActive: voice.isListening)
-                    .foregroundStyle(voice.isListening ? Color.red : Color.orange)
+                    .foregroundStyle(voice.isListening ? APLiteColors.red : APLiteColors.orange)
                 Text(verbatim: voice.isListening ? (voice.heard.isEmpty ? String(localized: "Listening… tap the microphone again to type it") : voice.heard)
                                                  : (voice.problem ?? ""))
                     .font(.callout).lineLimit(3)

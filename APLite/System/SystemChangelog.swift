@@ -11,6 +11,14 @@ enum SystemChangelog {
     }
 
     static let entries: [Entry] = [
+        Entry(version: "1.2.7", date: "2026-11-23", items: [
+            "Browser: real, versioned Safari identity for desktop WKWebView — fixes Gmail's unsupported-browser banner without faking an engine.",
+            "Shared WebContent process pool, automatic reload after a WebContent crash, and safer sign-in popup handling.",
+            "Colors: one sRGB palette — a declared #FF0000 stays red instead of turning pink; danger colors and the remote accent are normalised.",
+            "Drag apps to the Trash: WebApps uninstall, guest apps respect code-signing limits, system items are protected.",
+            "WebApp zoom: 9 unified levels, official WKWebView.pageZoom, saved separately for each WebApp, with a 100% reset.",
+            "Removed the last user-visible iDesk wording; attribution and all compatibility identifiers are preserved.",
+        ]),
         Entry(version: "1.2.6", date: "2026-11-23", items: [
             "Logins in any web window — including on the external display — are saved to the local account vault automatically.",
             "On-screen keyboard for the desktop: enable it in Settings, tap a field to show it, use × or Esc to hide it.",

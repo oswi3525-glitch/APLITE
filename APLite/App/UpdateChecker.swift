@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// Looks for a newer APLite on GitHub Releases (itshieuk/APLite): at launch and on return, at most hourly, unless off in
+/// Looks for a newer APLite on GitHub Releases (APLite.repository): at launch and on return, at most hourly, unless off in
 /// Settings → Help, and from "Check for updates" there. Nothing is sent but the request itself.
 final class UpdateChecker: ObservableObject {
     static let shared = UpdateChecker()
@@ -91,7 +91,7 @@ final class UpdateChecker: ObservableObject {
                 }
                 let tag = final.lastPathComponent
                 let version = tag.hasPrefix("v") ? String(tag.dropFirst()) : tag
-                let ipa = URL(string: "https://github.com/\(APLite.repository)/releases/download/\(tag)/APLite-\(version).ipa")
+                let ipa = URL(string: "https://github.com/\(APLite.repository)/releases/download/\(tag)/APLite-unsigned-\(version).ipa")
                 self.found(tag: tag, page: final, ipa: ipa, userAsked: userAsked)
             }
         }.resume()

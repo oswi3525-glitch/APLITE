@@ -1,5 +1,6 @@
 import Foundation
 import SwiftUI
+import UIKit
 
 /// Server-driven configuration refresh.
 ///
@@ -38,8 +39,12 @@ enum LiveUpdate {
     }
 
     static var accent: Color? {
-        guard let hex = UserDefaults.standard.string(forKey: accentKey) else { return nil }
-        return Color(hex: hex)
+        guard let hex = UserDefaults.standard.string(forKey: accentKey),
+              let rgb = HexColor.parse(hex), HexColor.isPlausibleAccent(rgb) else { return nil }
+        return Color(uiColor: UIColor(red: Double(rgb.r) / 255,
+                                      green: Double(rgb.g) / 255,
+                                      blue: Double(rgb.b) / 255,
+                                      alpha: 1))
     }
 
     /// Called at launch. Failures are silent — this is a cosmetic refresh, never a build gate.
@@ -56,7 +61,10 @@ enum LiveUpdate {
                 if let walls = manifest.wallpapers, let data = try? JSONEncoder().encode(walls) {
                     UserDefaults.standard.set(data, forKey: wallpaperKey)
                 }
-                if let accent = manifest.accent { UserDefaults.standard.set(accent, forKey: accentKey) }
+                if let accent = manifest.accent,
+                   let rgb = HexColor.parse(accent), HexColor.isPlausibleAccent(rgb) {
+                    UserDefaults.standard.set(accent, forKey: accentKey)
+                }
                 NotificationCenter.default.post(name: UserDefaults.didChangeNotification, object: nil)
             }
         }.resume()

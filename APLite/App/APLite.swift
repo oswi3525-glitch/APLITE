@@ -2,7 +2,7 @@ import Foundation
 
 /// APLite's identity, attribution and repository links.
 ///
-/// The source started as the APLite project (https://github.com/itshieuk/APLite). APLite is an
+/// The source started as the APLite project (https://github.com/itshieuk/iDesk). APLite is an
 /// independent fork: the original author and license are credited everywhere the app identifies
 /// itself. Keep this file the single place for the product name so a future rename does not have
 /// to touch the guest engine, the settings keys or the Mach-O loader.

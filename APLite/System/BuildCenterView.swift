@@ -94,7 +94,7 @@ struct BuildCenterView: View {
                     }
                 }
 
-                if let error { Section { Text(error).foregroundStyle(.red).font(.footnote) } }
+                if let error { Section { Text(error).foregroundStyle(APLiteColors.red).font(.footnote) } }
             }
             .navigationTitle("Build Center")
             .navigationBarTitleDisplayMode(.inline)

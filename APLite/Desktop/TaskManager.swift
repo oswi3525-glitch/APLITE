@@ -125,7 +125,7 @@ struct TaskManagerView: View {
                             Spacer(minLength: 0)
                             Image(systemName: "xmark.circle.fill")
                                 .font(.system(size: 16))
-                                .foregroundStyle(model.taskManagerCloseRect(i).contains(p) ? Color.red : Color.secondary)
+                                .foregroundStyle(model.taskManagerCloseRect(i).contains(p) ? APLiteColors.red : Color.secondary)
                         }
                         .padding(.horizontal, 12)
                         .frame(width: row.width, height: row.height)
@@ -163,7 +163,7 @@ struct TaskManagerView: View {
             .font(.system(size: 12, weight: .semibold))
             .frame(width: rect.width, height: rect.height)
             .background(RoundedRectangle(cornerRadius: 10, style: .continuous)
-                .fill(danger ? Color.red.opacity(rect.contains(p) ? 0.32 : 0.18)
+                .fill(danger ? APLiteColors.redOnGlass.opacity(rect.contains(p) ? 0.32 : 0.18)
                              : Color.white.opacity(rect.contains(p) ? 0.18 : 0.08)))
             .offset(x: rect.minX, y: rect.minY)
     }

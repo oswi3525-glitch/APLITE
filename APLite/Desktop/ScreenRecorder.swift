@@ -141,12 +141,12 @@ struct RecordButton: View {
         TimelineView(.periodic(from: .now, by: 1)) { ctx in
             let s = Int(ctx.date.timeIntervalSince(recorder.started ?? ctx.date))
             HStack(spacing: 6) {
-                Circle().fill(Color.red).frame(width: 9, height: 9)
+                Circle().fill(APLiteColors.red).frame(width: 9, height: 9)
                 Text(String(format: "%d:%02d", s / 60, s % 60)).font(.system(size: 12, weight: .semibold).monospacedDigit())
                 Image(systemName: "stop.fill").font(.system(size: 9))
             }
             .frame(width: 86, height: Layout.buttonHeight - 4)
-            .background(Capsule().fill(Color.red.opacity(hovered ? 0.45 : 0.28)))
+            .background(Capsule().fill(APLiteColors.redOnGlass.opacity(hovered ? 0.45 : 0.28)))
         }
     }
 }

@@ -674,8 +674,9 @@ final class DesktopModel: ObservableObject {
             DispatchQueue.main.async { self?.objectWillChange.send() }
         }
         // Settings and Apps pages follow changes made anywhere (keys, quick panel, the iPhone, installs).
-        pagesSubscription = objectWillChange.merge(with: GuestStore.shared.objectWillChange, SigningStore.shared.objectWillChange,
-                                                   NotificationCenter.default.publisher(for: UserDefaults.didChangeNotification).map { _ in })
+        // UserDefaults.didChange already calls objectWillChange.send() above; merging it again here
+        // scheduled a second identical DesktopPages.refresh() for every settings change.
+        pagesSubscription = objectWillChange.merge(with: GuestStore.shared.objectWillChange, SigningStore.shared.objectWillChange)
             .debounce(for: .milliseconds(250), scheduler: RunLoop.main)
             .sink { DesktopPages.refresh() }
         // A guest app opened an in-app browser (GuestRuntimeOpenURLNotification): a web window on the desktop.
@@ -799,6 +800,8 @@ final class DesktopModel: ObservableObject {
     /// The icon being dragged (drawn under the pointer) and the desktop cell it would land in.
     @Published private(set) var iconDrag: Shortcut?
     @Published private(set) var iconDropSlot: Int?
+    /// True while a dragged app icon is over the desktop Trash (drives the drop highlight).
+    @Published private(set) var trashDropHighlight = false
 
     /// What is on the desktop: the app menu's items minus the apps taken off it, plus the files put on it.
     var desktopItems: [Shortcut] {
@@ -854,6 +857,14 @@ final class DesktopModel: ObservableObject {
         desktopLayout.first { iconRect($0.slot).contains(p) }
     }
 
+    /// The Trash icon is a normal built-in shortcut, so find its current desktop cell.
+    private var trashIconSlot: Int? { desktopLayout.first { $0.item.url == Self.trashURL }?.slot }
+
+    private func isOverTrash(_ p: CGPoint) -> Bool {
+        guard let slot = trashIconSlot, p.y < taskbarHitTop, topWindow(at: p) == nil else { return false }
+        return iconRect(slot).contains(p)
+    }
+
     /// Puts an icon on the desktop (an app back from the app menu, a file from Files) or moves it, into a cell.
     /// Whatever is in that cell takes the dragged icon's old place. Every icon keeps its place from then on.
     private func dropOnDesktop(_ item: Shortcut, slot: Int) {
@@ -873,6 +884,66 @@ final class DesktopModel: ObservableObject {
         slots[key] = slot
         iconSlots = slots
         selectedIcon = slot
+    }
+
+    /// One dispatch point for dropping an icon on the Trash (or choosing Uninstall in its menu).
+    /// Only APLite-owned data is deleted; bundled guest apps are marked for the next reinstall, and
+    /// native iOS apps are never touched.
+    @discardableResult
+    func trash(_ item: Shortcut) -> Bool {
+        let isSystem = DesktopPage(URL(string: item.url)) != nil
+        let outcome = TrashPolicy.outcome(systemPage: isSystem, trash: item.url == Self.trashURL,
+                                          file: item.file != nil, webApp: item.webApp,
+                                          guestApp: item.app != nil,
+                                          guestRemovable: item.app.map { !$0.isBundled || $0.hasPendingUpdate } ?? false)
+        let key = Self.key(of: item)
+        switch outcome {
+        case .unsupportedSystemItem:
+            showToast(String(localized: "This is an APLite feature and can't be removed."))
+            return false
+        case .moveFileToTrash:
+            guard let path = item.file else { return false }
+            let moved = Trash.move([path])
+            desktopFiles.removeAll { $0 == path }
+            refreshFilesPages()
+            showToast(String(localized: moved > 0 ? "Moved 1 item to the Trash." : "Could not move that item to the Trash."))
+        case .uninstallWebApp:
+            for w in windows where w.isWebApp && Browsing.same(w.initialURL.absoluteString, item.url) { close(w) }
+            WebApps.shared.remove(item.url)
+            cleanupDeletedIcon(key: key)
+            showToast(String(localized: "Web app removed."))
+        case .uninstallGuestApp:
+            guard let app = item.app else { return false }
+            for w in windows where w.guestApp == app { close(w) }
+            GuestStore.shared.remove(app)
+            desktopHiddenApps.removeAll { $0 == app.id }
+            cleanupDeletedIcon(key: key)
+            // GuestStore.remove swallows filesystem errors; reload() can bring the app back.
+            if GuestStore.shared.apps.contains(where: { $0.id == app.id }) {
+                showToast(String(localized: "Could not remove that app."))
+                return false
+            }
+            showToast(String(localized: "App removed from APLite."))
+        case .markGuestForReinstall:
+            guard let app = item.app else { return false }
+            GuestStore.shared.toggleRemoval(app)
+            showToast(String(localized: "Marked for removal. Re-sign and reinstall APLite to finish."))
+            return false
+        case .removeShortcut:
+            removeFromDesktop(item)
+            cleanupDeletedIcon(key: key)
+            showToast(String(localized: "Removed from the desktop and app menu."))
+        }
+        invalidateItems()
+        scheduleSave()
+        return true
+    }
+
+    private func cleanupDeletedIcon(key: String) {
+        pinnedKeys.removeAll { $0 == key }
+        recentKeys.removeAll { $0 == key }
+        iconSlots[key] = nil
+        selectedIcon = nil
     }
 
     func removeFromDesktop(_ item: Shortcut) {
@@ -1018,21 +1089,20 @@ final class DesktopModel: ObservableObject {
             menu.append(MenuItem(isPinned(item) ? "Unpin from taskbar" : "Pin to taskbar",
                                  isPinned(item) ? "pin.slash" : "pin") { [weak self] in self?.togglePin(item) })
         }
-        if item.app != nil {
+        if let app = item.app {
             // An app stays in the app menu; only its desktop icon goes (dragging it back from the menu returns it).
             menu += isOnDesktop(item)
                 ? [.separator, MenuItem("Remove from desktop", "minus.circle") { [weak self] in self?.removeFromDesktop(item) }]
                 : [.separator, MenuItem("Add to desktop", "plus.circle") { [weak self] in
                     if let id = item.app?.id { self?.desktopHiddenApps.removeAll { $0 == id } }
                 }]
+            let removable = !app.isBundled || app.hasPendingUpdate
+            menu.append(MenuItem(removable ? "Uninstall app" : "Remove from APLite (needs reinstall)",
+                                 "trash") { [weak self] in _ = self?.trash(item) })
         } else if item.file != nil {
             menu += [.separator, MenuItem("Remove from desktop", "minus.circle") { [weak self] in self?.removeFromDesktop(item) }]
         } else if item.webApp {
-            menu += [.separator, MenuItem("Remove app", "trash") { [weak self] in
-                WebApps.shared.remove(item.url)
-                self?.pinnedKeys.removeAll { $0 == Self.key(of: item) }
-                self?.objectWillChange.send()
-            }]
+            menu += [.separator, MenuItem("Uninstall web app", "trash") { [weak self] in _ = self?.trash(item) }]
         } else if DesktopPage(URL(string: item.url)) == nil {
             // A web page (built-in or added by the user) is taken off the desktop and the app menu.
             menu += [.separator, MenuItem("Remove from desktop", "minus.circle") { [weak self] in self?.removeFromDesktop(item) }]
@@ -1132,6 +1202,9 @@ final class DesktopModel: ObservableObject {
         isExternalConnected = false
         UIApplication.shared.isIdleTimerDisabled = false
         drag = .none
+        iconDrag = nil
+        iconDropSlot = nil
+        trashDropHighlight = false
         contextMenu = nil
         snapPreview = nil
     }
@@ -1949,14 +2022,24 @@ final class DesktopModel: ObservableObject {
                 cursor.setStyle(.grab)
             }
             if iconDrag != nil {
-                let slot = dropSlot(at: p)
-                if slot != iconDropSlot { iconDropSlot = slot }
+                // The Trash takes precedence over a normal grid cell; highlight one target only.
+                let overTrash = isOverTrash(p)
+                if overTrash != trashDropHighlight { trashDropHighlight = overTrash }
+                if overTrash { iconDropSlot = nil }
+                else {
+                    let slot = dropSlot(at: p)
+                    if slot != iconDropSlot { iconDropSlot = slot }
+                }
             }
         case .filePending:
             break
         case let .widget(kind, offset):
-            WidgetStore.shared.positions[kind] = CGPoint(x: p.x - offset.x, y: p.y - offset.y)
-            objectWillChange.send()
+            let next = CGPoint(x: p.x - offset.x, y: p.y - offset.y)
+            if WidgetStore.shared.positions[kind] != next {
+                // WidgetStore is observable on its own; avoid rebuilding the whole desktop
+                // (wallpaper blends, materials, every window) on every pointer move.
+                WidgetStore.shared.positions[kind] = next
+            }
         case let .sticky(id, offset):
             guard let i = stickies.firstIndex(where: { $0.id == id }) else { return }
             stickies[i].x = Double(min(max(0, p.x - offset.x), screenSize.width - 60))
@@ -2124,11 +2207,14 @@ final class DesktopModel: ObservableObject {
             suggestFill(after: w, s)
         }
         if case let .icon(item, _) = drag, iconDrag != nil {
-            if let path = item.file, let w = topWindow(at: cursor.position), w.webView != nil, w.systemPage == nil {
+            if trashDropHighlight {
+                _ = trash(item)   // APLite-owned deletion, with an honest toast for each category
+            } else if let path = item.file, let w = topWindow(at: cursor.position), w.webView != nil, w.systemPage == nil {
                 uploadFile(path, to: w, at: localPoint(cursor.position, in: w))
             } else if let slot = iconDropSlot { dropOnDesktop(item, slot: slot) }
             iconDrag = nil
             iconDropSlot = nil
+            trashDropHighlight = false
         }
         if case .widget = drag { WidgetStore.shared.savePositions() }
         drag = .none
@@ -2611,7 +2697,8 @@ final class DesktopModel: ObservableObject {
             MenuItem("Find in page…", "magnifyingglass") { [weak self] in self?.findInPage() },
             MenuItem("Zoom in", "plus.magnifyingglass") { [weak self] in self?.zoom(1) },
             MenuItem("Zoom out", "minus.magnifyingglass") { [weak self] in self?.zoom(-1) },
-            MenuItem("Actual size", "1.magnifyingglass", enabled: abs(PageZoom.zoom(of: web) - PageZoom.standard) > 0.01) { [weak self] in self?.zoom(0) },
+            MenuItem("Actual size", "1.magnifyingglass",
+                     enabled: abs((w.webAppKey.flatMap { PageZoom.storedZoom(forApp: $0) } ?? Double(PageZoom.zoom(of: web))) - PageZoomMath.default) > 0.01) { [weak self] in self?.zoom(0) },
         ]
         if let link {
             items += [
@@ -2680,17 +2767,20 @@ final class DesktopModel: ObservableObject {
         objectWillChange.send()
     }
 
-    /// ⌘+ / ⌘− / ⌘0: the page's zoom, as in a desktop browser.
+    /// ⌘+ / ⌘− / ⌘0: one level table for the whole app. In a WebApp the value is saved per app
+    /// and applied to every tab of that window (popups included); other windows are untouched.
     func zoom(_ step: Int) {
-        guard let web = focused?.webView else { return }
-        let levels: [CGFloat] = [0.5, 0.67, 0.75, 0.8, 0.9, 1, 1.1, 1.25, 1.5, 1.75, 2, 2.5, 3]
-        let current = PageZoom.zoom(of: web)
-        let next: CGFloat
-        if step == 0 { next = PageZoom.standard }
-        else if step > 0 { next = levels.first { $0 > current + 0.01 } ?? levels.last! }
-        else { next = levels.last { $0 < current - 0.01 } ?? levels.first! }
-        PageZoom.set(next, for: web)
-        showToast(String(localized: "Zoom \(Int((next * 100).rounded()))%"))
+        guard let w = focused, let web = w.webView else { return }
+        let key = w.webAppKey
+        let current = key.flatMap { PageZoom.storedZoom(forApp: $0) } ?? Double(PageZoom.zoom(of: web))
+        let next = PageZoomMath.stepped(from: current, by: step)
+        if let key = key {
+            PageZoom.set(next, forApp: key)
+            for tab in w.tabs { tab.pageZoom = CGFloat(next) }
+        } else {
+            PageZoom.set(CGFloat(next), for: web)
+        }
+        showToast(String(localized: "Zoom \(PageZoomMath.percent(next))%"))
     }
 
     func scroll(dx: CGFloat, dy: CGFloat) {

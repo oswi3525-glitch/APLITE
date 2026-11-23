@@ -34,11 +34,23 @@ jobs:
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           echo "tag=v$VERSION" >> "$GITHUB_OUTPUT"
 
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode.app/Contents/Developer && xcodebuild -version
+
       - name: Install XcodeGen
         run: brew install xcodegen
 
       - name: Build unsigned IPA
         run: VERSION=${{ steps.version.outputs.version }} BUILD_NUMBER=${{ github.run_number }} scripts/build-ipa.sh
+
+      - name: Unit tests (all APLite modules)
+        run: |
+          SIM=$(xcrun simctl list devices available | grep -E '^    iPhone .* \(' | head -1 | sed -E 's/^    ([^()]+).*/\1/' | xargs)
+          test -n "$SIM" || { echo "No iPhone simulator available"; exit 1; }
+          echo "Using simulator: $SIM"
+          set -o pipefail
+          xcodebuild test -project APLite.xcodeproj -scheme APLiteTests \
+            -destination "platform=iOS Simulator,name=$SIM" -quiet 2>&1 | tee build/xcodebuild-test.log
 
       - name: Name the IPA after its signing state and version
         run: mv build/APLite.ipa "build/APLite-unsigned-${{ steps.version.outputs.version }}.ipa"

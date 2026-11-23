@@ -71,7 +71,7 @@ struct AppCreatorView: View {
                 }
                 if let result { AppResultSection(result: result, analyse: { analyse(result) }) }
                 if let error {
-                    Section { Text(error).foregroundStyle(.red).font(.footnote) }
+                    Section { Text(error).foregroundStyle(APLiteColors.red).font(.footnote) }
                 }
             }
             .navigationTitle("App Creator")

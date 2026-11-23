@@ -179,7 +179,7 @@ struct SystemSettingsView: View {
 
             Section(SettingsGroup.certificates.title) {
                 LabeledContent("Certificate", value: certificates.identityName ?? String(localized: "None"))
-                if let error = certificates.lastError { Text(error).foregroundStyle(.red).font(.footnote) }
+                if let error = certificates.lastError { Text(error).foregroundStyle(APLiteColors.red).font(.footnote) }
                 Button("Import .p12 / .pfx from Files") { importCertificate() }
                 if certificates.hasIdentity {
                     Button("Remove certificate", role: .destructive) { certificates.remove() }

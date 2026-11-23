@@ -1,5 +1,5 @@
 name: Bug report / Báo lỗi
-description: Something does not work, or an app crashes inside APLite. / Có gì đó không chạy, hoặc app bị crash trong iDesk.
+description: Something does not work, or an app crashes inside APLite. / Có gì đó không chạy, hoặc app bị crash trong APLite.
 labels: [bug]
 body:
   - type: textarea
@@ -12,7 +12,7 @@ body:
   - type: input
     id: app
     attributes:
-      label: Guest app and version (if any) / App chạy trong iDesk và phiên bản (nếu có)
+      label: Guest app and version (if any) / App chạy trong APLite và phiên bản (nếu có)
       placeholder: "TikTok 47.7.0, YouTube 21.45.4…"
   - type: textarea
     id: report
@@ -20,7 +20,7 @@ body:
       label: Error report / Báo cáo lỗi
       description: |
         If APLite quit, open it again and tap **Copy error** (**Sao chép lỗi**), then paste it here.
-        Nếu APLite bị thoát, mở lại iDesk, bấm **Sao chép lỗi** rồi dán vào đây.
+        Nếu APLite bị thoát, mở lại APLite, bấm **Sao chép lỗi** rồi dán vào đây.
       render: text
   - type: input
     id: device

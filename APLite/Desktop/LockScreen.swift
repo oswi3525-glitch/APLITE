@@ -229,7 +229,7 @@ private struct PasscodeUnlockView: View {
                 .frame(maxWidth: 260)
                 .onSubmit(verify)
             if let message {
-                Text(message).font(.footnote).foregroundStyle(.red)
+                Text(message).font(.footnote).foregroundStyle(APLiteColors.red)
                     .multilineTextAlignment(.center).frame(maxWidth: 300)
             }
             if let deadline = security.lockoutUntil, deadline > Date() {

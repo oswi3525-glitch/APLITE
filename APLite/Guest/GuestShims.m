@@ -585,7 +585,7 @@ static void *ShimDlopen(const char *path, int mode) {
         NSDictionary *info = AppAt(app).bundle.infoDictionary;
         NSString *name = info[@"CFBundleDisplayName"] ?: info[@"CFBundleName"] ?: AppAt(app).bundle.bundlePath.lastPathComponent;
         NSLog(@"[iDesk] %@ did not load %@: it belongs to another app", name, other);
-        return dlopen("/iDesk refused a library of another app", mode);     // fails, so dlerror() explains
+        return dlopen("/APLite refused a library of another app", mode);     // fails, so dlerror() explains
     }
     return gDlopenFrom(path, mode, returnAddress);
 }
@@ -928,7 +928,7 @@ typedef void (^AuthorizationCompletion)(BOOL, NSError *);
 
 static void ShimHealthAuthorization(id self, SEL _cmd, id share, id read, AuthorizationCompletion completion) {
     NSError *error = [NSError errorWithDomain:@"com.apple.healthkit" code:4   // HKErrorAuthorizationDenied
-                                     userInfo:@{NSLocalizedDescriptionKey: @"HealthKit is not available in iDesk."}];
+                                     userInfo:@{NSLocalizedDescriptionKey: @"HealthKit is not available in APLite."}];
     if (completion) dispatch_async(dispatch_get_main_queue(), ^{ completion(NO, error); });
 }
 
@@ -940,7 +940,7 @@ static BOOL ShimRegisterTask(id self, SEL _cmd, NSString *identifier, id queue, 
 
 static BOOL ShimSubmitTask(id self, SEL _cmd, id request, NSError **error) {
     if (error) *error = [NSError errorWithDomain:@"BGTaskSchedulerErrorDomain" code:1   // Unavailable
-                                        userInfo:@{NSLocalizedDescriptionKey: @"Background tasks are not available in iDesk."}];
+                                        userInfo:@{NSLocalizedDescriptionKey: @"Background tasks are not available in APLite."}];
     return NO;
 }
 

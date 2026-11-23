@@ -107,6 +107,19 @@ iPhone/iPad before any item is marked complete. Status today: **not tested on ha
 - [ ] Clean Facebook toggle changes the layout immediately and survives navigation and relaunch;
       other sites are untouched.
 
+## 1.2.7 — system overhaul
+
+- [ ] Open Gmail at `mail.google.com`: no "browser version is no longer supported" banner; sign-in and a Google OAuth popup still work.
+- [ ] Google Search, YouTube, GitHub and a modern JS-framework site load and respond to synthetic clicks.
+- [ ] Verify no site is told APLite is Chrome/Chromium; the UA contains `Version/<iOS> Safari/605.1.15` only.
+- [ ] Force a WebContent termination (memory pressure): the tab reloads once, then stops retrying if it keeps crashing.
+- [ ] Pure red status indicators (recording dot, errors, tray warning, danger buttons) look red, not pink, in dark dock, light dock and with the night filter on.
+- [ ] Drag a WebApp icon onto the Trash: the icon highlights, the app disappears from desktop/Launcher/dock, and its pin/recents/slot are cleaned.
+- [ ] Drag an imported guest app to the Trash after closing its window: it is removed; a bundled app is only marked and the toast explains the re-sign/reinstall step.
+- [ ] Native iOS apps are never offered for uninstall; system pages (Browser/Files/Settings/Trash) reject the drop.
+- [ ] Zoom a WebApp through ⌘+/⌘−/⌘0 and the menu: 9 levels, page reflows, scroll still works, clicks land correctly, other WebApps are unchanged, and the level survives restart.
+- [ ] No user-visible iDesk branding remains; LICENSE/NOTICE/About attribution is intact.
+
 ## Known unresolved issues
 
 Record any failures here before merging to `main`. Do not mark a feature complete on the strength of

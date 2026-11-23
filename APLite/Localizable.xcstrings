@@ -7141,6 +7141,46 @@
         }
       }
     },
+    "This is an APLite feature and can't be removed.": {
+      "localizations": {
+        "vi": { "stringUnit": { "state": "translated", "value": "Đây là tính năng của APLite và không thể xóa." } }
+      }
+    },
+    "Web app removed.": {
+      "localizations": {
+        "vi": { "stringUnit": { "state": "translated", "value": "Đã xóa web app." } }
+      }
+    },
+    "App removed from APLite.": {
+      "localizations": {
+        "vi": { "stringUnit": { "state": "translated", "value": "Đã xóa app khỏi APLite." } }
+      }
+    },
+    "Marked for removal. Re-sign and reinstall APLite to finish.": {
+      "localizations": {
+        "vi": { "stringUnit": { "state": "translated", "value": "Đã đánh dấu xóa. Ký lại và cài lại APLite để hoàn tất." } }
+      }
+    },
+    "Could not remove that app.": {
+      "localizations": {
+        "vi": { "stringUnit": { "state": "translated", "value": "Không thể xóa app đó." } }
+      }
+    },
+    "Removed from the desktop and app menu.": {
+      "localizations": {
+        "vi": { "stringUnit": { "state": "translated", "value": "Đã xóa khỏi desktop và menu ứng dụng." } }
+      }
+    },
+    "Uninstall app": {
+      "localizations": {
+        "vi": { "stringUnit": { "state": "translated", "value": "Gỡ cài đặt app" } }
+      }
+    },
+    "Uninstall web app": {
+      "localizations": {
+        "vi": { "stringUnit": { "state": "translated", "value": "Gỡ cài đặt web app" } }
+      }
+    },
     "Click a field to type · × hides": {
       "localizations": {
         "vi": { "stringUnit": { "state": "translated", "value": "Nhấn vào ô nhập liệu để gõ · × để ẩn" } }

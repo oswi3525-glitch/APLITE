@@ -251,7 +251,7 @@ enum FileStore {
     button:hover { background: #3a3a40; }
     button.on { background: #0a84ff; color: #fff; }
     button.primary { background: #0a84ff; color: #fff; } button.primary:hover { background: #3797ff; }
-    .danger { color: #ff8a80; }
+    .danger { color: #ff0000; }
     .seg { display: inline-flex; gap: 2px; background: #222226; border-radius: 8px; padding: 2px; }
     .seg button { padding: 5px 9px; }
     table { width: 100%; border-collapse: collapse; }

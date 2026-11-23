@@ -146,7 +146,7 @@ struct AppsSheet: View {
 
     private func status(_ app: GuestApp) -> some View {
         let s = app.status
-        let color: Color = switch s.tone { case .good: .green; case .warn: .orange; case .bad: .red; case .muted: .secondary }
+        let color: Color = switch s.tone { case .good: .green; case .warn: .orange; case .bad: APLiteColors.red; case .muted: .secondary }
         return Text(verbatim: s.text).font(.caption).foregroundStyle(color)
     }
 
@@ -201,7 +201,7 @@ struct AppsSheet: View {
             Text("Profile: \(profile.name)").font(.caption).foregroundStyle(.secondary)
             if let date = profile.expiration {
                 Text("Expires: \(date.formatted(date: .numeric, time: .omitted))")
-                    .font(.caption).foregroundStyle(profile.isExpired ? .red : .secondary)
+                    .font(.caption).foregroundStyle(profile.isExpired ? APLiteColors.red : .secondary)
             }
             if signing.profileMatchesCertificate == false {
                 Label("The profile does not match this certificate.", systemImage: "exclamationmark.triangle.fill")

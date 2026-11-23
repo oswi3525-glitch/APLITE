@@ -3,6 +3,18 @@
 All notable changes to APLite are documented here. APLite is based on iDesk v0.6.3
 (upstream commit `2179dbd`); the original upstream history is not rewritten.
 
+## 1.2.7 (unsigned development release)
+
+Browser / UI / app-management maintenance release on the 1.2.6 architecture. Guest Engine, bundle ID and all persistence keys are unchanged.
+
+- **Browser engine:** desktop-mode WKWebView previously sent an anonymous WebKit UA (no `Version/… Safari/…` tokens), which Google classifies as an unsupported browser — the Gmail banner. APLite now completes the UA with the **real** Safari version derived from iOS via `applicationNameForUserAgent`; no engine spoofing, no banner hiding. The same real UA and a shared `WKProcessPool` are applied to sign-in popups. WebContent process kills now reload a tab once automatically, OAuth tabs are exempt from memory discarding, and message-handler cleanup respects shared popup controllers.
+- **Color system:** added one sRGB-pinned semantic palette (`APLiteColors`). A declared `#FF0000` no longer resolves to a dark-mode system pink or composites into pink over glass; CSS danger colors were unified, hue-based icon colors pinned to sRGB, color→CSS conversion clamped, and the remote accent manifest now rejects values that would repaint the whole UI pink.
+- **App management / Trash:** drag any desktop or Launcher icon onto the Trash. WebApps are uninstalled with their pins/recents/slots/windows cleaned; imported guest apps are removed after their window closes; bundled guest apps are honestly marked for the next re-sign/reinstall; desktop files go to the file Trash; APLite system pages are protected. Native iOS/App Store apps are **never** claimed removable — iOS provides no such API. A drop highlight and context-menu uninstall actions were added.
+- **WebApp zoom:** unified the Settings and keyboard level tables to 50/75/90/100/110/125/150/175/200%. Uses the official `WKWebView.pageZoom` (available since iOS 14) as the single mechanism instead of re-injecting CSS zoom every navigation. Per-WebApp zoom is persisted under a dedicated key, keyed by the installed WebApp identity (redirect-safe), applied to popup tabs, and reset to 100% with ⌘0.
+- **Branding:** removed the remaining user-visible iDesk wording (issue template, two guest error messages, a dyld error token, the exported IPA filename, a stale comment and `.gitignore` rule). LICENSE, NOTICE, author attribution and all compatibility identifiers are preserved verbatim.
+- **Performance / correctness:** removed redundant whole-desktop repaints during widget drag, guarded memory-sample publishing, de-duplicated settings-page refreshes, removed dead guest-window observers, and fixed the in-app update fallback URL to match the released artifact name.
+- **Build/CI:** release workflow now selects Xcode explicitly and runs the full unit test suite before publishing.
+
 ## 1.2.6 (unsigned development release)
 
 - **Saved accounts from every window.** All web windows share WebKit's cookie store; a new observer

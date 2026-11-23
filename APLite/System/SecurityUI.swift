@@ -19,7 +19,7 @@ struct PasscodeSetupView: View {
                 SecureField("New passcode (at least 4 characters)", text: $newCode)
                 SecureField("Confirm new passcode", text: $confirm)
                 if let message {
-                    Text(message).foregroundStyle(success ? .green : .red)
+                    Text(message).foregroundStyle(success ? APLiteColors.green : APLiteColors.red)
                 }
                 Section {
                     Button(saveTitle) { save() }

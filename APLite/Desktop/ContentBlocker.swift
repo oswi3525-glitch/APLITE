@@ -200,54 +200,75 @@ enum ContentBlocker {
     }
 }
 
-/// The text size of web pages and APLite's pages (Settings → Display), and each tab's own zoom (⌘ + = / − / 0).
-/// Done with CSS zoom on the page: the page lays itself out again for the window's width, as in a desktop browser,
-/// instead of being magnified past the window's edges (which is what WKWebView.pageZoom does on iOS).
+/// Text size of web pages (Settings → Display), the zoom of an ordinary tab, and a persisted zoom
+/// per installed WebApp.
+///
+/// 1.2.7 uses **only** `WKWebView.pageZoom` (iOS 14+, equivalent to CSS zoom on all page content).
+/// It reflows the page, keeps WebInput's synthetic click coordinates correct (WebKit still updates
+/// `window.innerWidth` that WebInput.scaleHead reads), needs no per-navigation JS re-injection and
+/// never risks the old DOMContentLoaded-listener leak. Do not layer CSS zoom on top — that would
+/// apply the factor twice.
 enum PageZoom {
-    static let key = "iDesk.pageZoom"
-    static let levels: [Double] = [0.9, 1, 1.15, 1.3, 1.5]
+    static let key = "iDesk.pageZoom"              // legacy global text size (kept for upgrades)
+    private static let appKey = "iDesk.webAppZoom" // [WebApp identity: Double]
+    static let levels = PageZoomMath.levels
 
     static var standard: CGFloat {
-        CGFloat(UserDefaults.standard.object(forKey: key) as? Double ?? 1)
+        let raw = UserDefaults.standard.object(forKey: key) as? Double ?? PageZoomMath.default
+        return CGFloat(PageZoomMath.nearest(raw))
     }
 
-    /// Tabs zoomed with ⌘ + = / −; the others follow the standard size.
+    /// Tabs zoomed with ⌘ + = / −; ordinary browser tabs only (WebApps use the per-app value).
     private static var tabZoom: [ObjectIdentifier: CGFloat] = [:]
+
+    // MARK: Per-WebApp zoom
+
+    private static var appZooms: [String: Double] {
+        get { UserDefaults.standard.dictionary(forKey: appKey) as? [String: Double] ?? [:] }
+        set { UserDefaults.standard.set(newValue, forKey: appKey) }
+    }
+
+    /// Nil when this app has no override and should follow the global text size.
+    static func storedZoom(forApp key: String?) -> Double? {
+        guard let key else { return nil }
+        return appZooms[key].flatMap { PageZoomMath.isValid($0) ? $0 : nil }
+    }
+
+    static func effective(appKey key: String?) -> Double {
+        storedZoom(forApp: key) ?? Double(standard)
+    }
+
+    static func set(_ zoom: Double, forApp key: String) {
+        var all = appZooms
+        if abs(zoom - PageZoomMath.default) < PageZoomMath.epsilon { all[key] = nil }
+        else { all[key] = PageZoomMath.nearest(zoom) }
+        appZooms = all
+    }
+
+    static func reset(appKey key: String) { set(PageZoomMath.default, forApp: key) }
+
+    // MARK: Ordinary tabs / global default
 
     static func zoom(of web: WKWebView) -> CGFloat { tabZoom[ObjectIdentifier(web)] ?? standard }
 
     static func set(_ zoom: CGFloat, for web: WKWebView) {
-        tabZoom[ObjectIdentifier(web)] = abs(zoom - standard) < 0.01 ? nil : zoom
+        tabZoom[ObjectIdentifier(web)] = abs(zoom - standard) < PageZoomMath.epsilon ? nil : zoom
         apply(to: web)
     }
 
-    /// A new standard size: every tab not zoomed on its own follows it.
+    /// A new global text size: tabs without their own override follow it; WebApp overrides win.
     static func set(_ value: Double) {
-        UserDefaults.standard.set(value, forKey: key)
-        for w in DesktopModel.shared.windows { for tab in w.tabs { apply(to: tab) } }
+        UserDefaults.standard.set(PageZoomMath.nearest(value), forKey: key)
+        for w in DesktopModel.shared.windows {
+            for tab in w.tabs { apply(to: tab, appKey: w.webAppKey) }
+        }
     }
 
     static func forget(_ web: WKWebView) { tabZoom[ObjectIdentifier(web)] = nil }
 
-    /// Sets the page's zoom now and again once its document is there (called when a page starts and finishes).
-    static func apply(to web: WKWebView) {
-        let z = zoom(of: web)
-        let value = abs(z - 1) < 0.01 ? "''" : "'\(z)'"
-        web.evaluateJavaScript("""
-        (function (z) {
-          const set = () => { const d = document.documentElement; if (d && d.style.zoom !== z) d.style.zoom = z; };
-          window.__ideskZoom = z ? parseFloat(z) : 1;
-          set();
-          // apply() runs on both didCommit and didFinish: register the listener only once per document
-          // so it does not pile up (and keep old closures alive) on every navigation.
-          if (!window.__ideskZoomListener) {
-            window.__ideskZoomListener = true;
-            document.addEventListener('DOMContentLoaded', () => {
-              window.__ideskZoomListener = false;
-              set();
-            }, { once: true });
-          }
-        })(\(value))
-        """)
+    /// Native, persistent zoom. Safe to call at creation, on navigation and after a settings change.
+    static func apply(to web: WKWebView, appKey: String? = nil) {
+        let value = storedZoom(forApp: appKey) ?? Double(zoom(of: web))
+        web.pageZoom = CGFloat(value)
     }
 }

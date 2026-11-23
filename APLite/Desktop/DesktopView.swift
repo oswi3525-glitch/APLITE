@@ -370,8 +370,8 @@ struct AppIcon: View {
 
     private var placeholder: some View {
         RoundedRectangle(cornerRadius: size * 0.24, style: .continuous)
-            .fill(LinearGradient(colors: [Color(hue: shortcut.hue, saturation: 0.65, brightness: 0.95),
-                                          Color(hue: shortcut.hue, saturation: 0.8, brightness: 0.65)],
+            .fill(LinearGradient(colors: [Color(hue: shortcut.hue, saturation: 0.65, brightness: 0.95, colorSpace: .sRGB),
+                                          Color(hue: shortcut.hue, saturation: 0.8, brightness: 0.65, colorSpace: .sRGB)],
                                  startPoint: .top, endPoint: .bottom))
             .frame(width: size, height: size)
             .overlay(Image(systemName: shortcut.symbol)
@@ -403,6 +403,7 @@ private struct DesktopIconsView: View {
                 let hovered = r.contains(cursor.position) && model.topWindow(at: cursor.position) == nil
                 let selected = model.selectedIcon == entry.slot
                 let dragged = model.iconDrag.map { DesktopModel.key(of: $0) == DesktopModel.key(of: s) } ?? false
+                let overTrash = model.trashDropHighlight && s.url == DesktopModel.trashURL
                 let k = DesktopModel.iconScale(model.iconSize)
                 VStack(spacing: 6 * k) {
                     AppIcon(shortcut: s, size: (48 * k).rounded())
@@ -415,9 +416,14 @@ private struct DesktopIconsView: View {
                 }
                 .frame(width: r.width, height: r.height)
                 .background(RoundedRectangle(cornerRadius: 8)
-                    .fill(selected ? Color.accentColor.opacity(0.35) : hovered ? Color.white.opacity(0.1) : .clear))
+                    .fill(overTrash ? APLiteColors.redOnGlass.opacity(0.55)
+                          : selected ? Color.accentColor.opacity(0.35)
+                          : hovered ? Color.white.opacity(0.1) : .clear))
                 .overlay(RoundedRectangle(cornerRadius: 8)
-                    .stroke(selected ? Color.accentColor.opacity(0.7) : .clear, lineWidth: 1))
+                    .stroke(overTrash ? APLiteColors.red : selected ? Color.accentColor.opacity(0.7) : .clear,
+                            lineWidth: overTrash ? 2 : 1))
+                .scaleEffect(overTrash ? 1.08 : 1)
+                .animation(APLiteAnimation.snappy, value: overTrash)
                 .opacity(dragged ? 0.35 : 1)
                 .offset(x: r.minX, y: r.minY)
             }
@@ -559,7 +565,7 @@ private struct FindBar: View {
             }
             .frame(minWidth: 140, alignment: .leading)
             if !query.isEmpty {
-                if count == 0 { Text("Not found").foregroundStyle(.red) }
+                if count == 0 { Text("Not found").foregroundStyle(APLiteColors.red) }
                 else { Text("\(index) of \(count)").foregroundStyle(.secondary).monospacedDigit() }
             }
             Text("Enter: next · Esc: close").foregroundStyle(.secondary).font(.system(size: 11))
@@ -812,7 +818,7 @@ private struct TitleButtons: View {
         let hovered = Layout.titleButtons(in: frame).contains(cursor.position)
         let active = focused || hovered
         HStack(spacing: 6) {
-            dot(.red, "xmark", 8, active, hovered)
+            dot(APLiteColors.red, "xmark", 8, active, hovered)
             dot(.yellow, "minus", 8, active, hovered)
             dot(.green, "arrow.up.left.and.arrow.down.right", 7, active, hovered)
         }
@@ -981,6 +987,7 @@ final class GuestContainerView: UIView {
     func detach() {
         watchdog?.invalidate()
         watchdog = nil
+        NotificationCenter.default.removeObserver(self)   // the four selector observers from init
         portals.values.forEach { $0.removeFromSuperview() }
         portals = [:]
         fullScreen = []
@@ -1308,7 +1315,7 @@ private struct TrayView: View {
                     Image(systemName: "memorychip")
                     Text(verbatim: usedText).font(.system(size: 12).monospacedDigit())
                 }
-                .foregroundStyle(memoryMonitor.usedFraction >= 0.95 ? Color.red
+                .foregroundStyle(memoryMonitor.usedFraction >= 0.95 ? APLiteColors.red
                                  : memoryMonitor.usedFraction >= memoryMonitor.warningThreshold ? Color.orange
                                  : palette.primary)
                 Image(systemName: network.symbol)

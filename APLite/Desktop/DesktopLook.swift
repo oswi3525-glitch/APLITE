@@ -34,7 +34,8 @@ enum DynamicWallpaper {
         colors(at: date).map { c in
             let u = UIColor(c); var r: CGFloat = 0, g: CGFloat = 0, b: CGFloat = 0, a: CGFloat = 0
             u.getRed(&r, green: &g, blue: &b, alpha: &a)
-            return String(format: "rgb(%d,%d,%d)", Int(r * 255), Int(g * 255), Int(b * 255))
+            let c = { (v: CGFloat) in Int(max(0, min(1, v)) * 255) }
+            return String(format: "rgb(%d,%d,%d)", c(r), c(g), c(b))
         }
     }
 }

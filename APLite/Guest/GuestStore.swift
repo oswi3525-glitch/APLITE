@@ -404,7 +404,7 @@ final class GuestStore: ObservableObject {
         let total = Double(max(1, Self.size(of: own) + carriedSize + guests.reduce(0) { $0 + Self.size(of: $1.source) }))
         let output = Self.exportFolder
         try fm.createDirectory(at: output, withIntermediateDirectories: true)
-        let file = output.appendingPathComponent("iDesk-with-apps.ipa")
+        let file = output.appendingPathComponent("APLite-with-apps.ipa")
         try? fm.removeItem(at: file)
         let zip = try ZipWriter(creating: file)
         let report: (UInt64) -> Void = { written in progress(min(1, Double(written) / total)) }

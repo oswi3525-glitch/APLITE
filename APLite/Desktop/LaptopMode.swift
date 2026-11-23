@@ -189,9 +189,9 @@ private struct LaptopFooter: View {
     let stop: () -> Void
     var body: some View {
         Button(action: stop) {
-            Text("Stop").font(.headline).foregroundStyle(.red)
+            Text("Stop").font(.headline).foregroundStyle(APLiteColors.red)
                 .frame(maxWidth: .infinity).padding(.vertical, 15)
-                .background(Capsule().fill(Color.red.opacity(0.14)))
+                .background(Capsule().fill(APLiteColors.redOnGlass.opacity(0.14)))
         }
         .buttonStyle(.plain)
         .padding(.horizontal, 40)
