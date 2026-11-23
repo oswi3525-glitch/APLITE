@@ -51,8 +51,8 @@ struct KeyboardSettingsView: View {
                                 .minimumScaleFactor(0.6)
                                 .lineLimit(1)
                                 .frame(width: max(26, 18 * CGFloat(key.units)), height: 26)
-                                .background(RoundedRectangle(cornerRadius: 5).fill(Color.white.opacity(0.10)))
-                                .overlay(RoundedRectangle(cornerRadius: 5).stroke(Color.white.opacity(0.14), lineWidth: 1))
+                                .background(RoundedRectangle(cornerRadius: 5).fill(Color.primary.opacity(0.10)))
+                                .overlay(RoundedRectangle(cornerRadius: 5).stroke(Color.primary.opacity(0.14), lineWidth: 1))
                         }
                     }
                 }

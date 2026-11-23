@@ -8,6 +8,8 @@ final class DeskWindow: NSObject, ObservableObject, Identifiable, WKUIDelegate, 
     private static let processPool = WKProcessPool()
     /// Tabs already reloaded after a WebContent termination (one automatic retry, then leave it to the user).
     private var recoveredTabs = Set<ObjectIdentifier>()
+    /// Tabs created as window.open()/target=_blank popups — sign-in flows keep live opener state.
+    private var popupTabs = Set<ObjectIdentifier>()
 
     enum Kind: Equatable {
         /// Web pages: address bar, tabs, back / forward / reload.
@@ -284,44 +286,64 @@ final class DeskWindow: NSObject, ObservableObject, Identifiable, WKUIDelegate, 
 
     deinit {
         // Same sharing guard as detach(_:): a popup may still use a controller owned by this window.
-        for tab in tabs where !tabs.contains(where: {
-            $0 !== tab && $0.configuration.userContentController === tab.configuration.userContentController
-        }) { Self.detachAll(tab) }
+        for tab in tabs {
+            PageZoom.forget(tab)
+            ControllerInput.gamePages.remove(ObjectIdentifier(tab))
+            if !tabs.contains(where: {
+                $0 !== tab && $0.configuration.userContentController === tab.configuration.userContentController
+            }) { Self.detachAll(tab) }
+        }
     }
 
     // MARK: Tabs
 
-    func newTab(_ url: URL, activate: Bool = true) {
-        let config = WKWebViewConfiguration()
-        // A real, versioned Safari identity (derived from iOS) and one shared WebContent process pool.
-        // Without applicationNameForUserAgent, WebKit's desktop UA omits Version/Safari and Google
-        // classifies APLite as an unsupported browser.
+    /// The single place that defines APLite's browser policy. Used for ordinary tabs AND for
+    /// WebKit-provided popup configurations (sign-in popups). Popups may already carry a copy of the
+    /// opener's user scripts/handlers; adding a handler twice raises, so treat "our scripts are
+    /// already present" as "the bridges are already there too".
+    private func applyBrowserPolicy(to config: WKWebViewConfiguration) {
         config.applicationNameForUserAgent = BrowserUserAgent.applicationName(
             systemVersion: UIDevice.current.systemVersion)
         config.processPool = Self.processPool
         config.allowsInlineMediaPlayback = true
-        // Pages may start sound from APLite's clicks (which are not touches on the page) and use Web Audio for volume.
+        // Synthetic clicks are not trusted gestures: let pages start media and use Web Audio for volume.
         config.mediaTypesRequiringUserActionForPlayback = []
-        config.defaultWebpagePreferences.preferredContentMode = .desktop   // request desktop websites
-        config.userContentController.addUserScript(WebFullscreen.script)
-        config.userContentController.add(fullscreenBridge, name: WebFullscreen.messageName)
-        config.userContentController.add(filesBridge, name: FilesBridge.messageName)
-        config.userContentController.add(pageBridge, name: DesktopPages.messageName)
-        config.userContentController.addUserScript(DesktopSite.script(screen: DesktopModel.shared.screenSize))
-        ContentBlocker.apply(to: config.userContentController)
-        config.userContentController.addUserScript(DarkPages.script())
-        config.userContentController.addUserScript(FacebookEnhancements.script)
-        config.userContentController.addUserScript(WebVolume.script)
-        config.userContentController.add(WebAudioBridge.shared, name: WebAudioBridge.messageName)
-        config.userContentController.addUserScript(ControllerInput.pageScript)
-        config.userContentController.add(gamepadBridge, name: ControllerInput.messageName)
-        config.userContentController.addUserScript(WebInputFocusBridge.script)
-        config.userContentController.add(inputFocusBridge, name: WebInputFocusBridge.messageName)
+        config.defaultWebpagePreferences.preferredContentMode = .desktop
+
+        let controller = config.userContentController
+        let inherited = controller.userScripts.contains { $0.source == WebFullscreen.script.source }
+        func script(_ s: WKUserScript) {
+            if !controller.userScripts.contains(where: { $0.source == s.source }) { controller.addUserScript(s) }
+        }
+        func handler(_ h: WKScriptMessageHandler, _ name: String) {
+            if !inherited { controller.add(h, name: name) }
+        }
+        script(WebFullscreen.script)
+        handler(fullscreenBridge, WebFullscreen.messageName)
+        handler(filesBridge, FilesBridge.messageName)
+        handler(pageBridge, DesktopPages.messageName)
+        script(DesktopSite.script(screen: DesktopModel.shared.screenSize))
+        ContentBlocker.apply(to: controller)
+        script(DarkPages.script())
+        script(FacebookEnhancements.script)
+        script(WebVolume.script)
+        handler(WebAudioBridge.shared, WebAudioBridge.messageName)
+        script(ControllerInput.pageScript)
+        handler(gamepadBridge, ControllerInput.messageName)
+        script(WebInputFocusBridge.script)
+        handler(inputFocusBridge, WebInputFocusBridge.messageName)
+    }
+
+    func newTab(_ url: URL, activate: Bool = true) {
+        let config = WKWebViewConfiguration()
+        applyBrowserPolicy(to: config)
         let tab = WKWebView(frame: CGRect(origin: .zero, size: frame.size), configuration: config)
         // Set before the first load: no flash of unzoomed content, survives all navigations.
         PageZoom.apply(to: tab, appKey: webAppKey)
         Self.load(url, in: tab)
         add(tab, activate: activate)
+        // Rule compilation is asynchronous: if it finished after this tab was created, apply now.
+        ContentBlocker.apply(to: config.userContentController)
     }
 
     /// Reopens a tab where it was, instead of always appending it at the end (⌘⇧T).
@@ -361,7 +383,7 @@ final class DeskWindow: NSObject, ObservableObject, Identifiable, WKUIDelegate, 
         for (i, tab) in tabs.enumerated() where (i != activeTab || !isShown) && discarded[ObjectIdentifier(tab)] == nil {
             guard let url = tab.url, Browsing.isWebPage(url) else { continue }
             // A sign-in popup owns live OAuth state; discarding it can orphan window.opener.
-            if url.host?.lowercased() == "accounts.google.com" { continue }
+            if popupTabs.contains(ObjectIdentifier(tab)) || url.host?.lowercased() == "accounts.google.com" { continue }
             discarded[ObjectIdentifier(tab)] = (url, tab.title ?? "")
             tab.loadHTMLString("<html><body style='background:#111'></body></html>", baseURL: nil)
             n += 1
@@ -398,6 +420,8 @@ final class DeskWindow: NSObject, ObservableObject, Identifiable, WKUIDelegate, 
         PageZoom.forget(tab)
         editingTabs.remove(ObjectIdentifier(tab))
         recoveredTabs.remove(ObjectIdentifier(tab))
+        popupTabs.remove(ObjectIdentifier(tab))
+        ControllerInput.gamePages.remove(ObjectIdentifier(tab))
         discarded.removeValue(forKey: ObjectIdentifier(tab))
         let wasActive = i == activeTab
         if wasActive { findQuery = nil }  // the find bar belongs to a page, not to the window
@@ -590,13 +614,12 @@ final class DeskWindow: NSObject, ObservableObject, Identifiable, WKUIDelegate, 
             if let url = navigationAction.request.url { DesktopModel.shared.openWindow(url) }
             return nil
         }
-        // The configuration comes from WebKit (it carries window.opener for OAuth). Re-assert our
-        // policy on it before creating the popup so sign-in popups get the same real UA and pool.
-        configuration.applicationNameForUserAgent = BrowserUserAgent.applicationName(
-            systemVersion: UIDevice.current.systemVersion)
-        configuration.processPool = Self.processPool
-        configuration.defaultWebpagePreferences.preferredContentMode = .desktop
+        // The configuration comes from WebKit (it carries window.opener for OAuth). Re-assert the
+        // whole policy — media flags, scripts and bridges too, not just UA/pool — so a sign-in popup
+        // can play media and report Web Audio activity like any other tab.
+        applyBrowserPolicy(to: configuration)
         let tab = WKWebView(frame: CGRect(origin: .zero, size: frame.size), configuration: configuration)
+        popupTabs.insert(ObjectIdentifier(tab))   // never discard an OAuth popup under memory pressure
         PageZoom.apply(to: tab, appKey: webAppKey)   // sign-in popups inherit the app's zoom
         add(tab, activate: true)
         return tab

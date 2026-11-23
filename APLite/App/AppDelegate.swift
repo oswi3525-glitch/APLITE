@@ -14,7 +14,9 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         // share it; starting it before MediaControl also fixes the silent-switch-sensitive default
         // category that made the desktop silent over HDMI / AirPlay.
         AudioSessionManager.shared.guestAppsActive = {
-            DesktopModel.shared.windows.contains { $0.guestWindow != nil && $0.isShown }
+            // A minimised or off-desk guest can still be playing audio. "Shown" is not a proxy for
+            // "silent": keeping the session for any live guest window avoids cutting its sound.
+            DesktopModel.shared.windows.contains { $0.guestWindow != nil }
         }
         AudioSessionManager.shared.audioInUse = {
             QuickLook.isActive || ReadAloud.shared.isSpeaking || WebAudioActivity.shared.isPlaying

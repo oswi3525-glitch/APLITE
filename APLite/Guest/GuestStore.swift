@@ -224,6 +224,16 @@ final class GuestStore: ObservableObject {
         reload()
     }
 
+    /// Idempotent mark for removal: dropping the same bundled app on the Trash twice must never
+    /// silently unmark it. Keep toggleRemoval for the explicit "Keep / Remove" buttons.
+    func markForRemoval(_ app: GuestApp) {
+        var set = pendingRemoval
+        guard !set.contains(app.id) else { return }
+        set.insert(app.id)
+        pendingRemoval = set
+        reload()
+    }
+
     /// An app's copy in Documents (if any), used when exporting.
     private func localCopy(of id: String) -> URL? {
         ((try? fm.contentsOfDirectory(at: root, includingPropertiesForKeys: nil)) ?? [])

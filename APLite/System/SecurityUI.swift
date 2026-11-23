@@ -40,7 +40,6 @@ struct PasscodeSetupView: View {
                 ToolbarItem(placement: .confirmationAction) { Button("Done") { dismiss() } }
             }
         }
-        .preferredColorScheme(.dark)
     }
 
     private var saveTitle: String { security.isConfigured ? "Change passcode" : "Set passcode" }

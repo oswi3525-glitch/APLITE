@@ -515,7 +515,12 @@ private struct WindowView: View {
                          tabIcons: window.showsTabs ? window.tabs.indices.map { i in
                              i == window.activeTab ? window.icon : DeskWindow.cachedFavicon(window.url(ofTab: i).absoluteString)
                          } : nil,
-                         activeTab: window.activeTab, keepOnTop: window.keepOnTop)
+                         activeTab: window.activeTab, keepOnTop: window.keepOnTop,
+                          floatingVideo: window.floatingRestore != nil,
+                          zoomLevel: Layout.hasZoomControls(window)
+                              ? PageZoomMath.percent(window.webAppKey.flatMap { PageZoom.storedZoom(forApp: $0) }
+                                                     ?? Double(PageZoom.standard))
+                              : nil)
                     .frame(height: Layout.titleBar)
                 if window.showsAddressBar {
                     AddressBar(window: window, focused: focused, cursor: cursor)
@@ -592,6 +597,8 @@ private struct TitleBar: View {
     var tabIcons: [UIImage?]? = nil
     var activeTab = 0
     var keepOnTop = false
+    var floatingVideo = false
+    var zoomLevel: Int? = nil
 
     var body: some View {
         ZStack(alignment: .topLeading) {
@@ -600,16 +607,28 @@ private struct TitleBar: View {
                            startPoint: .top, endPoint: .bottom)
             .overlay(alignment: .bottom) {
                 Rectangle()
-                    .fill(focused ? Color.accentColor.opacity(0.55) : Color.white.opacity(0.06))
+                    .fill(focused ? APLiteColors.accent.opacity(0.55) : Color.white.opacity(0.06))
                     .frame(height: 1)
             }
             if keepOnTop {
-                Image(systemName: "pin.fill").font(.system(size: 10)).foregroundStyle(.yellow)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .trailing)
-                    .padding(.trailing, 10)
+                // Badge on the leading side: the trailing end is reserved for WebApp zoom controls.
+                Image(systemName: "pin.fill").font(.system(size: 10)).foregroundStyle(APLiteColors.yellow)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+                    .padding(.leading, 96)
+            }
+            if let zoomLevel {
+                HStack(spacing: 4) {
+                    Text("−").frame(width: 24)
+                    Text("\(zoomLevel)%").monospacedDigit().frame(width: 40)
+                    Text("+").frame(width: 24)
+                }
+                .font(.system(size: 12, weight: .semibold))
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .trailing)
+                .padding(.trailing, 8)
+                .foregroundStyle(focused ? .primary : .secondary)
             }
             HStack {
-                TitleButtons(frame: frame, focused: focused, cursor: cursor)
+                TitleButtons(frame: frame, focused: focused, cursor: cursor, floatingVideo: floatingVideo)
                 Spacer()
             }
             .padding(.leading, 12)
@@ -813,6 +832,7 @@ private struct BookmarksBar: View {
 private struct TitleButtons: View {
     let frame: CGRect
     let focused: Bool
+    var floatingVideo = false
     @ObservedObject var cursor: CursorModel
 
     var body: some View {
@@ -820,8 +840,8 @@ private struct TitleButtons: View {
         let active = focused || hovered
         HStack(spacing: 6) {
             dot(APLiteColors.red, "xmark", 8, active, hovered)
-            dot(.yellow, "minus", 8, active, hovered)
-            dot(.green, "arrow.up.left.and.arrow.down.right", 7, active, hovered)
+            dot(APLiteColors.yellow, "minus", 8, active, hovered)
+            dot(APLiteColors.signalGreen, floatingVideo ? "pip.exit" : "arrow.up.left.and.arrow.down.right", 7, active, hovered)
         }
     }
 
@@ -1599,7 +1619,7 @@ private struct QuickPanelView: View {
         case 1: return ("dock.arrow.down.rectangle", "Hide taskbar", model.autoHideTaskbar)
         case 2: return ("camera.viewfinder", "Screenshot", false)
         case 3: return ("gearshape", "Settings", false)
-        case 4: return (media.isMuted ? "speaker.slash.fill" : "speaker.wave.2.fill", "Mute", media.isMuted)
+        case 4: return (media.isVolumeZero ? "speaker.slash.fill" : "speaker.wave.2.fill", "Volume zero", media.isVolumeZero)
         default: return ("gearshape", "Settings", false)
         }
     }

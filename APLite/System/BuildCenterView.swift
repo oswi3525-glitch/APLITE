@@ -106,7 +106,6 @@ struct BuildCenterView: View {
                 repo = center.repo
             }
         }
-        .preferredColorScheme(.dark)
         .sheet(isPresented: $showCreator) { AppCreatorView() }
     }
 }

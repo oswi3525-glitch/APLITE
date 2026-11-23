@@ -58,7 +58,6 @@ struct MouseCheckView: View {
                 assistiveTouch = UIAccessibility.isAssistiveTouchRunning
             }
         }
-        .preferredColorScheme(.dark)
     }
 
     private func row(_ title: LocalizedStringKey, _ value: Int) -> some View {

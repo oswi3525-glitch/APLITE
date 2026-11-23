@@ -1,6 +1,6 @@
 {
-  "version": 6,
-  "notice": "APLite 1.2.7: real Safari browser identity for Gmail, fixed red colors, drag apps to Trash, per-WebApp zoom and cleaner branding.",
+  "version": 7,
+  "notice": "APLite 1.2.8: audio fixes, in-Settings Technical Diagnostics, cleaner Settings and windows, WebApp zoom buttons.",
   "wallpapers": null,
   "accent": null
 }

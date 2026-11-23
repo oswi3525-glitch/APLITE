@@ -17,7 +17,7 @@ import os.log
 /// deactivated the whole session when it stopped, and nobody listened for interruptions or route
 /// changes. Any of those left the desktop silent until the app was restarted.
 ///
-/// This manager keeps a `.playback` baseline active for the whole lifetime of the app, temporarily
+/// This manager keeps a `.playback` baseline whenever audio is in use, temporarily
 /// switches to `.playAndRecord` only while voice typing is listening, and restores playback
 /// afterwards. It never creates a player or synthesises sound: it only manages the session.
 final class AudioSessionManager: NSObject, ObservableObject {
@@ -77,7 +77,14 @@ final class AudioSessionManager: NSObject, ObservableObject {
         })
         // Check every 20 s: if nothing is playing, give the audio hardware back to iOS.
         idleTimer = Timer.scheduledTimer(withTimeInterval: 20, repeats: true) { [weak self] _ in
-            self?.deactivateIfIdle(reason: "no active audio source")
+            guard let self else { return }
+            // Guest apps share this process and can call setCategory directly. Repair a category
+            // left behind by a guest before considering the session idle.
+            if self.sessionActive, !self.recording,
+               AVAudioSession.sharedInstance().category != .playback {
+                self.activatePlayback(reason: "category changed by a guest app")
+            }
+            self.deactivateIfIdle(reason: "no active audio source")
         }
         idleTimer?.tolerance = 5
         activatePlayback(reason: "launch")
@@ -224,9 +231,9 @@ final class AudioSessionManager: NSObject, ObservableObject {
 
     private func handleRouteChange(_ notification: Notification) {
         let info = notification.userInfo ?? [:]
-        let reason = (info[AVAudioSessionRouteChangeReasonKey] as? UInt)
+        let rawReason = (info[AVAudioSessionRouteChangeReasonKey] as? UInt)
             .flatMap(AVAudioSession.RouteChangeReason.init(rawValue:))
-            .map(Self.routeReasonName) ?? String(localized: "unknown")
+        let reason = rawReason.map(Self.routeReasonName) ?? String(localized: "unknown")
         let previous = (info[AVAudioSessionRouteChangePreviousRouteKey] as? AVAudioSessionRouteDescription)
         let from = previous.map { Self.ports($0.outputs).map(\.name).joined(separator: ", ") } ?? String(localized: "unknown")
         note(.route, "Route changed: \(reason) (was: \(from))")
@@ -234,7 +241,10 @@ final class AudioSessionManager: NSObject, ObservableObject {
         // Unplugging headphones or a display can leave the session inactive without an interruption.
         // Re-assert playback on EVERY route change (not only when our cached flag says inactive):
         // a guest app may have deactivated the session behind our back.
-        if (recording || audioInUse()), !isInterrupted {
+        if rawReason == .categoryChange, !recording, !guestAppsActive(), !isInterrupted {
+            // A guest changed the category; restore APLite's playback baseline.
+            activatePlayback(reason: "category change")
+        } else if (recording || audioInUse()), !isInterrupted {
             activatePlayback(reason: "route change")
         }
     }

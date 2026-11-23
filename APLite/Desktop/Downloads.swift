@@ -153,7 +153,8 @@ final class Downloads: NSObject, ObservableObject, WKDownloadDelegate {
     /// Resumes a paused (or failed) download where it stopped, or starts it again when it cannot.
     func resume(_ id: UUID) {
         guard let i = items.firstIndex(where: { $0.id == id }) else { return }
-        guard let data = items[i].resumeData, let web = items[i].webView ?? DesktopModel.shared.focused?.webView else {
+        // Never resume in an unrelated tab: the focused window may belong to a different origin.
+        guard let data = items[i].resumeData, let web = items[i].webView else {
             showFailure(items[i].name)
             return
         }

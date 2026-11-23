@@ -231,6 +231,7 @@ enum WebVolume {
       function applyTo(el) {
         const v = volumes.has(el) ? volumes.get(el) : 1;
         let r = routes.get(el);
+        pending.delete(el);   // a restored element must not stay referenced forever
         if (!r) {
           if (v >= 1 || !routable(el)) return;
           const c = context();

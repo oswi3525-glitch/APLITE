@@ -120,6 +120,19 @@ iPhone/iPad before any item is marked complete. Status today: **not tested on ha
 - [ ] Zoom a WebApp through ⌘+/⌘−/⌘0 and the menu: 9 levels, page reflows, scroll still works, clicks land correctly, other WebApps are unchanged, and the level survives restart.
 - [ ] No user-visible iDesk branding remains; LICENSE/NOTICE/About attribution is intact.
 
+## 1.2.8 — patch release
+
+- [ ] Gmail, Google Search, YouTube, GitHub open; no claim of Chrome engine/Service Workers/passkeys.
+- [ ] Sign-in popup inherits media autoplay, volume bridge, focus tracking and per-WebApp zoom.
+- [ ] Voice typing stops on an incoming call; audio returns without restarting APLite.
+- [ ] A guest app playing audio stays audible when minimized or moved to another workspace.
+- [ ] Settings → System → Technical Diagnostics opens; no desktop/dock/launcher icon exists for it.
+- [ ] Diagnostics shows browser/audio/window/memory status, a main-thread gap sample, likely causes; repairs ask confirmation and re-check afterwards.
+- [ ] Settings can follow system / Light / Dark; no saved setting or item is lost after switching.
+- [ ] Window lights, focus ring and title bars look consistent; fullscreen and maximize animate.
+- [ ] WebApp title bar shows − / current % / +; clicks change zoom, 100% persists, other WebApps unaffected.
+- [ ] Dragging a bundled guest app to Trash only marks it for reinstall; dropping twice stays marked; Trash icon cannot be hidden; last removed WebApp restores from the desktop menu.
+
 ## Known unresolved issues
 
 Record any failures here before merging to `main`. Do not mark a feature complete on the strength of

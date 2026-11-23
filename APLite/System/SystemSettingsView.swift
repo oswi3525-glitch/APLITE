@@ -23,6 +23,7 @@ struct SystemSettingsView: View {
     @AppStorage("APLite.performance.detectLeaks") private var detectLeaks = true
     @AppStorage("APLite.personalization.pressRipples") private var pressRipples = false
     @AppStorage("APLite.input.virtualKeyboard") private var virtualKeyboard = false
+    @AppStorage("APLite.personalization.settingsAppearance") private var settingsAppearance = 0
 
     @State private var showPasscode = false
     @State private var showBuildCenter = false
@@ -30,20 +31,27 @@ struct SystemSettingsView: View {
     @State private var certificatePassword = ""
     @State private var pendingCertificate: Data?
     @State private var resolution = ""
+    @State private var pendingAction: (() -> Void)?
+    @State private var confirmMessage = ""
 
     private var apliteUsage: (files: Int, bytes: UInt64) { APLiteFileManager.systemUsage() }
     private var brightnessText: String { "\(Int((model.externalBrightness * 100).rounded()))%" }
 
     var body: some View {
         List {
-            Section(SettingsGroup.personalization.title) {
+            Section(header: Label(SettingsGroup.personalization.title, systemImage: SettingsGroup.personalization.symbol)) {
+                Picker("Settings appearance", selection: $settingsAppearance) {
+                    Text("Follow system").tag(0)
+                    Text("Light").tag(1)
+                    Text("Dark").tag(2)
+                }
                 Toggle("Reduce motion", isOn: $model.reduceMotion)
                 Toggle("Performance mode", isOn: $model.performanceMode)
                 Toggle("Clock and calendar widgets", isOn: $model.showWidgets)
                 Toggle("Circular press effect", isOn: $pressRipples)
             }
 
-            Section("Wallpaper") {
+            Section(header: Label("Wallpaper", systemImage: "photo")) {
                 Picker("Style", selection: $model.wallpaper) {
                     ForEach(Wallpapers.photos, id: \.index) { photo in
                         Text(photo.name == "MeadowWallpaper" ? "Đồng cỏ (meadow)" : "Biển (ocean)")
@@ -62,7 +70,7 @@ struct SystemSettingsView: View {
                     .font(.footnote).foregroundStyle(.secondary)
             }
 
-            Section(SettingsGroup.security.title) {
+            Section(header: Label(SettingsGroup.security.title, systemImage: SettingsGroup.security.symbol)) {
                 Toggle("Lock when APLite opens", isOn: $lockOnLaunch)
                 Toggle("Lock on sleep", isOn: $lockOnSleep)
                 Toggle("Authenticate on wake", isOn: $authOnWake)
@@ -79,12 +87,15 @@ struct SystemSettingsView: View {
                 }
             }
 
-            Section(SettingsGroup.power.title) {
+            Section(header: Label(SettingsGroup.power.title, systemImage: SettingsGroup.power.symbol)) {
                 LabeledContent("State", value: power.state.label)
                 Button("Sleep") { power.sleep() }
                 Button("Wake") { power.wake() }
                 .disabled(power.state != .sleeping)
-                Button("Shut down APLite", role: .destructive) { power.shutdown() }
+                Button("Shut down APLite", role: .destructive) {
+                    confirmMessage = "All open pages and guest apps will close. This is a soft shutdown of APLite only."
+                    pendingAction = { power.shutdown() }
+                }
                 Button("Restart APLite") { power.boot() }
                 .disabled(power.state != .shutDown)
                 Toggle("Suspend guest apps on sleep", isOn: $suspendWork)
@@ -93,7 +104,7 @@ struct SystemSettingsView: View {
                     .font(.footnote).foregroundStyle(.secondary)
             }
 
-            Section(SettingsGroup.performance.title) {
+            Section(header: Label(SettingsGroup.performance.title, systemImage: SettingsGroup.performance.symbol)) {
                 Picker("Memory target", selection: $memoryTarget) {
                     ForEach(APLiteSettings.Performance.memoryTargets, id: \.self) { Text("\($0) MB") }
                 }
@@ -103,10 +114,13 @@ struct SystemSettingsView: View {
                 Toggle("Release caches when idle", isOn: $releaseCaches)
                 Toggle("Detect possible memory leaks", isOn: $detectLeaks)
                 Text(memory.report()).font(.footnote).foregroundStyle(.secondary)
-                Button("Release caches now") { memory.releaseCaches(reason: "user request") }
+                Button("Release caches now") {
+                    confirmMessage = "Web and image caches are cleared; pages may reload once."
+                    pendingAction = { memory.releaseCaches(reason: "user request") }
+                }
             }
 
-            Section(SettingsGroup.applications.title) {
+            Section(header: Label(SettingsGroup.applications.title, systemImage: SettingsGroup.applications.symbol)) {
                 Button { model.openPage(.apps) } label: {
                     Label("Manage iOS apps", systemImage: "square.grid.2x2")
                 }
@@ -121,7 +135,7 @@ struct SystemSettingsView: View {
                 Toggle("Reopen guest apps at launch", isOn: $model.reopenApps)
             }
 
-            Section("Accounts") {
+            Section(header: Label("Accounts", systemImage: "person.crop.circle")) {
                 Button("Save signed-in accounts") {
                     AccountCookies.shared.save { count in
                         model.showToast(String(localized: count > 0
@@ -140,7 +154,7 @@ struct SystemSettingsView: View {
                     .font(.footnote).foregroundStyle(.secondary)
             }
 
-            Section(SettingsGroup.storage.title) {
+            Section(header: Label(SettingsGroup.storage.title, systemImage: SettingsGroup.storage.symbol)) {
                 LabeledContent("APLite managed files", value: "\(apliteUsage.files) files · \(APLiteFileManager.sizeText(Int64(apliteUsage.bytes)))")
                 Button("Save a diagnostics report") {
                     if APLiteFileManager.writeDiagnostics() != nil {
@@ -150,7 +164,7 @@ struct SystemSettingsView: View {
                 Button("Open Files") { model.openPage(.files) }
             }
 
-            Section(SettingsGroup.display.title) {
+            Section(header: Label(SettingsGroup.display.title, systemImage: SettingsGroup.display.symbol)) {
                 Picker("Resolution", selection: $resolution) {
                     Text("Automatic").tag("")
                     ForEach(ExternalDisplay.resolutions.map(ExternalDisplay.name(of:)), id: \.self) { Text($0).tag($0) }
@@ -165,7 +179,7 @@ struct SystemSettingsView: View {
                 }
             }
 
-            Section(SettingsGroup.input.title) {
+            Section(header: Label(SettingsGroup.input.title, systemImage: SettingsGroup.input.symbol)) {
                 Toggle("Natural scrolling", isOn: InputSettings.naturalScrollingBinding)
                 Toggle("On-screen keyboard", isOn: $virtualKeyboard)
                 NavigationLink {
@@ -177,16 +191,22 @@ struct SystemSettingsView: View {
                     .font(.footnote).foregroundStyle(.secondary)
             }
 
-            Section(SettingsGroup.certificates.title) {
+            Section(header: Label(SettingsGroup.certificates.title, systemImage: SettingsGroup.certificates.symbol)) {
                 LabeledContent("Certificate", value: certificates.identityName ?? String(localized: "None"))
                 if let error = certificates.lastError { Text(error).foregroundStyle(APLiteColors.red).font(.footnote) }
                 Button("Import .p12 / .pfx from Files") { importCertificate() }
                 if certificates.hasIdentity {
-                    Button("Remove certificate", role: .destructive) { certificates.remove() }
+                    Button("Remove certificate", role: .destructive) {
+                    confirmMessage = "The imported signing certificate will be removed from the Keychain."
+                    pendingAction = { certificates.remove() }
+                }
                 }
             }
 
-            Section(SettingsGroup.system.title) {
+            Section(header: Label(SettingsGroup.system.title, systemImage: SettingsGroup.system.symbol)) {
+                NavigationLink { TechnicalDiagnosticsView(model: model) } label: {
+                    Label("Technical Diagnostics", systemImage: "stethoscope")
+                }
                 NavigationLink { SystemChangelogView() } label: { Label("What's new", systemImage: "sparkles") }
                 LabeledContent("Version", value: APLite.displayVersion)
                 LabeledContent("Last clean shutdown", value: APLiteSettings.System.lastShutdown?.formatted() ?? String(localized: "never"))
@@ -196,9 +216,18 @@ struct SystemSettingsView: View {
         }
         .navigationTitle("System settings")
         .navigationBarTitleDisplayMode(.inline)
+        .listStyle(.insetGrouped)
+        .preferredColorScheme(settingsScheme)
         .onAppear { resolution = ExternalDisplay.resolution.map(ExternalDisplay.name(of:)) ?? "" }
         .sheet(isPresented: $showPasscode) { PasscodeSetupView() }
         .sheet(isPresented: $showBuildCenter) { BuildCenterView() }
+        .alert("Confirm action", isPresented: Binding(get: { pendingAction != nil },
+                                                     set: { if !$0 { pendingAction = nil } })) {
+            Button("Cancel", role: .cancel) { pendingAction = nil }
+            Button("Continue", role: .destructive) { pendingAction?(); pendingAction = nil }
+        } message: {
+            Text(confirmMessage)
+        }
         .alert("Certificate password", isPresented: $showCertificatePassword) {
             SecureField("Password", text: $certificatePassword)
             Button("Cancel", role: .cancel) { pendingCertificate = nil }
@@ -215,6 +244,14 @@ struct SystemSettingsView: View {
             }
         } message: {
             Text("Enter the password for the .p12 / .pfx file. It is stored in the Keychain and never logged.")
+        }
+    }
+
+    private var settingsScheme: ColorScheme? {
+        switch APLiteSettings.SettingsAppearance(rawValue: settingsAppearance) ?? .system {
+        case .light: return .light
+        case .dark: return .dark
+        case .system: return nil
         }
     }
 

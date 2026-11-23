@@ -186,7 +186,7 @@ enum DesktopPages {
                 "status": status, "tone": tone.rawValue, "open": open,
                 "pinned": m.isPinned(Shortcut(name: app.name, symbol: "", url: "", hue: 0, app: app)),
                 // A bundled app can only leave APLite with the next reinstall: "remove" marks it, "keep" unmarks it.
-                "removal": !app.isBundled || app.hasPendingUpdate ? "delete" : (app.pendingRemoval ? "keep" : "remove"),
+                "removal": !app.isBundled ? "delete" : (app.pendingRemoval ? "keep" : "remove"),
                 "compat": compat.entry(for: app.id)?.note ?? "",
                 "compatTone": compat.entry(for: app.id).map { $0.status == "works" ? "good" : $0.status == "broken" ? "bad" : "warn" } ?? "",
             ]
@@ -214,7 +214,7 @@ enum DesktopPages {
             "caches": store.cachesSize.map { ByteCountFormatter.string(fromByteCount: Int64($0), countStyle: .file) } ?? "",
             "cleanPending": store.clearCachesOnLaunch,
             "reinstallOnly": store.apps.contains(where: \.pendingRemoval)
-                && !store.apps.contains(where: { !$0.isBundled || $0.hasPendingUpdate }),
+                && !store.apps.contains(where: { !$0.isBundled }),
         ]
     }
 
@@ -299,7 +299,7 @@ enum DesktopPages {
                 .max(by: { $0.height < $1.height }) {
                 ExternalDisplay.resolution = r
             }
-            PageZoom.set(1.3)
+            PageZoom.set(1.25)
             m.iconSize = 2
             m.showToast(String(localized: "TV mode: 720p, larger text and icons. Pick Automatic under Resolution to go back."))
         case (.settings, "overscan"):

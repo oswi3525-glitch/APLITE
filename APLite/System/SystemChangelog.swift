@@ -11,6 +11,13 @@ enum SystemChangelog {
     }
 
     static let entries: [Entry] = [
+        Entry(version: "1.2.8", date: "2026-11-23", items: [
+            "Audio: popup web views now inherit media settings and bridges; guest audio is no longer cut by the idle timer; category changes and voice-typing interruptions recover correctly.",
+            "New Technical Diagnostics page, reachable only from Settings → System — no desktop icon, dock item or launcher entry.",
+            "Settings: clearer grouped sections with icons, optional Light appearance on iPhone, and confirmation for destructive actions.",
+            "Windows: one consistent chrome style, animated fullscreen/maximize, zoom buttons with the current level in WebApp title bars.",
+            "Trash: bundled guest apps are marked honestly for reinstall, the Trash icon is protected, and the last removed WebApp can be restored.",
+        ]),
         Entry(version: "1.2.7", date: "2026-11-23", items: [
             "Browser: real, versioned Safari identity for desktop WKWebView — fixes Gmail's unsupported-browser banner without faking an engine.",
             "Shared WebContent process pool, automatic reload after a WebContent crash, and safer sign-in popup handling.",
@@ -84,6 +91,5 @@ struct SystemChangelogView: View {
                 ToolbarItem(placement: .confirmationAction) { Button("Done") { dismiss() } }
             }
         }
-        .preferredColorScheme(.dark)
     }
 }

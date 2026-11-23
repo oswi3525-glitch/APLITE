@@ -45,6 +45,7 @@ struct SettingsSheet: View {
     @AppStorage(InputSettings.scrollKey) private var scrollSpeed = InputSettings.defaultScroll
     @AppStorage(InputSettings.naturalScrollingKey) private var naturalScrolling = true
     @AppStorage(InputSettings.alwaysShowMouseModeKey) private var alwaysShowMouseMode = false
+    @AppStorage("APLite.personalization.settingsAppearance") private var settingsAppearance = 0
     @State private var showMouseCheck = false
     @ObservedObject private var updates = UpdateChecker.shared
     @State private var showCheck = false
@@ -135,7 +136,15 @@ struct SettingsSheet: View {
                 ToolbarItem(placement: .confirmationAction) { Button("Done") { dismiss() } }
             }
         }
-        .preferredColorScheme(.dark)
+        .preferredColorScheme(settingsScheme)
+    }
+
+    private var settingsScheme: ColorScheme? {
+        switch APLiteSettings.SettingsAppearance(rawValue: settingsAppearance) ?? .system {
+        case .light: return .light
+        case .dark: return .dark
+        case .system: return nil
+        }
     }
 
     private func labeled<Content: View>(_ title: LocalizedStringKey, systemImage: String,

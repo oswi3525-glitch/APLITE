@@ -3,6 +3,18 @@
 All notable changes to APLite are documented here. APLite is based on iDesk v0.6.3
 (upstream commit `2179dbd`); the original upstream history is not rewritten.
 
+## 1.2.8 (unsigned development release)
+
+Patch release on the 1.2.7 architecture. Bundle ID, persistence keys, Guest Engine, attribution and unsigned build path are unchanged.
+
+- **Browser/WebKit:** one browser-policy helper now configures ordinary tabs and sign-in popups (UA, shared process pool, media flags, injected scripts and bridges); content-blocker rules are applied to tabs created during async compilation; OAuth popups are never discarded under memory pressure; stale tab identifiers (zoom/gamepad) are cleared; paused downloads no longer resume in an unrelated tab. Real Safari version UA from 1.2.7 is kept — no engine spoofing. Service Workers, WebAuthn/passkeys in embedded WKWebView and Chrome engine remain platform-BLOCKED and are not claimed.
+- **Audio:** popup WKWebViews inherit media flags and the audio activity bridge; a live guest window keeps the session active even when minimized/off-desk; guest category changes are repaired; voice typing stops cleanly on interruption; a JS `pending` Set no longer retains media elements; "Mute" tile honestly relabelled "Volume zero".
+- **Technical Diagnostics:** new read-only module reachable only from Settings → System. Aggregates browser/audio/window/memory signals, samples main-thread responsiveness only while open, shows likely causes, runs APLite-owned repairs after confirmation, and re-checks. iOS does not expose per-app CPU or other processes' logs — proxies and disclaimers are explicit.
+- **Settings redesign:** section icons via the existing `SettingsGroup.symbol`, inset-grouped lists, unified footnote styling, opt-in Light/Dark appearance for the iPhone-native settings stack, and confirmation alerts for destructive actions. All existing keys and values preserved.
+- **Windows:** unified chrome colors and focus ring, fullscreen/maximize animations now animate geometry, PiP exit glyph, pin badge moved clear of tabs, visible WebApp zoom controls (− / current % / +) with reliable 100% persistence.
+- **Trash:** bundled guest apps always marked for reinstall (never falsely "deleted"), marking is idempotent, Trash/system pages cannot be hidden, last removed WebApp can be restored from the desktop menu.
+- **Performance/test:** account-cookie signature dedupe, cache-entry cleanup on window deinit, targeted audio/zoom cleanups; new pure tests for diagnostics policy. CI release workflow keeps Xcode selection and the full test suite.
+
 ## 1.2.7 (unsigned development release)
 
 Browser / UI / app-management maintenance release on the 1.2.6 architecture. Guest Engine, bundle ID and all persistence keys are unchanged.

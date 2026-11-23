@@ -15,4 +15,7 @@ enum APLiteColors {
     static let redOnGlass = Color(uiColor: UIColor(red: 0.62, green: 0, blue: 0, alpha: 1))
     static let orange = Color(uiColor: UIColor(red: 1, green: 0.58, blue: 0, alpha: 1))
     static let green = Color(uiColor: UIColor(red: 0.18, green: 0.82, blue: 0.36, alpha: 1))
+    /// Fixed signal yellow/green so the three window lights use one colour system (not dynamic ones).
+    static let yellow = Color(uiColor: UIColor(red: 1, green: 0.84, blue: 0.10, alpha: 1))
+    static let signalGreen = Color(uiColor: UIColor(red: 0.19, green: 0.82, blue: 0.35, alpha: 1))
 }

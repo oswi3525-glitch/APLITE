@@ -240,12 +240,21 @@ enum PageZoom {
 
     static func set(_ zoom: Double, forApp key: String) {
         var all = appZooms
-        if abs(zoom - PageZoomMath.default) < PageZoomMath.epsilon { all[key] = nil }
-        else { all[key] = PageZoomMath.nearest(zoom) }
+        // Store 100% explicitly too: a WebApp that was reset must not silently jump back to a
+        // global text size of 150% on the next navigation. `reset` is the "follow global" escape.
+        all[key] = PageZoomMath.nearest(zoom)
         appZooms = all
     }
 
-    static func reset(appKey key: String) { set(PageZoomMath.default, forApp: key) }
+    /// Removes the per-app override so the app follows the global text size again.
+    static func reset(appKey key: String) {
+        var all = appZooms
+        all[key] = nil
+        appZooms = all
+    }
+
+    /// Drops stale zoom settings when a WebApp is uninstalled.
+    static func forget(appKey key: String) { reset(appKey: key) }
 
     // MARK: Ordinary tabs / global default
 

@@ -158,8 +158,8 @@ struct RecordButton: View {
 final class MediaControl: NSObject, ObservableObject {
     static let shared = MediaControl()
     @Published private(set) var hud: (symbol: String, level: Float?)?
-    /// Current system mute state (the Control Center tile and the HUD both read this).
-    var isMuted: Bool { AVAudioSession.sharedInstance().outputVolume <= 0.001 }
+    /// iOS does not expose the hardware silent switch. This is only output volume == 0.
+    var isVolumeZero: Bool { AVAudioSession.sharedInstance().outputVolume <= 0.001 }
     private var hudWork: DispatchWorkItem?
     private var volumeObservation: NSKeyValueObservation?
     /// `removeTarget` belongs to each MPRemoteCommand, not the shared center, so keep the pair.

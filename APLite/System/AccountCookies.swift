@@ -34,11 +34,14 @@ final class AccountCookies: NSObject, WKHTTPCookieStoreObserver {
     func flush(completion: ((Int) -> Void)? = nil) {
         debounce?.cancel()
         debounce = nil
-        save(domains: nil, completion: completion)
+        save(domains: nil, force: false, completion: completion)
     }
 
     /// Saves cookies for an explicit list of domains, or all login cookies when `domains` is nil.
-    func save(domains: [String]? = nil, completion: ((Int) -> Void)? = nil) {
+    /// `force` is false only for the automatic observer path: a sign-in burst can notify the store
+    /// several times with identical cookies, and rewriting the vault each time is pure I/O churn.
+    /// Manual "Save all accounts" stays forced so a refreshed token is still reported as saved.
+    func save(domains: [String]? = nil, force: Bool = true, completion: ((Int) -> Void)? = nil) {
         WKWebsiteDataStore.default().httpCookieStore.getAllCookies { [weak self] cookies in
             let chosen: [HTTPCookie]
             if let domains = domains {
@@ -46,8 +49,10 @@ final class AccountCookies: NSObject, WKHTTPCookieStoreObserver {
             } else {
                 chosen = AccountCookies.loginCookies(cookies)
             }
-            let count = CookieVault.save(chosen)
-            if let self = self, !chosen.isEmpty { self.lastSignature = AccountCookies.signature(of: chosen) }
+            let signature = AccountCookies.signature(of: chosen)
+            let changed = force || (signature != (self?.lastSignature ?? ""))
+            let count = changed ? CookieVault.save(chosen) : chosen.count
+            if let self = self, !chosen.isEmpty { self.lastSignature = signature }
             DispatchQueue.main.async { completion?(count) }
         }
     }

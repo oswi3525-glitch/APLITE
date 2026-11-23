@@ -40,6 +40,14 @@ enum Layout {
         return CGRect(x: min(x, f.maxX - 32), y: f.minY + 5, width: 24, height: 24)
     }
 
+    // WebApp zoom controls live at the trailing end of the title bar. All clicks are synthetic,
+    // so these rects are the hit targets; DesktopView only paints them.
+    static let zoomReserve: CGFloat = 104
+    static func zoomOutRect(in f: CGRect) -> CGRect { CGRect(x: f.maxX - zoomReserve, y: f.minY + 5, width: 24, height: 24) }
+    static func zoomLevelRect(in f: CGRect) -> CGRect { CGRect(x: f.maxX - 78, y: f.minY + 5, width: 40, height: 24) }
+    static func zoomInRect(in f: CGRect) -> CGRect { CGRect(x: f.maxX - 36, y: f.minY + 5, width: 24, height: 24) }
+    static func hasZoomControls(_ w: DeskWindow) -> Bool { w.isWebApp && !w.isFullscreen }
+
     // Address bar of a web window, below the title bar.
     static func addressRow(in f: CGRect) -> CGRect { CGRect(x: f.minX, y: f.minY + titleBar, width: f.width, height: addressBar) }
     static func backButton(in f: CGRect) -> CGRect { CGRect(x: f.minX + 8, y: f.minY + titleBar + 5, width: 28, height: 28) }
@@ -802,6 +810,8 @@ final class DesktopModel: ObservableObject {
     @Published private(set) var iconDropSlot: Int?
     /// True while a dragged app icon is over the desktop Trash (drives the drop highlight).
     @Published private(set) var trashDropHighlight = false
+    /// Last WebApp removed from the desktop, kept in memory only so it can be restored this session.
+    var lastRemovedWebApp: (url: String, title: String)?
 
     /// What is on the desktop: the app menu's items minus the apps taken off it, plus the files put on it.
     var desktopItems: [Shortcut] {
@@ -895,7 +905,7 @@ final class DesktopModel: ObservableObject {
         let outcome = TrashPolicy.outcome(systemPage: isSystem, trash: item.url == Self.trashURL,
                                           file: item.file != nil, webApp: item.webApp,
                                           guestApp: item.app != nil,
-                                          guestRemovable: item.app.map { !$0.isBundled || $0.hasPendingUpdate } ?? false)
+                                          guestRemovable: item.app.map { !$0.isBundled } ?? false)
         let key = Self.key(of: item)
         switch outcome {
         case .unsupportedSystemItem:
@@ -910,8 +920,14 @@ final class DesktopModel: ObservableObject {
         case .uninstallWebApp:
             for w in windows where w.isWebApp && Browsing.same(w.initialURL.absoluteString, item.url) { close(w) }
             WebApps.shared.remove(item.url)
+            PageZoom.forget(appKey: item.url)
+            closed.removeAll { closedEntry in
+                if case let .window(urls, _) = closedEntry { return urls.contains(item.url) }
+                return false
+            }
+            lastRemovedWebApp = (item.url, item.name)
             cleanupDeletedIcon(key: key)
-            showToast(String(localized: "Web app removed."))
+            showToast(String(localized: "Web app removed. Right-click the desktop to restore it."))
         case .uninstallGuestApp:
             guard let app = item.app else { return false }
             for w in windows where w.guestApp == app { close(w) }
@@ -926,7 +942,7 @@ final class DesktopModel: ObservableObject {
             showToast(String(localized: "App removed from APLite."))
         case .markGuestForReinstall:
             guard let app = item.app else { return false }
-            GuestStore.shared.toggleRemoval(app)
+            GuestStore.shared.markForRemoval(app)
             showToast(String(localized: "Marked for removal. Re-sign and reinstall APLite to finish."))
             return false
         case .removeShortcut:
@@ -937,6 +953,20 @@ final class DesktopModel: ObservableObject {
         invalidateItems()
         scheduleSave()
         return true
+    }
+
+    /// Restores only APLite's own WebApp entry. Its icon may need re-generating (bundled presets
+    /// are restored by BuiltInWebApps; custom sites fall back to a placeholder).
+    private func restoreLastWebApp() {
+        guard let last = lastRemovedWebApp, let url = URL(string: last.url) else { return }
+        if let preset = BuiltInWebApp.allCases.first(where: { Browsing.same($0.url, last.url) }) {
+            WebApps.shared.install(url, title: preset.title, icon: UIImage(named: preset.iconName ?? ""))
+        } else {
+            WebApps.shared.install(url, title: last.title, icon: nil)
+        }
+        lastRemovedWebApp = nil
+        invalidateItems()
+        showToast(String(localized: "Web app restored."))
     }
 
     private func cleanupDeletedIcon(key: String) {
@@ -1096,13 +1126,16 @@ final class DesktopModel: ObservableObject {
                 : [.separator, MenuItem("Add to desktop", "plus.circle") { [weak self] in
                     if let id = item.app?.id { self?.desktopHiddenApps.removeAll { $0 == id } }
                 }]
-            let removable = !app.isBundled || app.hasPendingUpdate
+            let removable = !app.isBundled
             menu.append(MenuItem(removable ? "Uninstall app" : "Remove from APLite (needs reinstall)",
                                  "trash") { [weak self] in _ = self?.trash(item) })
         } else if item.file != nil {
             menu += [.separator, MenuItem("Remove from desktop", "minus.circle") { [weak self] in self?.removeFromDesktop(item) }]
         } else if item.webApp {
             menu += [.separator, MenuItem("Uninstall web app", "trash") { [weak self] in _ = self?.trash(item) }]
+        } else if item.url == Self.trashURL || DesktopPage(URL(string: item.url)) != nil {
+            // APLite system pages (including the Trash itself) cannot be removed from the menu.
+            // Hiding the Trash icon would silently disable drag-to-Trash.
         } else if DesktopPage(URL(string: item.url)) == nil {
             // A web page (built-in or added by the user) is taken off the desktop and the app menu.
             menu += [.separator, MenuItem("Remove from desktop", "minus.circle") { [weak self] in self?.removeFromDesktop(item) }]
@@ -1515,24 +1548,27 @@ final class DesktopModel: ObservableObject {
     /// The window covers the whole external display (taskbar included) when the page requests fullscreen.
     func setFullscreen(_ w: DeskWindow, _ on: Bool) {
         guard on != w.isFullscreen else { return }
-        APLiteAnimation.perform(APLiteAnimation.gentle) { self.objectWillChange.send() }
-        if on {
-            w.fullscreenRestore = (w.frame, w.isMaximized, w.isSnapped)
-            w.isFullscreen = true
-            w.frame = CGRect(origin: .zero, size: screenSize)
-            showLauncher = false
-            contextMenu = nil
-            focus(w)
-        } else {
-            w.isFullscreen = false
-            if let r = w.fullscreenRestore {
-                w.frame = r.frame
-                w.isMaximized = r.maximized
-                w.isSnapped = r.snapped
+        // Animate the geometry itself, not just an empty objectWillChange: fullscreen used to snap
+        // while every other window transition was animated.
+        APLiteAnimation.perform(APLiteAnimation.gentle) {
+            if on {
+                w.fullscreenRestore = (w.frame, w.isMaximized, w.isSnapped)
+                w.isFullscreen = true
+                w.frame = CGRect(origin: .zero, size: screenSize)
+                showLauncher = false
+                contextMenu = nil
+            } else {
+                w.isFullscreen = false
+                if let r = w.fullscreenRestore {
+                    w.frame = r.frame
+                    w.isMaximized = r.maximized
+                    w.isSnapped = r.snapped
+                }
+                w.fullscreenRestore = nil
+                w.fullscreenFrame = nil
             }
-            w.fullscreenRestore = nil
-            w.fullscreenFrame = nil
         }
+        if on { focus(w) }
         updateHover(cursor.position)
     }
 
@@ -1556,16 +1592,18 @@ final class DesktopModel: ObservableObject {
     }
 
     func toggleMaximize(_ w: DeskWindow) {
-        if w.isMaximized {
-            w.frame = w.restoreFrame ?? w.frame
-            w.isMaximized = false
-        } else {
-            if !w.isSnapped { w.restoreFrame = w.frame }
-            w.frame = maximizedFrame
-            w.isMaximized = true
+        APLiteAnimation.perform(APLiteAnimation.gentle) {
+            if w.isMaximized {
+                w.frame = w.restoreFrame ?? w.frame
+                w.isMaximized = false
+            } else {
+                if !w.isSnapped { w.restoreFrame = w.frame }
+                w.frame = maximizedFrame
+                w.isMaximized = true
+            }
+            w.isSnapped = false
+            w.snap = nil
         }
-        w.isSnapped = false
-        w.snap = nil
         scheduleSave()
     }
 
@@ -2058,6 +2096,11 @@ final class DesktopModel: ObservableObject {
             cursor.setStyle(.arrow); return
         }
         guard let w = pointerWindow(at: p) else { cursor.setStyle(.arrow); return }
+        if Layout.hasZoomControls(w), p.y < w.frame.minY + Layout.titleBar,
+           Layout.zoomOutRect(in: w.frame).contains(p) || Layout.zoomLevelRect(in: w.frame).contains(p)
+            || Layout.zoomInRect(in: w.frame).contains(p) {
+            cursor.setStyle(.pointer); return
+        }
         let edges = resizeEdges(w, at: p)
         if !edges.isEmpty { cursor.setStyle(edges.cursorStyle); return }
         guard isOverContent(p, of: w), let web = w.webView else { cursor.setStyle(.arrow); return }
@@ -2164,7 +2207,9 @@ final class DesktopModel: ObservableObject {
             drag = .resize(w.id, edges: edges, start: p, startFrame: w.frame)
             cursor.setStyle(edges.cursorStyle)
         } else if w.frame.contains(p), !w.isFullscreen, p.y < w.frame.minY + Layout.titleBar,
-                  !Layout.titleButtons(in: w.frame).contains(p) {
+                  !Layout.titleButtons(in: w.frame).contains(p),
+                  !(Layout.hasZoomControls(w) && (Layout.zoomOutRect(in: w.frame).contains(p)
+                    || Layout.zoomLevelRect(in: w.frame).contains(p) || Layout.zoomInRect(in: w.frame).contains(p))) {
             if w.isMaximized || w.isSnapped, let r = w.restoreFrame {
                 // Dragging a maximized/snapped window: restore its size, keeping the pointer at the same spot on the title bar.
                 let rx = (p.x - w.frame.minX) / max(1, w.frame.width)
@@ -2345,6 +2390,11 @@ final class DesktopModel: ObservableObject {
                 }
             }
             if !w.isFullscreen, p.y < f.minY + Layout.titleBar {
+                if Layout.hasZoomControls(w) {
+                    if Layout.zoomOutRect(in: f).contains(p) { zoom(-1); return }
+                    if Layout.zoomLevelRect(in: f).contains(p) { zoom(0); return }
+                    if Layout.zoomInRect(in: f).contains(p) { zoom(1); return }
+                }
                 if w.showsTabs, clickTabs(w, at: p) { return }
                 if isDouble { toggleMaximize(w) }   // double click on the title bar = maximize / restore
                 return
@@ -2571,6 +2621,8 @@ final class DesktopModel: ObservableObject {
             MenuItem("New window", "plus.rectangle.on.rectangle") { [weak self] in self?.newBrowserWindow() },
             MenuItem("New sticky note", "note.text.badge.plus") { [weak self] in self?.newSticky(at: self?.cursor.position) },
             MenuItem("Reopen closed window or tab", "arrow.uturn.backward", enabled: canReopenClosed) { [weak self] in self?.reopenClosed() },
+            MenuItem("Restore last removed web app", "arrow.uturn.backward.circle",
+                     enabled: lastRemovedWebApp != nil) { [weak self] in self?.restoreLastWebApp() },
             .separator,
             MenuItem("Tile windows", "rectangle.split.2x2", enabled: anyVisible) { [weak self] in self?.tileWindows() },
             MenuItem("Cascade windows", "square.stack", enabled: anyVisible) { [weak self] in self?.cascadeWindows() },

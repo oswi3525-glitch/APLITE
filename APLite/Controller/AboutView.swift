@@ -62,6 +62,5 @@ struct AboutView: View {
                 ToolbarItem(placement: .confirmationAction) { Button("Done") { dismiss() } }
             }
         }
-        .preferredColorScheme(.dark)
     }
 }

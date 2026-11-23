@@ -57,9 +57,17 @@ enum APLiteSettings {
     }
     static func set(_ group: String, _ name: String, _ value: String) { store.set(value, forKey: key(group, name)) }
 
+    /// Appearance of the iPhone-native settings stack only. The desktop stays dark by design.
+    enum SettingsAppearance: Int, CaseIterable { case system, light, dark }
+
     enum Personalization {
         /// The old circular press ripple is off by default: users asked for cleaner controls.
         static var pressRipples: Bool { get { APLiteSettings.bool("personalization", "pressRipples") } set { APLiteSettings.set("personalization", "pressRipples", newValue) } }
+
+        static var settingsAppearance: Int {
+            get { APLiteSettings.number("personalization", "settingsAppearance", default: 0) }
+            set { APLiteSettings.set("personalization", "settingsAppearance", min(2, max(0, newValue))) }
+        }
     }
 
     enum Security {

@@ -7,8 +7,9 @@ import Foundation
 /// the `Version/<n> … Safari/<build>` tokens that real Safari sends. Google's browser-support check
 /// treats that anonymous WebKit client as unknown/outdated and shows the Gmail banner.
 ///
-/// We only add the **real** Safari version derived from the device's iOS version. WebKit still
-/// generates the engine token itself, so this never claims a different engine or a newer version.
+/// Only the `Version/<major>.<minor>` part comes from the device's real iOS version;
+/// `Safari/605.1.15` is WebKit's desktop-Safari build constant. WebKit still generates the
+/// `AppleWebKit` engine token itself, so this never claims a different engine or a newer version.
 /// Kept Foundation-only so it is unit testable without UIKit.
 enum BrowserUserAgent {
     /// e.g. `Version/17.4 Safari/605.1.15` for iOS 17.4.1.
