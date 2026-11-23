@@ -628,7 +628,7 @@ private struct TitleBar: View {
                 .foregroundStyle(focused ? .primary : .secondary)
             }
             HStack {
-                TitleButtons(frame: frame, focused: focused, cursor: cursor, floatingVideo: floatingVideo)
+                TitleButtons(frame: frame, focused: focused, floatingVideo: floatingVideo, cursor: cursor)
                 Spacer()
             }
             .padding(.leading, 12)

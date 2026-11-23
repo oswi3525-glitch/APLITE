@@ -11,8 +11,7 @@ import WebKit
 final class VoiceTyping: ObservableObject {
     static let shared = VoiceTyping()
     /// A call/Siri stops the audio session. Stop cleanly instead of leaving "Listening…" with a dead engine.
-    private override init() {
-        super.init()
+    private init() {
         interruptionObserver = NotificationCenter.default.addObserver(
             forName: AVAudioSession.interruptionNotification, object: nil, queue: .main) { [weak self] note in
                 guard let raw = note.userInfo?[AVAudioSessionInterruptionTypeKey] as? UInt,

@@ -922,7 +922,7 @@ final class DesktopModel: ObservableObject {
             WebApps.shared.remove(item.url)
             PageZoom.forget(appKey: item.url)
             closed.removeAll { closedEntry in
-                if case let .window(urls, _) = closedEntry { return urls.contains(item.url) }
+                if case let .window(urls, _) = closedEntry { return urls.contains(where: { $0.absoluteString == item.url }) }
                 return false
             }
             lastRemovedWebApp = (item.url, item.name)
@@ -1279,8 +1279,8 @@ final class DesktopModel: ObservableObject {
         let area = desktopArea
         guard area.width > 100, area.height > 100 else { return }
         for w in windows {
-            if w.isFullscreen { w.frame = CGRect(origin: .zero, size: screenSize); continue }
-            if w.isMaximized { w.frame = maximizedFrame; continue }
+            if w.isFullscreen { w.frame = CGRect(origin: .zero, size: self.screenSize); continue }
+            if w.isMaximized { w.frame = self.maximizedFrame; continue }
             if w.isSnapped, let s = w.snap { w.frame = snapRect(s); continue }
             var f = w.frame
             f.size.width = min(f.width, area.width)
@@ -1554,9 +1554,9 @@ final class DesktopModel: ObservableObject {
             if on {
                 w.fullscreenRestore = (w.frame, w.isMaximized, w.isSnapped)
                 w.isFullscreen = true
-                w.frame = CGRect(origin: .zero, size: screenSize)
-                showLauncher = false
-                contextMenu = nil
+                w.frame = CGRect(origin: .zero, size: self.screenSize)
+                self.showLauncher = false
+                self.contextMenu = nil
             } else {
                 w.isFullscreen = false
                 if let r = w.fullscreenRestore {
@@ -1598,7 +1598,7 @@ final class DesktopModel: ObservableObject {
                 w.isMaximized = false
             } else {
                 if !w.isSnapped { w.restoreFrame = w.frame }
-                w.frame = maximizedFrame
+                w.frame = self.maximizedFrame
                 w.isMaximized = true
             }
             w.isSnapped = false
