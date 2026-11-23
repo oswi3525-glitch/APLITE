@@ -32,7 +32,7 @@ final class PhoneSceneDelegate: UIResponder, UIWindowSceneDelegate {
         GuestRuntime.forwardSceneEvent(#selector(UISceneDelegate.sceneDidEnterBackground(_:)), scene: scene)
         MemoryManager.shared.releaseCaches(reason: "background")
         DesktopModel.shared.flushPendingSaves()   // pending sticky-note edits
-        GoogleSession.save()   // keep the signed-in Google account in APLite's cookie vault
+        AccountCookies.shared.flush()   // save every signed-in account, not just Google's
     }
 
     func sceneWillEnterForeground(_ scene: UIScene) {
@@ -125,6 +125,9 @@ final class ExternalSceneDelegate: UIResponder, UIWindowSceneDelegate {
     func sceneDidDisconnect(_ scene: UIScene) {
         if let modeObserver { NotificationCenter.default.removeObserver(modeObserver) }
         modeObserver = nil
+        // Logins made on this screen must not wait for the phone scene to background: copy them to
+        // the local vault now, before the display (and possibly its windows) go away.
+        AccountCookies.shared.flush()
         DesktopModel.shared.externalDisconnected()
         ExternalDisplay.disconnected()
         window = nil

@@ -11,6 +11,13 @@ enum SystemChangelog {
     }
 
     static let entries: [Entry] = [
+        Entry(version: "1.2.6", date: "2026-11-23", items: [
+            "Logins in any web window — including on the external display — are saved to the local account vault automatically.",
+            "On-screen keyboard for the desktop: enable it in Settings, tap a field to show it, use × or Esc to hide it.",
+            "Full keyboard settings page with every key, Shift / Caps Lock / 123 layers, sizing and click feedback.",
+            "Tabs: find bar no longer leaks between tabs, closed tabs reopen in place, and web apps keep their branded icon and name.",
+            "Clean Facebook layout (togglable in Browser settings) and a more readable tab strip with site icons.",
+        ]),
         Entry(version: "1.2.5", date: "2026-11-22", items: [
             "Analogue clock on the desktop widget, lock screen, screen saver and quick panel.",
             "New 'Biển' ocean wallpaper next to 'Đồng cỏ'; both shown as real thumbnails in Settings.",

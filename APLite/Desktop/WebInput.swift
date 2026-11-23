@@ -257,6 +257,17 @@ enum WebInput {
         """, [:])
     }
 
+    /// Whether a text field currently has focus. Used to show the on-screen keyboard only when the
+    /// user taps into an input, including on pages that never fire a usable focus event.
+    static func isEditing(_ webView: WKWebView, completion: @escaping (Bool) -> Void) {
+        webView.callAsyncJavaScript("""
+        const e = document.activeElement;
+        return !!(e && e.matches && e.matches('input,textarea,select,[contenteditable]:not([contenteditable="false"])'));
+        """, arguments: [:], in: nil, in: .page) { result in
+            completion(((try? result.get()) as? Bool) ?? false)
+        }
+    }
+
     /// Gets the selected text (for Cmd/Ctrl+C).
     static func selectedText(_ webView: WKWebView, completion: @escaping (String?) -> Void) {
         webView.callAsyncJavaScript("""

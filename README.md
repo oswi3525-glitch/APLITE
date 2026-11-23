@@ -6,7 +6,7 @@ windows, a floating Liquid-Glass dock, a browser, files, widgets and iOS apps in
 becomes the trackpad and keyboard.
 
 > Experimental: APLite uses private UIKit APIs, is meant to be sideloaded, and a future iOS may
-> break parts of it. Latest unsigned build: **1.2.5** (CI build + unit tests passed; on-device
+> break parts of it. Latest unsigned build: **1.2.6** (CI build + unit tests passed; on-device
 > verification is still pending).
 
 ## Attribution — original project
@@ -38,10 +38,17 @@ The original MIT license and copyright notice are preserved in [LICENSE](LICENSE
   analogue clock (with a digital readout alongside).
 - **Web apps:** Zalo, Facebook, Telegram, Chrome, YouTube and Gmail with branded icons are installed
   on first launch; native versions still require a decrypted IPA.
-- **Cookies & saved logins:** paste a `Cookie:` header for a domain or import a Netscape
-  `cookies.txt` from Files into APLite's shared WebKit cookie store; APLite also keeps a local
-  cookie vault, restores it at launch, and can export it as JSON. iOS does not expose Safari's jar
-  to other apps, so the values are copied by you and stay on the device.
+- **Cookies & saved logins:** sign-ins in any web window (including windows on the external display)
+  are watched through WebKit's cookie store and copied into APLite's local vault automatically, with
+  flushes on background, display disconnect and shutdown. You can also paste a `Cookie:` header for a
+  domain or import a Netscape `cookies.txt` from Files; the vault is restored at launch and can be
+  exported as JSON. iOS does not expose Safari's jar to other apps, so imported values are copied by
+  you and stay on the device.
+- **On-screen keyboard:** a full keyboard for the desktop can be enabled in Settings. It appears only
+  when a text field is tapped, supports Shift / Caps Lock / symbol layers, arrows and editing keys,
+  and has a hide key. A dedicated iPhone settings page lists every key.
+- **Clean Facebook web app:** an optional facebook.com-only stylesheet tidies the feed, hides side
+  rails on narrow windows and marks sponsored units, without touching other sites.
 - **Screen saver:** choose the delay (1–60 min or off), style (drifting clock, APLite gradient or
   blurred wallpaper), drift on/off and fade duration in Settings → Security.
 - **Task Manager:** a dock-button panel listing open windows with memory pressure and per-window

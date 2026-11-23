@@ -7,6 +7,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         CrashReporter.install()      // guest apps share this process: record it if one takes iDesk down
         _ = OwnSignature.signature   // read APLite's own signature now, before Bundle.main may be swapped
         CookieVault.restore()        // saved login cookies back into WebKit before any page loads
+        AccountCookies.shared.start() // then watch the store: logins on the external display are saved too
         MouseInput.shared.start()
         ControllerInput.shared.start()
         // One owner for the process-wide audio session. Guest apps, WebKit, Quick Look and speech all

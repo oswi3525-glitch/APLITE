@@ -36,8 +36,8 @@ enum Layout {
         return CGRect(x: t.maxX - 22, y: t.midY - 8, width: 16, height: 16)
     }
     static func newTabRect(count: Int, in f: CGRect) -> CGRect {
-        let last = tabRect(count - 1, count: count, in: f)
-        return CGRect(x: min(last.maxX + 6, f.maxX - 32), y: f.minY + 5, width: 24, height: 24)
+        let x = count > 0 ? tabRect(count - 1, count: count, in: f).maxX + 6 : f.minX + tabsX
+        return CGRect(x: min(x, f.maxX - 32), y: f.minY + 5, width: 24, height: 24)
     }
 
     // Address bar of a web window, below the title bar.
@@ -249,6 +249,10 @@ final class DesktopModel: ObservableObject {
     static func typingTargetChanged() {
         NotificationCenter.default.post(name: KeyCaptureView.resetNotification, object: nil)
         TextReplacements.typed = ""
+        shared.virtualKeyboardShift = false   // Shift is one-shot when the target changes
+        // Make the desktop re-evaluate the keyboard's visibility (window-owned fields such as the
+        // address and find drafts do not repaint the parent view by themselves).
+        shared.objectWillChange.send()
     }
     @Published var screenSize: CGSize = CGSize(width: 1280, height: 720) {
         didSet { if screenSize != oldValue { fitWindowsToScreen() } }
@@ -341,6 +345,16 @@ final class DesktopModel: ObservableObject {
     /// The emoji panel (⌃⌘Space, InputExtras.swift) and the emoji selected in it.
     @Published var showEmoji = false
     @Published var emojiIndex = 0
+
+    // On-screen keyboard (VirtualKeyboard.swift). The on/off setting lives in APLiteSettings.Input;
+    // these are its runtime state. A hidden keyboard comes back as soon as a field is tapped again.
+    @Published var virtualKeyboardDismissed = false
+    @Published var virtualKeyboardShift = false
+    @Published var virtualKeyboardCaps = false
+    @Published var virtualKeyboardSymbols = false
+    /// Last tap into a guest app: its native fields cannot be observed, so this stands in for focus.
+    private var lastGuestTap: Date = .distantPast
+
     /// The Downloads panel (Downloads.swift), opened from its button on the taskbar.
     @Published var showDownloads = false
     /// Task Manager: running windows, memory pressure and close controls.
@@ -652,7 +666,10 @@ final class DesktopModel: ObservableObject {
             DispatchQueue.main.async { self?.invalidateItems() }
         }
         NotificationCenter.default.addObserver(forName: UserDefaults.didChangeNotification,
-                                               object: nil, queue: .main) { [weak self] _ in self?.invalidateItems() }
+                                               object: nil, queue: .main) { [weak self] _ in
+            self?.invalidateItems()
+            self?.objectWillChange.send()   // settings such as the on-screen keyboard changed
+        }
         updatesSubscription = UpdateChecker.shared.objectWillChange.sink { [weak self] in
             DispatchQueue.main.async { self?.objectWillChange.send() }
         }
@@ -1360,7 +1377,7 @@ final class DesktopModel: ObservableObject {
     }
 
     /// Tabs and browser windows closed in this session, newest last: ⌘ + Shift + T brings them back.
-    private enum Closed { case tab(URL, window: UUID), window([URL], frame: CGRect) }
+    private enum Closed { case tab(URL, window: UUID, index: Int), window([URL], frame: CGRect) }
     private var closed: [Closed] = []
     var canReopenClosed: Bool { !closed.isEmpty }
 
@@ -1374,9 +1391,9 @@ final class DesktopModel: ObservableObject {
     func reopenClosed() {
         guard isExternalConnected, let item = closed.popLast() else { return }
         switch item {
-        case let .tab(url, id):
+        case let .tab(url, id, index):
             if let w = window(id) ?? windows.last(where: { $0.isBrowser && $0.isShown }) {
-                w.newTab(url)
+                w.insertTab(url, at: min(index, w.tabs.count))
                 focus(w)
                 scheduleSave()
             } else {
@@ -1953,7 +1970,8 @@ final class DesktopModel: ObservableObject {
         if quickLook != nil || contextMenu != nil || recents != nil || (showLauncher && launcherRect.contains(p)) || p.y >= taskbarHitTop
             || showSpotlight || showClipboard || showEmoji || (showDownloads && downloadsRect.contains(p)) || fillSuggestion.map({ fillArea($0).contains(p) }) == true
             || stickyIndex(at: p) != nil
-            || (showQuickPanel && quickPanelRect.contains(p)) || (banner != nil && bannerRect.contains(p)) {
+            || (showQuickPanel && quickPanelRect.contains(p)) || (banner != nil && bannerRect.contains(p))
+             || (virtualKeyboardVisible && virtualKeyboardRect.contains(p)) {
             cursor.setStyle(.arrow); return
         }
         guard let w = pointerWindow(at: p) else { cursor.setStyle(.arrow); return }
@@ -2021,6 +2039,8 @@ final class DesktopModel: ObservableObject {
         cursor.isPressed = true
         let p = cursor.position
         if capture != nil { capture = CaptureState(start: p, rect: CGRect(origin: p, size: .zero)); return }
+        // Pressing a virtual key must not start a drag of the window underneath it.
+        if virtualKeyboardVisible, virtualKeyboardRect.contains(p) { return }
         if showSpotlight || showClipboard { return }
         if let f = fillSuggestion, !fillArea(f).contains(p) { fillSuggestion = nil }
         // A widget (not on the timer's buttons): dragging moves it.
@@ -2141,6 +2161,12 @@ final class DesktopModel: ObservableObject {
         let p = cursor.position
         flashPress()
         addRipple(at: p)
+        // Keys are drawn with SwiftUI but hit-tested here: the external display gets no touches.
+        // Handle them before typingTargetChanged(), which clears a pending one-shot Shift.
+        if virtualKeyboardVisible, virtualKeyboardRect.contains(p) {
+            clickVirtualKeyboard(at: p)
+            return
+        }
         Self.typingTargetChanged()        // a click may put the caret in another field
         if capture != nil {
             finishCapture(topWindow(at: p)?.frame ?? CGRect(origin: .zero, size: screenSize))
@@ -2250,6 +2276,7 @@ final class DesktopModel: ObservableObject {
                 tapGuest(guest, at: localPoint(p, in: w), hold: 0.06)
             } else if let web = w.webView {
                 WebInput.click(web, at: localPoint(p, in: w), count: isDouble ? 2 : 1)
+                queryWebEditingAfterClick(web)
             }
             return
         }
@@ -2286,6 +2313,7 @@ final class DesktopModel: ObservableObject {
     /// Taps the guest app: finger down, then up after `hold` seconds.
     private func tapGuest(_ guest: UIWindow, at point: CGPoint, hold: TimeInterval) {
         guard !isGuestDrag else { return }
+        lastGuestTap = Date()
         Self.guestInput { Self.touchDown(at: point, in: guest) }
         DispatchQueue.main.asyncAfter(deadline: .now() + hold) { [weak self] in
             guard let self, !self.isGuestDrag else { return }
@@ -2542,7 +2570,12 @@ final class DesktopModel: ObservableObject {
                     MenuItem("Close other tabs", "xmark.square.fill") { [weak self] in
                         guard let self else { return }
                         let keep = w.tabs[i]
-                        while w.tabs.count > 1 { if !w.closeTab(w.tabs.firstIndex(where: { $0 !== keep }) ?? 0) { break } }
+                        while w.tabs.count > 1 {
+                            let index = w.tabs.firstIndex(where: { $0 !== keep }) ?? 0
+                            let url = w.url(ofTab: index)
+                            if !w.closeTab(index) { break }
+                            self.remember(.tab(url, window: w.id, index: index))
+                        }
                         self.scheduleSave()
                     },
                     .separator,
@@ -2630,6 +2663,7 @@ final class DesktopModel: ObservableObject {
         if DesktopPage(web.url) == .editor { web.evaluateJavaScript("window.ideskFind && ideskFind()"); return }
         w.addressDraft = nil
         if w.findQuery == nil { w.findQuery = "" }
+        objectWillChange.send()
     }
 
     func findAgain(backwards: Bool) {
@@ -2643,6 +2677,7 @@ final class DesktopModel: ObservableObject {
 
     func closeFind(_ w: DeskWindow) {
         w.findQuery = nil
+        objectWillChange.send()
     }
 
     /// ⌘+ / ⌘− / ⌘0: the page's zoom, as in a desktop browser.
@@ -2866,7 +2901,7 @@ final class DesktopModel: ObservableObject {
 
     func closeTab(_ i: Int, of w: DeskWindow) {
         let url = w.url(ofTab: i)
-        if w.closeTab(i) { remember(.tab(url, window: w.id)) } else { close(w) }
+        if w.closeTab(i) { remember(.tab(url, window: w.id, index: i)) } else { close(w) }
         scheduleSave()
     }
 
@@ -2921,6 +2956,86 @@ final class DesktopModel: ObservableObject {
     private var editingAddress: DeskWindow? {
         guard let w = focused, w.addressDraft != nil else { return nil }
         return w
+    }
+
+    // MARK: On-screen keyboard
+
+    /// Whether a text field is ready for typing right now: a page input, the address or find bar,
+    /// a Files field, a sticky note, Spotlight, the launcher, or a guest app.
+    var textInputActive: Bool {
+        if isLocked || showScreenSaver { return false }
+        if showSpotlight || showLauncher || showClipboard { return true }
+        if editingSticky != nil { return true }
+        guard let w = focused, w.isShown else { return false }
+        if w.findQuery != nil || w.addressDraft != nil { return true }
+        if w.systemPage == .files && w.filesEditing { return true }
+        if w.webView != nil && w.webEditing { return true }
+        // Guest apps own their UITextFields; all we can observe is a recent tap into the app.
+        if w.isApp, Date().timeIntervalSince(lastGuestTap) < 8 { return true }
+        return false
+    }
+
+    /// The keyboard follows the focus: it is never drawn just because the setting is on.
+    var virtualKeyboardVisible: Bool {
+        guard isExternalConnected, APLiteSettings.Input.virtualKeyboard,
+              !isLocked, !showScreenSaver, !virtualKeyboardDismissed else { return false }
+        return APLiteSettings.Input.keyboardAlwaysVisible || textInputActive
+    }
+
+    var keyboardShiftActive: Bool { virtualKeyboardShift != virtualKeyboardCaps }
+
+    var virtualKeyboardRect: CGRect {
+        KeyboardLayout.panelRect(screen: screenSize, taskbarTop: taskbarTop,
+                                 scale: CGFloat(APLiteSettings.Input.keyboardSize) / 100)
+    }
+
+    /// The key below the pointer, using the same geometry as the view that draws it.
+    func virtualKey(at p: CGPoint) -> KeyboardLayout.Key? {
+        KeyboardLayout.key(at: p, in: virtualKeyboardRect, symbols: virtualKeyboardSymbols)
+    }
+
+    /// Called from DesktopModel.click() before a page click, so a newly focused field can bring a
+    /// keyboard back even if the focus bridge did not fire (site scripts, already focused fields).
+    func queryWebEditingAfterClick(_ web: WKWebView) {
+        WebInput.isEditing(web) { [weak self] editing in
+            guard let self = self else { return }
+            self.focused?.setEditing(web, editing)
+            if editing, self.virtualKeyboardDismissed { self.virtualKeyboardDismissed = false }
+            self.objectWillChange.send()
+        }
+    }
+
+    func clickVirtualKeyboard(at p: CGPoint) {
+        guard let key = virtualKey(at: p) else { return }
+        if APLiteSettings.Input.keyboardFeedback {
+            UISelectionFeedbackGenerator().selectionChanged()   // tiny tick on the iPhone, never on the display
+        }
+        switch key.action {
+        case let .text(s):
+            let text = keyboardShiftActive ? (key.shifted ?? s.uppercased()) : s
+            typeText(text)
+            virtualKeyboardShift = false
+        case let .special(name, code):
+            sendKey(name, code, keyboardShiftActive)
+            virtualKeyboardShift = false
+        case .backspace: backspace()
+        case .enter: pressEnter()
+        case .tab: sendKey("Tab", 9, keyboardShiftActive)
+        case .escape:
+            virtualKeyboardDismissed = true
+            virtualKeyboardShift = false
+        case .shift: virtualKeyboardShift.toggle()
+        case .capsLock: virtualKeyboardCaps.toggle()
+        case .symbols: virtualKeyboardSymbols.toggle()
+        case .hide:
+            // "Put the keyboard away" — the next tap into a field brings it back.
+            virtualKeyboardDismissed = true
+            virtualKeyboardShift = false
+            virtualKeyboardSymbols = false
+        case .selectAll: selectAll()
+        case .copy: copySelection()
+        case .paste: paste()
+        }
     }
 
     // MARK: Keyboard & navigation (act on the focused window)
@@ -3472,6 +3587,7 @@ final class DesktopModel: ObservableObject {
     /// Esc: close the open menu, otherwise send Esc to the page.
     /// Esc: close the open menu; in an app, Back; otherwise send Esc to the page.
     func escape() {
+        if virtualKeyboardVisible { virtualKeyboardDismissed = true; return }
         if quickLook != nil { quickLook = nil; return }
         if presentation != nil { endPresentation(); return }
         if capture != nil { capture = nil; return }

@@ -70,6 +70,7 @@ final class DeskWindow: NSObject, ObservableObject, Identifiable, WKUIDelegate, 
     var onFullscreen: ((Bool) -> Void)?
     private let fullscreenBridge = WebFullscreenBridge()
     private let filesBridge = FilesBridge()
+    private let inputFocusBridge = WebInputFocusBridge()
     /// The file selected in a Files window (for Quick Look), as a path inside Files.
     var selectedFile: String?
     /// Find in page (⌘F): what is being looked for (nil = the find bar is closed), and whether it is on the page.
@@ -140,6 +141,18 @@ final class DeskWindow: NSObject, ObservableObject, Identifiable, WKUIDelegate, 
     private(set) var filesFolder = ""
     /// A text field of the Files page has focus (search, rename): Space types instead of opening Quick Look.
     var filesEditing = false
+
+    /// A text field of the tab in front has focus: the desktop's on-screen keyboard follows this.
+    @Published private(set) var webEditing = false
+    /// Per-tab focus, so switching tabs does not leave the keyboard showing for the wrong page.
+    private var editingTabs = Set<ObjectIdentifier>()
+
+    func setEditing(_ web: WKWebView, _ on: Bool) {
+        let id = ObjectIdentifier(web)
+        if on { editingTabs.insert(id) } else { editingTabs.remove(id) }
+        let active = webView.map { editingTabs.contains(ObjectIdentifier($0)) } ?? false
+        if webEditing != active { webEditing = active }
+    }
 
     /// Shows a folder of Files in this window.
     func showFolder(_ folder: String) {
@@ -254,6 +267,7 @@ final class DeskWindow: NSObject, ObservableObject, Identifiable, WKUIDelegate, 
         if let page = systemPage { title = page.windowTitle(for: url) }
         fullscreenBridge.window = self
         filesBridge.window = self
+        inputFocusBridge.window = self
         newTab(url)
     }
 
@@ -276,13 +290,27 @@ final class DeskWindow: NSObject, ObservableObject, Identifiable, WKUIDelegate, 
         config.userContentController.addUserScript(DesktopSite.script(screen: DesktopModel.shared.screenSize))
         ContentBlocker.apply(to: config.userContentController)
         config.userContentController.addUserScript(DarkPages.script())
+        config.userContentController.addUserScript(FacebookEnhancements.script)
         config.userContentController.addUserScript(WebVolume.script)
         config.userContentController.add(WebAudioBridge.shared, name: WebAudioBridge.messageName)
         config.userContentController.addUserScript(ControllerInput.pageScript)
         config.userContentController.add(gamepadBridge, name: ControllerInput.messageName)
+        config.userContentController.addUserScript(WebInputFocusBridge.script)
+        config.userContentController.add(inputFocusBridge, name: WebInputFocusBridge.messageName)
         let tab = WKWebView(frame: CGRect(origin: .zero, size: frame.size), configuration: config)
         Self.load(url, in: tab)
         add(tab, activate: activate)
+    }
+
+    /// Reopens a tab where it was, instead of always appending it at the end (⌘⇧T).
+    func insertTab(_ url: URL, at index: Int) {
+        newTab(url, activate: false)
+        let last = tabs.count - 1
+        guard tabs.indices.contains(index), last > index else { return }
+        tabs.insert(tabs.remove(at: last), at: index)
+        if activeTab == last { activeTab = index }
+        else if activeTab >= index { activeTab += 1 }
+        selectTab(activeTab)
     }
 
     private func add(_ tab: WKWebView, activate: Bool) {
@@ -322,6 +350,8 @@ final class DeskWindow: NSObject, ObservableObject, Identifiable, WKUIDelegate, 
         if isFullscreen, i != activeTab { exitFullscreen() }
         activeTab = i
         addressDraft = nil
+        findQuery = nil                 // match counts belong to the page we just left
+        webEditing = editingTabs.contains(ObjectIdentifier(tabs[i]))
         let tab = tabs[i]
         if let d = discarded.removeValue(forKey: ObjectIdentifier(tab)) { tab.load(URLRequest(url: d.url)) }
         updateFavicon(tab)
@@ -342,10 +372,20 @@ final class DeskWindow: NSObject, ObservableObject, Identifiable, WKUIDelegate, 
         let tab = tabs[i]
         tab.stopLoading()
         PageZoom.forget(tab)
+        editingTabs.remove(ObjectIdentifier(tab))
+        discarded.removeValue(forKey: ObjectIdentifier(tab))
+        let wasActive = i == activeTab
+        if wasActive { findQuery = nil }  // the find bar belongs to a page, not to the window
         detach(tab)
         tabs.remove(at: i)
         titleObservations[ObjectIdentifier(tab)] = nil
-        selectTab(i < activeTab || activeTab >= tabs.count ? max(0, activeTab - 1) : activeTab)
+        let next = i < activeTab || activeTab >= tabs.count ? max(0, activeTab - 1) : activeTab
+        if wasActive { selectTab(next) }
+        else {
+            activeTab = next            // closing a background tab must not clear an address draft
+            webEditing = editingTabs.contains(ObjectIdentifier(tabs[activeTab]))
+            onChange?()
+        }
         return true
     }
 
@@ -362,7 +402,17 @@ final class DeskWindow: NSObject, ObservableObject, Identifiable, WKUIDelegate, 
 
     /// The site's icon (for the taskbar, Recent apps and the switcher), or an app's icon.
     @Published private(set) var favicon: UIImage?
-    var icon: UIImage? { guestApp?.icon ?? favicon }
+    /// A web app keeps its branded icon in the dock and switcher instead of flipping to a generic
+    /// globe (or the site's favicon) while its page is loading.
+    var icon: UIImage? {
+        if isWebApp {
+            let key = initialURL.absoluteString
+            if let branded = WebApps.shared.icon(for: key) { return branded }
+            if let entry = WebApps.shared.all.first(where: { Browsing.same($0.url, key) }),
+               let branded = WebApps.shared.icon(for: entry.url) { return branded }
+        }
+        return guestApp?.icon ?? favicon
+    }
     private static var favicons: [String: UIImage] = [:]
     /// A site's icon, once a page of it was open (for the bookmarks bar).
     static func cachedFavicon(_ url: String) -> UIImage? { URL(string: url)?.host.flatMap { favicons[$0] } }
@@ -410,6 +460,10 @@ final class DeskWindow: NSObject, ObservableObject, Identifiable, WKUIDelegate, 
 
     private func tabTitleChanged() {
         if let page = systemPage { title = page.windowTitle(for: webView?.url ?? initialURL) }   // an app's name, not the page's <title>
+        else if isWebApp {
+            let key = initialURL.absoluteString
+            title = WebApps.shared.all.first { Browsing.same($0.url, key) }?.title ?? title(ofTab: activeTab)
+        }
         else if webView != nil { title = title(ofTab: activeTab) }
         objectWillChange.send()
     }
@@ -426,6 +480,8 @@ final class DeskWindow: NSObject, ObservableObject, Identifiable, WKUIDelegate, 
         tab.configuration.userContentController.removeScriptMessageHandler(forName: FilesBridge.messageName)
         tab.configuration.userContentController.removeScriptMessageHandler(forName: DesktopPages.messageName)
         tab.configuration.userContentController.removeScriptMessageHandler(forName: ControllerInput.messageName)
+        tab.configuration.userContentController.removeScriptMessageHandler(forName: WebAudioBridge.messageName)
+        tab.configuration.userContentController.removeScriptMessageHandler(forName: WebInputFocusBridge.messageName)
     }
 
     /// Opens an address in the tab shown; "idesk://files" is the Files page.
@@ -473,6 +529,11 @@ final class DeskWindow: NSObject, ObservableObject, Identifiable, WKUIDelegate, 
     /// History: every page that finishes loading.
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         if let url = webView.url { Browsing.shared.record(url, title: webView.title) }
+        // The user script is baked into the tab configuration when it is created; re-apply the
+        // current Clean Facebook choice on every new navigation.
+        if let host = webView.url?.host?.lowercased(), host.hasSuffix("facebook.com") {
+            webView.evaluateJavaScript("window.__apliteFB && window.__apliteFB(\(FacebookEnhancements.enabled))")
+        }
         PageZoom.apply(to: webView)
         if webView === self.webView { updateFavicon(webView) }
         if let url = webView.url, FileStore.isFilesPage(url) { refreshFilesPages() }

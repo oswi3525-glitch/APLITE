@@ -3,6 +3,31 @@
 All notable changes to APLite are documented here. APLite is based on iDesk v0.6.3
 (upstream commit `2179dbd`); the original upstream history is not rewritten.
 
+## 1.2.6 (unsigned development release)
+
+- **Saved accounts from every window.** All web windows share WebKit's cookie store; a new observer
+  (`AccountCookies`) watches it and copies sign-in cookies into APLite's local vault no matter which
+  scene they came from. The old hook only saved Google cookies when the *phone* scene backgrounded,
+  so a login made on the external monitor was never vaulted. Flushes also happen on display
+  disconnect, shutdown and background. The vault now preserves `HttpOnly` / `SameSite`, serialises
+  writes and reports refreshes correctly (a re-saved token no longer says "no cookies found").
+- **On-screen desktop keyboard.** Enable it in native System settings → Input or the desktop
+  Settings → Typing. It appears only when a text field receives focus (web pages use a new focus
+  bridge; native fields, the address / find bars, sticky notes, Spotlight and guest apps are covered),
+  has letters, numbers, symbols, Shift, Caps Lock, arrows, Tab, Esc, Home/End, PgUp/PgDn, Delete,
+  select all / copy / paste and a **× hide key**, and returns when another field is tapped. There is
+  a full keyboard settings page with every key listed, size control and click feedback.
+- **Window tabs.** The find bar no longer leaks to the next tab; closed tabs reopen at their original
+  position (including "Close other tabs"); background-tab updates no longer discard an address draft;
+  discarded pages are purged on close; web apps keep their branded icon and app name in the dock and
+  switcher instead of a globe and a page title; tab titles get site icons and a compact letter when a
+  tab is narrow; history titles are patched on the right entry and A → B → A no longer duplicates.
+- **Clean Facebook layout.** A toggleable, facebook.com-only user script rounds feed cards, makes the
+  header sticky and glassy, hides side rails on narrow windows and marks obvious sponsored units.
+  Off by choice in Browser settings; no APLite page or other site is affected.
+- **UI/UX consistency.** New panels reuse the standard floating-glass treatment and animations; the
+  keyboard's keys match the existing desktop keycap style; all new strings are localised in Vietnamese.
+
 ## 1.2.5 (unsigned development release)
 
 - **Source renamed:** the `iDesk/` source folder and bridging header are now `APLite/`. Bundle ID,

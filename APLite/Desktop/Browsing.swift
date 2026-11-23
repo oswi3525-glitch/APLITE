@@ -106,9 +106,12 @@ final class Browsing: ObservableObject {
     func record(_ url: URL, title: String?) {
         guard Self.isWebPage(url) else { return }
         let key = url.absoluteString, name = Self.clean(title ?? "", url)
-        if let first = history.first, first.url == key, Date().timeIntervalSince(first.date) < 30 * 60 {
-            history[0].date = Date()
-            if !(title ?? "").isEmpty { history[0].title = name }
+        if let i = history.firstIndex(where: { $0.url == key && Date().timeIntervalSince($0.date) < 30 * 60 }) {
+            // A → B → A within half an hour is one visit, not a new history row.
+            var entry = history.remove(at: i)
+            entry.date = Date()
+            if !(title ?? "").isEmpty { entry.title = name }
+            history.insert(entry, at: 0)
         } else {
             history.insert(WebEntry(url: key, title: name, date: Date()), at: 0)
             if history.count > Self.historyLimit { history.removeLast(history.count - Self.historyLimit) }
@@ -116,11 +119,13 @@ final class Browsing: ObservableObject {
         scheduleHistorySave()
     }
 
-    /// The page set its title after loading.
+    /// The page set its title after loading. Title KVO callbacks arrive late, so patch the entry
+    /// for this URL rather than whichever page happens to be first in the list.
     func updateTitle(_ url: URL?, title: String?) {
-        guard let url, let title, !title.isEmpty, let first = history.first, first.url == url.absoluteString,
-              first.title != title else { return }
-        history[0].title = title
+        guard let url, let title, !title.isEmpty else { return }
+        let key = url.absoluteString, name = Self.clean(title, url)
+        guard let i = history.firstIndex(where: { $0.url == key }), history[i].title != name else { return }
+        history[i].title = name
         scheduleHistorySave()
     }
 

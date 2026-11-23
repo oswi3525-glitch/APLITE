@@ -130,6 +130,13 @@ struct DesktopView: View {
                     TaskPreviewView(preview: preview, screenWidth: geo.size.width, taskbarTop: model.taskbarTop)
                 }
 
+                // Only when the setting is on and a text field has focus (or Always is chosen).
+                if model.virtualKeyboardVisible {
+                    VirtualKeyboardView(model: model, cursor: model.cursor)
+                        .transition(.move(edge: .bottom).combined(with: .opacity))
+                        .animation(APLiteAnimation.snappy, value: model.virtualKeyboardVisible)
+                }
+
                 if let switcher = model.switcher {
                     SwitcherView(model: model, switcher: switcher)
                         .frame(width: geo.size.width, height: geo.size.height)
@@ -498,6 +505,9 @@ private struct WindowView: View {
             if !window.isFullscreen {
                 TitleBar(title: window.title, focused: focused, frame: f, cursor: cursor,
                          tabs: window.showsTabs ? window.tabs.indices.map { window.title(ofTab: $0) } : nil,
+                         tabIcons: window.showsTabs ? window.tabs.indices.map { i in
+                             i == window.activeTab ? window.icon : DeskWindow.cachedFavicon(window.url(ofTab: i).absoluteString)
+                         } : nil,
                          activeTab: window.activeTab, keepOnTop: window.keepOnTop)
                     .frame(height: Layout.titleBar)
                 if window.showsAddressBar {
@@ -572,6 +582,7 @@ private struct TitleBar: View {
     let cursor: CursorModel
     /// Tab titles of a web window (nil for an app window, which shows its name instead).
     var tabs: [String]? = nil
+    var tabIcons: [UIImage?]? = nil
     var activeTab = 0
     var keepOnTop = false
 
@@ -597,7 +608,7 @@ private struct TitleBar: View {
             .padding(.leading, 12)
             .frame(maxHeight: .infinity)
             if let tabs {
-                TabStrip(titles: tabs, active: activeTab, focused: focused, frame: frame, cursor: cursor)
+                TabStrip(titles: tabs, icons: tabIcons, active: activeTab, focused: focused, frame: frame, cursor: cursor)
             } else {
                 Text(title)
                     .font(.system(size: 13, weight: .medium))
@@ -613,10 +624,16 @@ private struct TitleBar: View {
 /// A browser window's tabs, as in a desktop browser: the one shown is lighter, × closes, + opens a new one.
 private struct TabStrip: View {
     let titles: [String]
+    let icons: [UIImage?]?
     let active: Int
     let focused: Bool
     let frame: CGRect
     @ObservedObject var cursor: CursorModel
+
+    private func icon(at i: Int) -> UIImage? {
+        guard let icons, icons.indices.contains(i) else { return nil }
+        return icons[i]
+    }
 
     var body: some View {
         let n = titles.count, p = cursor.position
@@ -625,8 +642,17 @@ private struct TabStrip: View {
                 let r = Layout.tabRect(i, count: n, in: frame)
                 let hovered = r.contains(p)
                 let closeHovered = Layout.tabCloseRect(i, count: n, in: frame).insetBy(dx: -3, dy: -3).contains(p)
-                HStack(spacing: 6) {
-                    Text(titles[i]).font(.system(size: 12, weight: i == active ? .semibold : .regular)).lineLimit(1)
+                HStack(spacing: 5) {
+                    if let icon = icon(at: i) {
+                        Image(uiImage: icon).resizable().scaledToFit().frame(width: 14, height: 14)
+                    } else if r.width < 78 {
+                        // Too narrow for a title: a single letter still identifies the site.
+                        Text(titles[i].isEmpty ? "?" : String(titles[i].prefix(1)).uppercased())
+                            .font(.system(size: 11, weight: .semibold))
+                    }
+                    if r.width >= 78 {
+                        Text(titles[i]).font(.system(size: 12, weight: i == active ? .semibold : .regular)).lineLimit(1)
+                    }
                     Spacer(minLength: 0)
                     Image(systemName: "xmark").font(.system(size: 9, weight: .bold))
                         .frame(width: 16, height: 16)

@@ -7141,6 +7141,126 @@
         }
       }
     },
+    "Click a field to type · × hides": {
+      "localizations": {
+        "vi": { "stringUnit": { "state": "translated", "value": "Nhấn vào ô nhập liệu để gõ · × để ẩn" } }
+      }
+    },
+    "Accounts": {
+      "localizations": {
+        "vi": { "stringUnit": { "state": "translated", "value": "Tài khoản" } }
+      }
+    },
+    "Save signed-in accounts": {
+      "localizations": {
+        "vi": { "stringUnit": { "state": "translated", "value": "Lưu các tài khoản đã đăng nhập" } }
+      }
+    },
+    "Save Google account only": {
+      "localizations": {
+        "vi": { "stringUnit": { "state": "translated", "value": "Chỉ lưu tài khoản Google" } }
+      }
+    },
+    "Save all accounts": {
+      "localizations": {
+        "vi": { "stringUnit": { "state": "translated", "value": "Lưu tất cả tài khoản" } }
+      }
+    },
+    "On-screen keyboard": {
+      "localizations": {
+        "vi": { "stringUnit": { "state": "translated", "value": "Bàn phím ảo" } }
+      }
+    },
+    "Keyboard settings & all keys": {
+      "localizations": {
+        "vi": { "stringUnit": { "state": "translated", "value": "Cài đặt bàn phím & tất cả phím" } }
+      }
+    },
+    "Show keyboard on the desktop": {
+      "localizations": {
+        "vi": { "stringUnit": { "state": "translated", "value": "Hiện bàn phím trên desktop" } }
+      }
+    },
+    "Keep it visible when no field is focused": {
+      "localizations": {
+        "vi": { "stringUnit": { "state": "translated", "value": "Giữ bàn phím hiện khi không có ô nào được chọn" } }
+      }
+    },
+    "Key size": {
+      "localizations": {
+        "vi": { "stringUnit": { "state": "translated", "value": "Kích thước phím" } }
+      }
+    },
+    "Click feedback on iPhone": {
+      "localizations": {
+        "vi": { "stringUnit": { "state": "translated", "value": "Phản hồi khi nhấn trên iPhone" } }
+      }
+    },
+    "All keys": {
+      "localizations": {
+        "vi": { "stringUnit": { "state": "translated", "value": "Tất cả phím" } }
+      }
+    },
+    "Letters": {
+      "localizations": {
+        "vi": { "stringUnit": { "state": "translated", "value": "Chữ cái" } }
+      }
+    },
+    "Symbols (123)": {
+      "localizations": {
+        "vi": { "stringUnit": { "state": "translated", "value": "Ký hiệu (123)" } }
+      }
+    },
+    "On-screen keyboard (appears when you click a field)": {
+      "localizations": {
+        "vi": { "stringUnit": { "state": "translated", "value": "Bàn phím ảo (hiện khi bạn nhấn vào ô nhập liệu)" } }
+      }
+    },
+    "Keep the keyboard visible when no field is focused": {
+      "localizations": {
+        "vi": { "stringUnit": { "state": "translated", "value": "Giữ bàn phím hiện khi không có ô nào được chọn" } }
+      }
+    },
+    "All keys & keyboard settings on iPhone": {
+      "localizations": {
+        "vi": { "stringUnit": { "state": "translated", "value": "Tất cả phím & cài đặt bàn phím trên iPhone" } }
+      }
+    },
+    "Clean Facebook layout (hide side rails and ads)": {
+      "localizations": {
+        "vi": { "stringUnit": { "state": "translated", "value": "Giao diện Facebook gọn hơn (ẩn thanh bên và quảng cáo)" } }
+      }
+    },
+    "Accounts & cookies": {
+      "localizations": {
+        "vi": { "stringUnit": { "state": "translated", "value": "Tài khoản & cookie" } }
+      }
+    },
+    "Saved %lld login cookies.": {
+      "localizations": {
+        "vi": { "stringUnit": { "state": "translated", "value": "Đã lưu %lld cookie đăng nhập." } }
+      }
+    },
+    "Saved %lld login cookies for %@.": {
+      "localizations": {
+        "vi": { "stringUnit": { "state": "translated", "value": "Đã lưu %lld cookie đăng nhập cho %@." } }
+      }
+    },
+    "Saved %lld login cookies from all web apps.": {
+      "localizations": {
+        "vi": { "stringUnit": { "state": "translated", "value": "Đã lưu %lld cookie đăng nhập từ các web app." } }
+      }
+    },
+    "No cookies were found for %@.": {
+      "localizations": {
+        "vi": { "stringUnit": { "state": "translated", "value": "Không tìm thấy cookie cho %@." } }
+      }
+    },
+    "No signed-in accounts were found on the desktop yet.": {
+      "localizations": {
+        "vi": { "stringUnit": { "state": "translated", "value": "Chưa có tài khoản nào đăng nhập trên desktop." } }
+      }
+    },
     "Reduce motion (follows iPhone setting)": {
       "localizations": {
         "vi": {

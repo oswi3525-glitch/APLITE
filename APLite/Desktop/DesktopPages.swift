@@ -159,6 +159,9 @@ enum DesktopPages {
             "scroll": String(format: "%.1f×", Double(InputSettings.scrollSpeed)),
             "natural": InputSettings.naturalScrolling,
             "mouseModeButton": InputSettings.alwaysShowMouseMode,
+            "virtualKeyboard": APLiteSettings.Input.virtualKeyboard,
+            "keyboardAlwaysVisible": APLiteSettings.Input.keyboardAlwaysVisible,
+            "facebookEnhancements": FacebookEnhancements.enabled,
             "version": APLite.displayVersion,
             "liveNotice": LiveUpdate.notice ?? "",
             "autoUpdate": UpdateChecker.shared.automatic,
@@ -347,10 +350,16 @@ enum DesktopPages {
             }
         case (.settings, "cookieSaveCurrent"):
             CookieImporter.currentCookies(for: value) { cookies in
-                let added = CookieVault.save(cookies)
-                m.showToast(added > 0
-                    ? String(localized: "Saved \(added) login cookies for \(value).")
-                    : String(localized: "No cookies were found in what you pasted."))
+                let saved = CookieVault.save(cookies)
+                m.showToast(saved > 0
+                    ? String(localized: "Saved \(saved) login cookies for \(value).")
+                    : String(localized: "No cookies were found for \(value)."))
+            }
+        case (.settings, "cookieSaveAll"):
+            AccountCookies.shared.save { saved in
+                m.showToast(saved > 0
+                    ? String(localized: "Saved \(saved) login cookies from all web apps.")
+                    : String(localized: "No signed-in accounts were found on the desktop yet."))
             }
         case (.settings, "cookieVaultRemove"):
             let removed = CookieVault.remove(domain: value)
@@ -436,6 +445,13 @@ enum DesktopPages {
             InputSettings.naturalScrolling = value == "1"
         case (.settings, "mouseModeButton"):
             InputSettings.alwaysShowMouseMode.toggle()
+        case (.settings, "virtualKeyboard"):
+            APLiteSettings.Input.virtualKeyboard = !APLiteSettings.Input.virtualKeyboard
+        case (.settings, "keyboardAlwaysVisible"):
+            APLiteSettings.Input.keyboardAlwaysVisible = !APLiteSettings.Input.keyboardAlwaysVisible
+            m.objectWillChange.send()
+        case (.settings, "facebookEnhancements"):
+            FacebookEnhancements.enabled = !FacebookEnhancements.enabled
         case (.settings, "resetSpeeds"):
             UserDefaults.standard.removeObject(forKey: InputSettings.pointerKey)
             UserDefaults.standard.removeObject(forKey: InputSettings.scrollKey)
@@ -636,15 +652,20 @@ enum DesktopPages {
             "scroll": String(localized: "Scrolling speed"), "reset": String(localized: "Reset to defaults"),
             "accessibility": String(localized: "Accessibility"),
             "mouseModeButton": String(localized: "Always show the mouse mode button"),
+            "virtualKeyboard": String(localized: "On-screen keyboard (appears when you click a field)"),
+            "keyboardAlwaysVisible": String(localized: "Keep the keyboard visible when no field is focused"),
+            "keyboardSettings": String(localized: "All keys & keyboard settings on iPhone"),
+            "facebookEnhancements": String(localized: "Clean Facebook layout (hide side rails and ads)"),
             "about": String(localized: "Version"),
-            "cookies": String(localized: "Cookies from Safari"),
-            "cookieNote": String(localized: "iOS does not let APLite read Safari's cookie jar. Copy cookies from Safari's Web Inspector (or export cookies.txt) and paste or import them here. Values stay on this device."),
+            "cookies": String(localized: "Accounts & cookies"),
+            "cookieNote": String(localized: "Logins in web windows are saved to APLite's local vault automatically, including on the external display. iOS does not let APLite read Safari's cookie jar: to bring an account over, copy its Cookie header or import a cookies.txt file below. Values stay on this device."),
             "cookieDomain": String(localized: "Domain, e.g. example.com"),
             "cookiePaste": String(localized: "Paste cookies: name=value; name2=value2"),
             "cookieImport": String(localized: "Import pasted cookies"),
             "cookieFile": String(localized: "Import cookies.txt…"),
             "cookieClear": String(localized: "Clear"),
             "cookieSaveCurrent": String(localized: "Save login cookies"),
+            "cookieSaveAll": String(localized: "Save all accounts"),
             "cookieVault": String(localized: "Saved login cookies"),
             "cookieVaultEmpty": String(localized: "No saved logins yet."),
             "cookieVaultRemove": String(localized: "Forget"),
@@ -771,7 +792,8 @@ enum DesktopPages {
         + `<div style="${s.blockAds ? '' : 'opacity:.45;pointer-events:none'}">`
         + siteList('bs', 'blockSite', s.blockedSites, T.blockedSites) + siteList('as', 'allowSite', s.allowedSites, T.allowedSites)
         + `</div>`
-        + `<div class="card">` + toggle('darkPages', s.darkPages, T.darkPages) + `</div>`;
+        + `<div class="card">` + toggle('darkPages', s.darkPages, T.darkPages)
+        + toggle('facebookEnhancements', s.facebookEnhancements, T.facebookEnhancements) + `</div>`;
     }
     function render(s) {
       const key = JSON.stringify(s); if (key === window.__shown) return; window.__shown = key;
@@ -848,7 +870,10 @@ enum DesktopPages {
       h += `<h2>${esc(T.typing)}</h2><div class="card">` + s.replacements.map(([a, b]) =>
           `<div class="row"><div class="label"><b>${esc(a)}</b> → ${esc(b)}</div><button onclick="send('removeReplacement', '${esc(a).replace(/'/g, "\\'")}')">×</button></div>`).join('')
         + `<div class="row"><input id="rs" placeholder="${esc(T.short)}" style="width:90px"> <input id="rp" placeholder="${esc(T.phrase)}" style="flex:1;margin:0 8px">`
-        + `<button onclick="const a = document.getElementById('rs').value, b = document.getElementById('rp').value; if (a && b) send('addReplacement', a + '\u0001' + b)">${esc(T.add)}</button></div></div>`;
+        + `<button onclick="const a = document.getElementById('rs').value, b = document.getElementById('rp').value; if (a && b) send('addReplacement', a + '\u0001' + b)">${esc(T.add)}</button></div>`
+         + toggle('virtualKeyboard', s.virtualKeyboard, T.virtualKeyboard)
+         + toggle('keyboardAlwaysVisible', s.keyboardAlwaysVisible, T.keyboardAlwaysVisible)
+         + `<div class="row"><div class="label"></div><button onclick="send('systemSettings')">${esc(T.keyboardSettings)}</button></div></div>`;
       h += `<h2>${esc(T.browser)}</h2><div class="card"><div class="row"><div class="label">${esc(T.browserLink)}</div>`
         + `<button onclick="send('browserSettings')">${esc(T.openBrowser)}</button></div></div>`;
       h += `<h2>${esc(T.windows)}</h2><div class="card"><div class="row"><div class="label">${esc(T.maxWindows)}</div><div class="seg">`;
@@ -886,7 +911,8 @@ enum DesktopPages {
         + `<div class="row"><textarea id="cookieValue" rows="3" placeholder="${esc(T.cookiePaste)}" autocapitalize="off" autocorrect="off"></textarea></div>`
         + `<div class="row"><div class="label"></div><button class="primary" onclick="const d=document.getElementById('cookieDomain').value.trim(), v=document.getElementById('cookieValue').value.trim(); if(d&&v) send('cookieAdd', d+'\u0001'+v)">${esc(T.cookieImport)}</button>`
         + `<button onclick="send('cookieFile')">${esc(T.cookieFile)}</button>`
-        + `<button onclick="const d=document.getElementById('cookieDomain').value.trim(); if(d) send('cookieSaveCurrent', d)">${esc(T.cookieSaveCurrent)}</button></div>`
+        + `<button onclick="const d=document.getElementById('cookieDomain').value.trim(); if(d) send('cookieSaveCurrent', d)">${esc(T.cookieSaveCurrent)}</button>`
+         + `<button onclick="send('cookieSaveAll')">${esc(T.cookieSaveAll)}</button></div>`
         + `<div class="row"><div class="label"><b>${esc(T.cookieVault)}</b></div><button onclick="send('cookieExport')">${esc(T.cookieExport)}</button></div>`
         + (s.savedCookies.length ? s.savedCookies.map(x =>
             `<div class="row"><div class="label">${esc(x.domain)} <span class="note">(${x.count})</span></div>`

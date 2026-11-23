@@ -86,6 +86,31 @@ enum APLiteSettings {
         static let memoryTargets = [512, 768, 1024, 1536]
     }
 
+    enum Input {
+        /// The desktop's on-screen keyboard. Off by default: it appears only when a text field is
+        /// tapped, and can be folded away with its own hide key.
+        static var virtualKeyboard: Bool {
+            get { APLiteSettings.bool("input", "virtualKeyboard") }
+            set { APLiteSettings.set("input", "virtualKeyboard", newValue) }
+        }
+        /// Keep the keyboard on screen even when no field has focus (kiosk / TV use).
+        static var keyboardAlwaysVisible: Bool {
+            get { APLiteSettings.bool("input", "keyboardAlwaysVisible") }
+            set { APLiteSettings.set("input", "keyboardAlwaysVisible", newValue) }
+        }
+        /// Keyboard width as a percentage of its normal size.
+        static var keyboardSize: Int {
+            get { APLiteSettings.number("input", "keyboardSize", default: 100) }
+            set { APLiteSettings.set("input", "keyboardSize", min(140, max(60, newValue))) }
+        }
+        static let keyboardSizes = [70, 85, 100, 115, 130]
+        /// A soft tick on the iPhone when an on-screen key is pressed.
+        static var keyboardFeedback: Bool {
+            get { APLiteSettings.bool("input", "keyboardFeedback", default: true) }
+            set { APLiteSettings.set("input", "keyboardFeedback", newValue) }
+        }
+    }
+
     enum Certificates {
         static var rememberChoice: Bool { get { APLiteSettings.bool("certificates", "remember") } set { APLiteSettings.set("certificates", "remember", newValue) } }
     }

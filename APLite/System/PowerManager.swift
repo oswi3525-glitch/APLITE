@@ -65,6 +65,7 @@ final class PowerManager: ObservableObject {
         for window in Array(model.windows) { model.close(window) }
         model.closePanels()
         QuickLook.stop()
+        AccountCookies.shared.flush()   // keep accounts signed in after a shut down / restart
         MemoryManager.shared.releaseCaches(reason: "shutdown")
         set(.shutDown)
     }

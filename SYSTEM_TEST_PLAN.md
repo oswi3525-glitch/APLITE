@@ -72,6 +72,41 @@ iPhone/iPad before any item is marked complete. Status today: **not tested on ha
 - [ ] "Analyse in Build Center" reads the generated project and reports the correct Bundle ID.
 - [ ] A build request sent to a real macOS worker compiles the generated project (only then claim it builds).
 
+## Accounts (1.2.6)
+
+- [ ] Sign in to Facebook / Zalo / Gmail in a window on the **external display** with the iPhone
+      already backgrounded; the account appears in desktop Settings → Accounts & cookies within a
+      couple of seconds without pressing any save button.
+- [ ] Disconnect the display and shut APLite down: re-launch restores the signed-in session.
+- [ ] Re-saving the same account shows a success count (not "no cookies found") and the vault file
+      keeps `HttpOnly` / `SameSite` values after a round-trip.
+- [ ] "Clear" removes cookies from WebKit and "Forget" removes them from the vault; a cleared domain
+      is not silently restored at the next launch.
+
+## On-screen keyboard (1.2.6)
+
+- [ ] Enable it in native Settings → Input (and in desktop Settings → Typing); it stays hidden until
+      an input field is clicked in a web page, the address bar, the find bar, a sticky note, Files or
+      the editor.
+- [ ] Every key works in a web input and in the text editor: letters (uppercase after Shift, Caps
+      Lock persists), digits/symbols via 123, Backspace, Enter, Tab, arrows, Home/End, PgUp/PgDn,
+      Delete, Esc, Select all / Copy / Paste, and Space.
+- [ ] × hides the keyboard with the slide-down animation; clicking another field brings it back;
+      Esc also hides it. "Keep it visible" shows it even with no field focused.
+- [ ] Keyboard sizing and click feedback (iPhone haptic) work, and the full keyboard settings page
+      lists every supported key.
+- [ ] The hardware/iPhone keyboard and Voice Typing still type into the same field while the virtual
+      keyboard is shown.
+
+## Tabs & Facebook (1.2.6)
+
+- [ ] Find bar closes when switching or closing tabs; match counts always belong to the shown page.
+- [ ] ⌘⇧T restores a closed tab at its original position, including after "Close other tabs".
+- [ ] Multiple Facebook/Zalo windows show the branded icon and app name in the dock and switcher.
+- [ ] Tab strip stays readable with many tabs; favicons appear where available.
+- [ ] Clean Facebook toggle changes the layout immediately and survives navigation and relaunch;
+      other sites are untouched.
+
 ## Known unresolved issues
 
 Record any failures here before merging to `main`. Do not mark a feature complete on the strength of

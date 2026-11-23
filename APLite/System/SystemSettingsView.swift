@@ -22,6 +22,7 @@ struct SystemSettingsView: View {
     @AppStorage("APLite.performance.releaseCaches") private var releaseCaches = true
     @AppStorage("APLite.performance.detectLeaks") private var detectLeaks = true
     @AppStorage("APLite.personalization.pressRipples") private var pressRipples = false
+    @AppStorage("APLite.input.virtualKeyboard") private var virtualKeyboard = false
 
     @State private var showPasscode = false
     @State private var showBuildCenter = false
@@ -121,14 +122,21 @@ struct SystemSettingsView: View {
             }
 
             Section("Accounts") {
-                Button("Save signed-in Google account") {
+                Button("Save signed-in accounts") {
+                    AccountCookies.shared.save { count in
+                        model.showToast(String(localized: count > 0
+                            ? "Saved \(count) login cookies."
+                            : "No signed-in accounts were found on the desktop yet."))
+                    }
+                }
+                Button("Save Google account only") {
                     GoogleSession.save { count in
                         model.showToast(String(localized: count > 0
                             ? "Saved \(count) Google cookies."
                             : "No Google account is signed in on the desktop yet."))
                     }
                 }
-                Text("Stored locally in APLite's cookie vault. Never sent anywhere.")
+                Text("Logins in any web window — including those on the external display — are copied to APLite's local vault automatically. Stored on this device only; never sent anywhere.")
                     .font(.footnote).foregroundStyle(.secondary)
             }
 
@@ -159,6 +167,14 @@ struct SystemSettingsView: View {
 
             Section(SettingsGroup.input.title) {
                 Toggle("Natural scrolling", isOn: InputSettings.naturalScrollingBinding)
+                Toggle("On-screen keyboard", isOn: $virtualKeyboard)
+                NavigationLink {
+                    KeyboardSettingsView(model: model)
+                } label: {
+                    Label("Keyboard settings & all keys", systemImage: "keyboard")
+                }
+                Text("The desktop keyboard appears only when you click a text field. It has a hide key, and every key is configurable in the page above.")
+                    .font(.footnote).foregroundStyle(.secondary)
             }
 
             Section(SettingsGroup.certificates.title) {
