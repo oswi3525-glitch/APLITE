@@ -131,6 +131,7 @@ final class ThermalMonitor: ObservableObject {
         case .charging: return "charging"
         case .full: return "full"
         case .unplugged: return "on battery"
+        case .unknown: return "unknown"
         @unknown default: return "unknown"
         }
     }

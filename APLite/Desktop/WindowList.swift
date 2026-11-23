@@ -21,9 +21,7 @@ extension DesktopModel {
 
     func clickWindowList(at p: CGPoint) {
         guard windowListRect.contains(p) else {
-            showWindowList = false
-            // Let a dock button act on this same click, except the Window button itself (that would reopen).
-            if p.y >= taskbarHitTop, !windowListButtonRect.contains(p) { clickTaskbar(p) }
+            clickOutsideWindowList(p)
             return
         }
         let rows = WindowListMath.visibleRows(count: windows.count)

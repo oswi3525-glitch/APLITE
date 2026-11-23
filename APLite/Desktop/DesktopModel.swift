@@ -2528,6 +2528,13 @@ final class DesktopModel: ObservableObject {
         }
     }
 
+    /// A click outside the dock's window list closes it. A click on another dock control should still
+    /// perform that control's action on the same click (the Window button itself only closes it).
+    func clickOutsideWindowList(_ p: CGPoint) {
+        showWindowList = false
+        if p.y >= taskbarHitTop, !windowListButtonRect.contains(p) { clickTaskbar(p) }
+    }
+
     // MARK: Middle click
 
     /// Middle button, as in a desktop browser: on a tab it closes the tab, on a link it opens it in a background tab;
