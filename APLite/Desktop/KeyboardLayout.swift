@@ -54,7 +54,7 @@ enum KeyboardLayout {
          key("u", .text("u"), shifted: "U"), key("i", .text("i"), shifted: "I"),
          key("o", .text("o"), shifted: "O"), key("p", .text("p"), shifted: "P"),
          key("[", .text("["), shifted: "{"), key("]", .text("]"), shifted: "}"),
-         key("\\", .text("\\"), shifted: "|", units: 1.5, id: "backslash")],
+         key("\\", .text("\\"), units: 1.5, shifted: "|", id: "backslash")],
 
         [key("caps", .capsLock, units: 1.75, id: "caps"),
          key("a", .text("a"), shifted: "A"), key("s", .text("s"), shifted: "S"),

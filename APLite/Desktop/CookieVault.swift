@@ -42,8 +42,11 @@ struct SavedCookie: Codable, Equatable {
         ]
         if let expires = expires, expires > 0 { properties[.expires] = Date(timeIntervalSince1970: expires) }
         if secure { properties[.secure] = true }
-        if httpOnly { properties[.httpOnly] = true }
-        if let sameSite = sameSite { properties[.sameSite] = sameSite }
+        // These two have no static HTTPCookiePropertyKey constants in the iOS SDK; use raw keys.
+        if httpOnly { properties[HTTPCookiePropertyKey(rawValue: "HttpOnly")] = "TRUE" }
+        if let sameSite = sameSite {
+            properties[.sameSitePolicy] = HTTPCookieStringPolicy(rawValue: sameSite).rawValue
+        }
         return HTTPCookie(properties: properties)
     }
 
@@ -54,15 +57,12 @@ struct SavedCookie: Codable, Equatable {
         path = cookie.path
         expires = cookie.expiresDate?.timeIntervalSince1970
         secure = cookie.isSecure
-        httpOnly = cookie.isHttpOnly
-        // "None" needs Secure on modern sites and is the default when the attribute is absent, so
-        // leaving it out on restore is both safer and equivalent.
+        httpOnly = cookie.isHTTPOnly
+        // Only "lax" and "strict" are real policies; nil / "none" means no restriction, so leaving
+        // it out on restore is both safer and equivalent.
         if let policy = cookie.sameSitePolicy {
-            switch policy {
-            case .lax: sameSite = "Lax"
-            case .strict: sameSite = "Strict"
-            case .none: sameSite = nil
-            }
+            let raw = policy.rawValue.lowercased()
+            sameSite = (raw == "lax" || raw == "strict") ? raw : nil
         } else {
             sameSite = nil
         }
