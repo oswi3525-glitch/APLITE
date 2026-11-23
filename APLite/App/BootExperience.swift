@@ -259,12 +259,14 @@ struct PhoneRootView: View {
     let model: DesktopModel
 
     var body: some View {
-        if boot.servicesReady {
-            ControllerView(model: model)
-                .transition(.opacity)
-        } else {
-            APLiteBootScreen(boot: boot)
-                .transition(.opacity)
+        Group {
+            if boot.servicesReady {
+                ControllerView(model: model)
+                    .transition(.opacity)
+            } else {
+                APLiteBootScreen(boot: boot)
+                    .transition(.opacity)
+            }
         }
         .animation(APLiteAnimation.gentle, value: boot.servicesReady)
     }
