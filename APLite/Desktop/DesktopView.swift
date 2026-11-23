@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 import WebKit
 
 enum Wallpapers {
@@ -370,8 +371,8 @@ struct AppIcon: View {
 
     private var placeholder: some View {
         RoundedRectangle(cornerRadius: size * 0.24, style: .continuous)
-            .fill(LinearGradient(colors: [Color(hue: shortcut.hue, saturation: 0.65, brightness: 0.95, colorSpace: .sRGB),
-                                          Color(hue: shortcut.hue, saturation: 0.8, brightness: 0.65, colorSpace: .sRGB)],
+            .fill(LinearGradient(colors: [Color(uiColor: UIColor(hue: shortcut.hue, saturation: 0.65, brightness: 0.95, alpha: 1)),
+                                          Color(uiColor: UIColor(hue: shortcut.hue, saturation: 0.8, brightness: 0.65, alpha: 1))],
                                  startPoint: .top, endPoint: .bottom))
             .frame(width: size, height: size)
             .overlay(Image(systemName: shortcut.symbol)
