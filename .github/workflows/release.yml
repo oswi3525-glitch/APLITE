@@ -40,6 +40,9 @@ jobs:
       - name: Install XcodeGen
         run: brew install xcodegen
 
+      - name: Validate local asset library
+        run: python3 scripts/validate-assets.py
+
       - name: Build unsigned IPA
         run: VERSION=${{ steps.version.outputs.version }} BUILD_NUMBER=${{ github.run_number }} scripts/build-ipa.sh
 

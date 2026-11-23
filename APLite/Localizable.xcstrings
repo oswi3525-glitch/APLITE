@@ -7794,6 +7794,106 @@
           }
         }
       }
+    },
+    "Initializing system": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đang khởi tạo hệ thống"
+          }
+        }
+      }
+    },
+    "Loading resources": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đang tải tài nguyên"
+          }
+        }
+      }
+    },
+    "Starting services": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đang khởi động dịch vụ"
+          }
+        }
+      }
+    },
+    "Preparing desktop": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đang chuẩn bị desktop"
+          }
+        }
+      }
+    },
+    "Ready": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sẵn sàng"
+          }
+        }
+      }
+    },
+    "Startup needs attention": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Khởi động gặp sự cố"
+          }
+        }
+      }
+    },
+    "APLite couldn't finish starting: %@": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "APLite chưa thể khởi động xong: %@"
+          }
+        }
+      }
+    },
+    "Retry startup": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thử khởi động lại"
+          }
+        }
+      }
+    },
+    "Startup took too long to respond.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Khởi động mất quá nhiều thời gian để phản hồi."
+          }
+        }
+      }
+    },
+    "Startup progress": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tiến trình khởi động"
+          }
+        }
+      }
     }
   },
   "version": "1.0"

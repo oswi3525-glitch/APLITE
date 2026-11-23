@@ -1,0 +1,255 @@
+{
+  "version": "1.3.0",
+  "description": "Local asset source library for APLite. Only glyphs referenced by the native registry are kept, with original licences. Files here are NOT bundled into the app; no hotlinking.",
+  "hotlinking": false,
+  "families": [
+    {
+      "id": "tabler",
+      "name": "Tabler Icons",
+      "version": "3.52.0",
+      "license": "MIT",
+      "licenseFile": "Assets/Icons/Tabler/LICENSE",
+      "outlinePath": "Assets/Icons/Tabler/outline",
+      "outlineCount": 42,
+      "source": "https://github.com/tabler/tabler-icons",
+      "attribution": "Copyright (c) 2020-2026 Paweł Kuna",
+      "note": "Filtered to the 42 glyphs referenced by the native Asset Registry; upstream full set is available from the source URL."
+    },
+    {
+      "id": "lucide",
+      "name": "Lucide Icons",
+      "license": "ISC",
+      "licenseFile": "Assets/Icons/Lucide/LICENSE",
+      "iconPath": "Assets/Icons/Lucide/icons",
+      "iconCount": 42,
+      "source": "https://github.com/lucide-icons/lucide",
+      "attribution": "Copyright (c) 2026 Lucide Icons and Contributors",
+      "note": "Filtered to the 42 glyphs referenced by the native Asset Registry; upstream metadata JSON removed to keep the library small."
+    }
+  ],
+  "wallpapers": [
+    {
+      "asset": "MeadowWallpaper",
+      "source": "locally generated",
+      "generator": "scripts/generate_meadow.py"
+    },
+    {
+      "asset": "OceanWallpaper",
+      "source": "locally generated",
+      "generator": "scripts/generate_ocean.py"
+    }
+  ],
+  "nativeRegistry": "APLite/System/AssetRegistry.swift",
+  "concepts": [
+    {
+      "concept": "folder",
+      "tabler": "folder.svg",
+      "lucide": "folder.svg"
+    },
+    {
+      "concept": "file",
+      "tabler": "file.svg",
+      "lucide": "file.svg"
+    },
+    {
+      "concept": "settings",
+      "tabler": "settings.svg",
+      "lucide": "settings.svg"
+    },
+    {
+      "concept": "trash",
+      "tabler": "trash.svg",
+      "lucide": "trash.svg"
+    },
+    {
+      "concept": "lock",
+      "tabler": "lock.svg",
+      "lucide": "lock.svg"
+    },
+    {
+      "concept": "wifi",
+      "tabler": "wifi.svg",
+      "lucide": "wifi.svg"
+    },
+    {
+      "concept": "battery",
+      "tabler": "battery.svg",
+      "lucide": "battery.svg"
+    },
+    {
+      "concept": "keyboard",
+      "tabler": "keyboard.svg",
+      "lucide": "keyboard.svg"
+    },
+    {
+      "concept": "bell",
+      "tabler": "bell.svg",
+      "lucide": "bell.svg"
+    },
+    {
+      "concept": "search",
+      "tabler": "search.svg",
+      "lucide": "search.svg"
+    },
+    {
+      "concept": "terminal",
+      "tabler": "terminal.svg",
+      "lucide": "terminal.svg"
+    },
+    {
+      "concept": "download",
+      "tabler": "download.svg",
+      "lucide": "download.svg"
+    },
+    {
+      "concept": "upload",
+      "tabler": "upload.svg",
+      "lucide": "upload.svg"
+    },
+    {
+      "concept": "x",
+      "tabler": "x.svg",
+      "lucide": "x.svg"
+    },
+    {
+      "concept": "maximize",
+      "tabler": "maximize.svg",
+      "lucide": "maximize.svg"
+    },
+    {
+      "concept": "minimize",
+      "tabler": "minimize.svg",
+      "lucide": "minimize.svg"
+    },
+    {
+      "concept": "chevron-right",
+      "tabler": "chevron-right.svg",
+      "lucide": "chevron-right.svg"
+    },
+    {
+      "concept": "plus",
+      "tabler": "plus.svg",
+      "lucide": "plus.svg"
+    },
+    {
+      "concept": "check",
+      "tabler": "check.svg",
+      "lucide": "check.svg"
+    },
+    {
+      "concept": "power",
+      "tabler": "power.svg",
+      "lucide": "power.svg"
+    },
+    {
+      "concept": "moon",
+      "tabler": "moon.svg",
+      "lucide": "moon.svg"
+    },
+    {
+      "concept": "sun",
+      "tabler": "sun.svg",
+      "lucide": "sun.svg"
+    },
+    {
+      "concept": "shield",
+      "tabler": "shield.svg",
+      "lucide": "shield.svg"
+    },
+    {
+      "concept": "key",
+      "tabler": "key.svg",
+      "lucide": "key.svg"
+    },
+    {
+      "concept": "calendar",
+      "tabler": "calendar.svg",
+      "lucide": "calendar.svg"
+    },
+    {
+      "concept": "clock",
+      "tabler": "clock.svg",
+      "lucide": "clock.svg"
+    },
+    {
+      "concept": "link",
+      "tabler": "link.svg",
+      "lucide": "link.svg"
+    },
+    {
+      "concept": "copy",
+      "tabler": "copy.svg",
+      "lucide": "copy.svg"
+    },
+    {
+      "concept": "clipboard",
+      "tabler": "clipboard.svg",
+      "lucide": "clipboard.svg"
+    },
+    {
+      "concept": "app-window",
+      "tabler": "app-window.svg",
+      "lucide": "app-window.svg"
+    },
+    {
+      "concept": "chart-bar",
+      "tabler": "chart-bar.svg",
+      "lucide": "chart-bar.svg"
+    },
+    {
+      "concept": "cloud",
+      "tabler": "cloud.svg",
+      "lucide": "cloud.svg"
+    },
+    {
+      "concept": "plug",
+      "tabler": "plug.svg",
+      "lucide": "plug.svg"
+    },
+    {
+      "concept": "bluetooth",
+      "tabler": "bluetooth.svg",
+      "lucide": "bluetooth.svg"
+    },
+    {
+      "concept": "volume",
+      "tabler": "volume.svg",
+      "lucide": "volume.svg"
+    },
+    {
+      "concept": "camera",
+      "tabler": "camera.svg",
+      "lucide": "camera.svg"
+    },
+    {
+      "concept": "map-pin",
+      "tabler": "map-pin.svg",
+      "lucide": "map-pin.svg"
+    },
+    {
+      "concept": "mail",
+      "tabler": "mail.svg",
+      "lucide": "mail.svg"
+    },
+    {
+      "concept": "shield-check",
+      "tabler": "shield-check.svg",
+      "lucide": "shield-check.svg"
+    },
+    {
+      "concept": "code",
+      "tabler": "code.svg",
+      "lucide": "code.svg"
+    },
+    {
+      "concept": "palette",
+      "tabler": "palette.svg",
+      "lucide": "palette.svg"
+    },
+    {
+      "concept": "list",
+      "tabler": "list.svg",
+      "lucide": "list.svg"
+    }
+  ]
+}

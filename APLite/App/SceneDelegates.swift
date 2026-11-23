@@ -11,7 +11,7 @@ final class PhoneSceneDelegate: UIResponder, UIWindowSceneDelegate {
         let window = PhoneWindow(windowScene: windowScene)
         window.rootViewController = PreviewController.isRequested
             ? PreviewController()
-            : PhoneHostingController(rootView: ControllerView(model: .shared))
+            : PhoneHostingController(rootView: PhoneRootView(model: .shared))
         window.makeKeyAndVisible()
         PhoneWindow.current = window
         window.claimKeyboard()
@@ -54,7 +54,7 @@ final class PhoneSceneDelegate: UIResponder, UIWindowSceneDelegate {
 }
 
 /// Controller screen on the iPhone: follows device rotation; mouse mode is always landscape.
-final class PhoneHostingController: UIHostingController<ControllerView> {
+final class PhoneHostingController: UIHostingController<PhoneRootView> {
     private static var landscapeOnly = false
 
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
@@ -108,11 +108,20 @@ final class ExternalSceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
         DispatchQueue.main.async { [weak self] in self?.fitToScreen() }
 
-        model.externalConnected()
-        PowerManager.shared.restorePendingSessionIfNeeded()
+        bootObserverID = BootCoordinator.shared.whenServicesReady { [weak self, weak window] in
+            guard let self, self.window === window else { return }
+            model.externalConnected()
+            PowerManager.shared.restorePendingSessionIfNeeded()
+            if !BootCoordinator.shared.desktopReady, APLiteSettings.Security.lockOnLaunch {
+                model.lockDesktop(force: true)
+            }
+            BootCoordinator.shared.finishDesktopPreparation()
+            self.bootObserverID = nil
+        }
     }
 
     private var modeObserver: NSObjectProtocol?
+    private var bootObserverID: UUID?
 
     private func fitToScreen() {
         guard let window, let screen = window.windowScene?.screen else { return }
@@ -125,6 +134,8 @@ final class ExternalSceneDelegate: UIResponder, UIWindowSceneDelegate {
     func sceneDidDisconnect(_ scene: UIScene) {
         if let modeObserver { NotificationCenter.default.removeObserver(modeObserver) }
         modeObserver = nil
+        BootCoordinator.shared.removeServicesReadyObserver(bootObserverID)
+        bootObserverID = nil
         // Logins made on this screen must not wait for the phone scene to background: copy them to
         // the local vault now, before the display (and possibly its windows) go away.
         AccountCookies.shared.flush()

@@ -12,11 +12,11 @@ struct APLiteGlassButtonStyle: ButtonStyle {
             .padding(.horizontal, 14)
             .padding(.vertical, 10)
             .background(
-                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                RoundedRectangle(cornerRadius: APLiteDesign.Radius.sm, style: .continuous)
                     .fill(Color.primary.opacity(isEnabled ? (configuration.isPressed ? 0.20 : 0.10) : 0.05))
             )
             .overlay(
-                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                RoundedRectangle(cornerRadius: APLiteDesign.Radius.sm, style: .continuous)
                     .stroke(Color.primary.opacity(0.14), lineWidth: 1)
             )
             .scaleEffect(configuration.isPressed && !APLiteAnimation.reduced ? 0.98 : 1)

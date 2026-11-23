@@ -31,6 +31,11 @@ jobs:
       - name: Install XcodeGen
         run: brew install xcodegen
 
+      - name: Validate local asset library
+        # Catches a filtered/missing glyph or a registry that drifted from the Swift enum before
+        # the build starts. No bundling, no hotlinking — library stays outside the app target.
+        run: python3 scripts/validate-assets.py
+
       - name: Resolve package dependencies
         # The project currently has no Swift Package dependencies. The step is kept so a future
         # Package.swift is resolved by CI instead of failing at first use.

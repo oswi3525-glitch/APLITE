@@ -42,6 +42,27 @@ enum Wallpapers {
 /// The whole UI on the external display.
 struct DesktopView: View {
     @ObservedObject var model: DesktopModel
+    @ObservedObject private var boot = BootCoordinator.shared
+
+    var body: some View {
+        Group {
+            if boot.desktopReady {
+                DesktopSurfaceView(model: model)
+                    .transition(.opacity)
+            } else {
+                APLiteBootScreen(boot: boot)
+                    .transition(.opacity)
+            }
+        }
+        .ignoresSafeArea()
+        .preferredColorScheme(.dark)
+        .environment(\.colorScheme, .dark)
+        .animation(APLiteAnimation.gentle, value: boot.desktopReady)
+    }
+}
+
+private struct DesktopSurfaceView: View {
+    @ObservedObject var model: DesktopModel
 
     var body: some View {
         GeometryReader { geo in

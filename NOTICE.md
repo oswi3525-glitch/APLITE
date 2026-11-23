@@ -12,3 +12,7 @@ APLite is not an official release or endorsement of the original iDesk project.
 The upstream project is distributed under the MIT License. The original LICENSE file and its
 copyright notice are kept unchanged in the root of this repository. APLite does not claim
 ownership of the original work and does not replace the original author's name with its own.
+
+Third-party icon libraries shipped as a local source library (Tabler Icons — MIT, Lucide Icons —
+ISC) keep their original licence files and attribution. See `Assets/ATTRIBUTION.md` and the full
+licence texts in `Assets/Icons/Tabler/LICENSE` and `Assets/Icons/Lucide/LICENSE`.
