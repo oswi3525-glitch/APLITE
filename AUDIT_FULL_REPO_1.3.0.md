@@ -60,3 +60,23 @@ _(sẽ điền từ báo cáo bảo mật, correctness, build/docs)_
 | Thời điểm | Hành động | Kết quả |
 | --- | --- | --- |
 | 24/11/2026 | Khởi tạo baseline audit | lint 22 FAIL / 304 WARN, CI beta 1 xanh |
+| 24/11/2026 | Phase B+C: 42 file, +513/−63 | 3 lần CI fail do API Data Protection/protection type sai + regex redaction ăn `&next`; đã vá |
+| 24/11/2026 | CI cuối `45307515029` | **success** — build + unit test + upload IPA, commit `b821d01` |
+
+## 6. Kết quả sau audit (đã push)
+
+- Design lint: **16 FAIL / 303 WARN** (giảm 6 FAIL: 1 token swap + 5 `taste:allow` có lý do). 16 FAIL còn lại là gradient/wallpaper/product identity — **cần capture sáng/tối + focus state trên thiết bị**, không đổi mù.
+- Bảo mật đã vá: redact crash report trước khi đưa lên GitHub issue public; mở rộng redaction (JSON, Bearer, api_key, pin, session) + test; Data Protection cho cookie/log/khảo sát; Keychain signing dùng `WhenUnlockedThisDeviceOnly` + migration; chặn `CFBundleExecutable` path traversal; Unzip prefix/overflow; main-frame guard Files bridge; BuildCenter chỉ gửi Bearer tới host GitHub + strip auth khi redirect khác host + escape segment; nhãn APStore trung thực; redact ghi chú khảo sát.
+- Lỗi đã vá: khảo sát chuyển ra **phone surface** (external scene không nhận drag); cleanup scan & log read ra nền; **Auto-lock after hoạt động lại**; `APLiteSettings.bool` không còn ép `NSNumber(1)` thành `true`; huỷ hold 4 ngón khi tay dịch chuyển; không xoá icon web app khi registry decode hỏng; không xoá cache WebKit.
+- Phát hành: channel mặc định rỗng (build HEAD là stable), beta chỉ bật qua release input; `MARKETING_VERSION` nhận bản số học (`1.3.0`) thay vì `1.3.0-beta.1`; notes lấy từ `RELEASE_NOTES_1.3.0.md`; `VersionCompare` + test; `skills-lock.json` bị ignore; bổ sung 16 khoá VI + plural VI.
+
+## 7. Còn lại (cần quyết định / thiết bị)
+
+1. **Tag `v1.3.0` cũ trỏ tới `46a92b1`** (mã 1.2.9,MARKETING_VERSION 1.2.9) nhưng release mang tên 1.3.0. Việc dời/xoá tag là **history rewrite** → cần bạn uỷ quyền rõ ràng; tôi không tự làm.
+2. Beta artifact hiện tại (`v1.3.0-beta.1`) vẫn hiển thị `1.3.0-beta.1 (beta 1)` do workflow cũ. Muốn đúng `1.3.0 (beta 1)` cần **publish lại release** sau khi workflow mới đã sửa — cần bạn xác nhận (xoá tag/release cũ rồi tạo lại, hoặc tạo `v1.3.0-beta.2`).
+3. **A7 (race cache wipe vs WebKit restore)** chưa sửa: nên đưa legacy wipe thành boot step đầu tiên trước `CookieVault.restore()`, thay vì trong `GuestStore.init()`.
+4. **PBKDF2 cho passcode** chưa làm (vẫn SHA-256 + salt); cần migration có phiên bản — để lại do rủi ro cao khi không có thiết bị thử.
+5. Persistence silent-decode (B3), `main.sync` latent (B4), queue dữ liệu AccountCookies (B5), `systemUsage()` tính trong `body` (B6), cleanup reporting success khi xoá hỏng (A4) — đã giảm phạm vi nhưng chưa xử lý hết.
+6. UI: 16 gradient FAIL + hand-glass/shadow/type-scale WARN cần capture thiết bị (sáng/tối, AX5, focus) — không đổi mù khi chưa có bằng chứng hình ảnh.
+7. Tài liệu stale: `README.vi.md` vẫn hướng dẫn tải IPA từ repo iDesk gốc (D5), `ARCHITECTURE.md`/`UI_SYSTEM_PLAN.md`/`INDEPENDENCE.md` cần cập nhật theo 1.3.0.
+
