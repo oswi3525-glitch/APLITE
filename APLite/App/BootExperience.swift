@@ -60,9 +60,10 @@ final class BootCoordinator: ObservableObject {
     private init() {}
 
     func start(steps: [StartupStep]) {
-        guard !hasStarted else { return }
+        guard !hasStarted else { return }   // foreground returns must never replay boot
         hasStarted = true
         self.steps = steps
+        APLog.info("Boot started with \(steps.count) steps", module: "Boot")
         runNextStep()
     }
 
@@ -91,6 +92,7 @@ final class BootCoordinator: ObservableObject {
         guard servicesReady, !desktopReady else { return }
         desktopReady = true
         phase = .ready
+        APLog.info("Desktop preparation finished — boot complete", module: "Boot")
     }
 
     private func runNextStep() {
@@ -105,10 +107,14 @@ final class BootCoordinator: ObservableObject {
         phase = step.phase
         isRunning = true
         armWatchdog(for: stepIndex)
+        let started = Date()
+        APLog.info("Boot step started: \(step.phase.title)", module: "Boot")
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
             do {
                 try step.operation()
+                let elapsed = Int(Date().timeIntervalSince(started) * 1000)
+                APLog.info("Boot step finished: \(step.phase.title) in \(elapsed) ms", module: "Boot")
                 // The watchdog may have failed this step while it was running. Ignore the late
                 // completion so a timed-out startup never resumes behind the error screen.
                 guard self.nextStep == stepIndex, self.errorMessage == nil else { return }
@@ -117,6 +123,7 @@ final class BootCoordinator: ObservableObject {
                 self.cancelWatchdog()
                 self.runNextStep()
             } catch {
+                APLog.error("Boot step failed: \(step.phase.title) — \(error.localizedDescription)", module: "Boot")
                 self.fail(error.localizedDescription)
             }
         }
@@ -125,6 +132,7 @@ final class BootCoordinator: ObservableObject {
     private func finishServices() {
         cancelWatchdog()
         servicesReady = true
+        APLog.info("All boot services ready", module: "Boot")
         if !desktopReady { phase = .preparingDesktop }
         let observers = Array(readyObservers.values)
         readyObservers.removeAll()
@@ -135,18 +143,29 @@ final class BootCoordinator: ObservableObject {
         cancelWatchdog()
         isRunning = false
         errorMessage = message
+        APLog.error("Boot failed: \(message)", module: "Boot")
         phase = .failed
     }
 
+    /// The watchdog must NOT share the main queue with the work it guards: a step that blocks
+    /// the main thread would otherwise silence its own watchdog and strand the user on the boot
+    /// screen forever. It now fires on a utility queue, records timestamped evidence immediately,
+    /// then hops to main to present the existing retry UI once main is free again.
     private func armWatchdog(for stepIndex: Int) {
         cancelWatchdog()
+        let phase = steps[stepIndex].phase
+        let timeout = Int(Self.stepTimeout)
         let item = DispatchWorkItem { [weak self] in
-            guard let self, self.nextStep == stepIndex, !self.servicesReady,
-                  self.errorMessage == nil else { return }
-            self.fail(String(localized: "Startup took too long to respond."))
+            guard let self else { return }
+            APLog.fault("Boot step '\(phase.title)' exceeded \(timeout)s; main thread may be blocked",
+                        module: "Boot")
+            DispatchQueue.main.async {
+                guard self.nextStep == stepIndex, !self.servicesReady, self.errorMessage == nil else { return }
+                self.fail(String(localized: "Startup took too long to respond."))
+            }
         }
         watchdog = item
-        DispatchQueue.main.asyncAfter(deadline: .now() + Self.stepTimeout, execute: item)
+        DispatchQueue.global(qos: .utility).asyncAfter(deadline: .now() + Self.stepTimeout, execute: item)
     }
 
     private func cancelWatchdog() {

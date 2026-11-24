@@ -144,6 +144,21 @@ iPhone/iPad before any item is marked complete. Status today: **not tested on ha
 - [ ] Tray/quick panel show a live pressure index with trend; Technical Diagnostics contains the full breakdown; no °C value is claimed.
 - [ ] Settings → System has one "Advanced tools" page; Build Center, certificates and diagnostics are reachable there; no saved value is lost after the upgrade.
 
+## 1.3.0 — beta 1
+
+- [ ] Cold launch (with and without an external display) reaches the desktop; no indefinite boot screen. Settings shows version `1.3.0 (beta 1)`.
+- [ ] System Log contains `Boot started`, a `Boot step … in N ms` line per phase, `All boot services ready` and `Desktop preparation finished`. Compare timings before/after the fix.
+- [ ] With a deliberately slow boot step, the watchdog logs a `fault`, shows the retry UI, and a late completion does not resume behind the error screen.
+- [ ] Returning from background does not replay boot; preview mode (`-APLitePreview`) leaves the boot overlay on its own.
+- [ ] A legacy install with `iDesk.clearCachesOnLaunch = true` boots quickly and the cache deletion happens off main.
+- [ ] Settings has five tabs; the System tab still contains every previous control; desktop "Open system settings on iPhone" lands on System. TV mode, passcode, shutdown confirmation, Keyboard/Advanced/Changelog/About pushes and the Help sheets still work.
+- [ ] System Log lists events, filters by level, clears its own copy, and survives a restart without growing past the rotation cap. No private API is used.
+- [ ] Cleanup scan finds only APLite-owned items; after deletion, user files, guest apps and web apps are intact; the log records the item/byte count.
+- [ ] APStore shows Web Apps and Native Modules separately; "Get" installs a web shortcut; "Verify module integrity" logs hashes. No UI promises installing an external IPA.
+- [ ] Beta build: four-finger hold opens the survey, a single four-finger tap still opens the app menu, drag-select → note → save produces a record, and "Export all surveys" writes a JSON with base64 images.
+- [ ] Stable build (empty `APLiteReleaseChannel`): the survey entry point and "Export beta surveys" are absent and the gesture does nothing.
+- [ ] Lint design gate shows no new FAIL; CI build and the full unit-test suite pass before this beta is tagged.
+
 ## Known unresolved issues
 
 Record any failures here before merging to `main`. Do not mark a feature complete on the strength of

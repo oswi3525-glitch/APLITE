@@ -17,17 +17,24 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
                 // One owner for the process-wide audio session. Guest apps, WebKit, Quick Look and speech all
                 // share it; starting it before MediaControl also fixes the silent-switch-sensitive default
                 // category that made the desktop silent over HDMI / AirPlay.
+                // Audio activates during boot step 2 and calls these closures immediately. DesktopModel.shared
+                // owns the guest-app scan, keychain reads and cache checks; forcing it here put that heavy
+                // singleton init on the boot main thread. Before services are ready there are no windows or
+                // tabs to inspect anyway, so report the safe answer and let the real state take over later.
                 AudioSessionManager.shared.guestAppsActive = {
+                    guard BootCoordinator.shared.servicesReady else { return false }
                     // A minimised or off-desk guest can still be playing audio. "Shown" is not a proxy for
                     // "silent": keeping the session for any live guest window avoids cutting its sound.
-                    DesktopModel.shared.windows.contains { $0.guestWindow != nil }
+                    return DesktopModel.shared.windows.contains { $0.guestWindow != nil }
                 }
                 AudioSessionManager.shared.audioInUse = {
-                    QuickLook.isActive || ReadAloud.shared.isSpeaking || WebAudioActivity.shared.isPlaying
-                        || DesktopModel.shared.windows.contains { $0.guestWindow != nil && $0.isShown }
+                    let basic = QuickLook.isActive || ReadAloud.shared.isSpeaking || WebAudioActivity.shared.isPlaying
+                    guard BootCoordinator.shared.servicesReady else { return basic }
+                    return basic || DesktopModel.shared.windows.contains { $0.guestWindow != nil && $0.isShown }
                 }
                 // Web Audio contexts can stay suspended after an interruption; nudge every open tab.
                 AudioSessionManager.shared.resumeWebAudio = {
+                    guard BootCoordinator.shared.servicesReady else { return }
                     for window in DesktopModel.shared.windows {
                         for tab in window.tabs {
                             tab.evaluateJavaScript("window.__ideskVolumeResume && window.__ideskVolumeResume()")

@@ -3,6 +3,38 @@
 All notable changes to APLite are documented here. APLite is based on iDesk v0.6.3
 (upstream commit `2179dbd`); the original upstream history is not rewritten.
 
+## 1.3.0 (beta 1) — unsigned development release
+
+Beta build. Bundle ID, persistence keys (legacy `iDesk.*` included), Guest Engine, attribution and
+the unsigned build path are unchanged. The release channel is set to `beta 1`, so beta-only UI is
+enabled; a stable build of the same code sets an empty channel and hides it entirely.
+
+- **Boot hang fixed.** The 20 s watchdog no longer shares the main queue with the work it guards;
+  it now records a timestamped fault from a utility queue before hopping to main. Audio callbacks no
+  longer force `DesktopModel.shared` (guest scan, Keychain, cache checks) into boot step 2, the
+  legacy `iDesk.clearCachesOnLaunch` cache wipe runs off main, and preview mode no longer strands the
+  desktop behind the boot overlay. Every boot phase is logged with elapsed milliseconds.
+- **System Log.** New in-app log: Apple Unified Logging plus a bounded, rotated file in APLite's
+  sandbox. Four levels, timestamps, module names, filtering and clearing. User-facing at
+  Settings → Privacy & Security → System Log. No private `OSLogStore`, no reading other apps' logs.
+- **Settings split into five tabs.** System, Apps, Privacy & Security, Cleanup & Optimize, APStore.
+  The System tab is the existing `SystemSettingsView` unchanged, so every current key and action is
+  preserved; the other tabs add the new features rather than replacing old ones.
+- **APStore.** Browses Web Apps (website shortcuts) and Native Modules (code signed with APLite),
+  with SHA-256 integrity checks. It does not promise installing arbitrary external IPAs — iOS code
+  signing and sandbox rules forbid that.
+- **Internal cleanup.** Scans and deletes APLite-owned caches, stale temporary files, rotated logs,
+  old diagnostics and unused web icons — only inside APLite's sandbox. Content blocking remains
+  scoped to APLite's own WebViews.
+- **Beta survey (beta builds only).** Four-finger hold (single four-finger tap still opens the app
+  menu), drag to select an area, add a note, and export all reports as one structured JSON with
+  base64 screenshots and device metadata. Hidden completely on stable builds.
+- **Design system.** New SwiftUI surfaces use the existing `APLiteDesign` tokens, SF Symbols,
+  continuous corners, 44 pt targets and Reduce Motion behaviour; no gradients, tinted icon cards or
+  emoji. The design lint reports zero failures on the new files.
+- Verification: static checks only in this environment (no Xcode/Simulator). CI build, unit tests
+  and on-device boot/gesture checks are pending — see `SYSTEM_TEST_PLAN.md` §1.3.0.
+
 ## 1.2.9 (unsigned development release)
 
 Patch release on the 1.2.8 architecture. Bundle ID, persistence keys, Guest Engine, attribution and unsigned build path are unchanged.

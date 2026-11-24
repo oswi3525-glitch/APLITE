@@ -55,6 +55,13 @@ final class PreviewController: UIViewController {
         shield.addGestureRecognizer(hold)
 
         model.externalConnected()
+        // Preview mode has no external scene, so nobody else calls finishDesktopPreparation().
+        // Without this the preview desktop stayed behind the boot overlay forever.
+        // The coordinator drops all observers as soon as it fires, and the closure is weak.
+        _ = BootCoordinator.shared.whenServicesReady { [weak self] in
+            guard self != nil else { return }
+            BootCoordinator.shared.finishDesktopPreparation()
+        }
     }
 
     override func viewDidLayoutSubviews() {

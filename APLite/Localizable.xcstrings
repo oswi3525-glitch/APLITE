@@ -7894,6 +7894,706 @@
           }
         }
       }
+    },
+    "Privacy & Security": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quyền riêng tư & Bảo mật"
+          }
+        }
+      }
+    },
+    "Cleanup & Optimize": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dọn rác & Tối ưu"
+          }
+        }
+      }
+    },
+    "APStore": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "APStore"
+          }
+        }
+      }
+    },
+    "Installed apps": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ứng dụng đã cài"
+          }
+        }
+      }
+    },
+    "Web apps": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Web app"
+          }
+        }
+      }
+    },
+    "Native modules": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Module native"
+          }
+        }
+      }
+    },
+    "Web shortcuts": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lối tắt web"
+          }
+        }
+      }
+    },
+    "Open the Apps page": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mở trang Ứng dụng"
+          }
+        }
+      }
+    },
+    "Web shortcuts open in APLite's browser. Native versions need a signed IPA and a signing app; iOS does not allow an app to install arbitrary IPAs.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lối tắt web mở trong trình duyệt của APLite. Phiên bản native cần IPA đã giải mã và ứng dụng ký; iOS không cho phép cài IPA tùy ý."
+          }
+        }
+      }
+    },
+    "No native modules are bundled with this build.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bản dựng này không kèm module native nào."
+          }
+        }
+      }
+    },
+    "Access": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quyền truy cập"
+          }
+        }
+      }
+    },
+    "Activity": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hoạt động"
+          }
+        }
+      }
+    },
+    "System log": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nhật ký hệ thống"
+          }
+        }
+      }
+    },
+    "Export beta surveys": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Xuất khảo sát beta"
+          }
+        }
+      }
+    },
+    "Browser privacy": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quyền riêng tư trình duyệt"
+          }
+        }
+      }
+    },
+    "Logins stay in APLite's local vault on this device only. Sensitive values are redacted before they reach the system log or an exported report.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thông tin đăng nhập chỉ lưu trong kho của APLite trên thiết bị này. Dữ liệu nhạy cảm được che trước khi vào nhật ký hoặc báo cáo xuất ra."
+          }
+        }
+      }
+    },
+    "Content blockers work only inside web pages opened by APLite. iOS does not let an app scan or clean other apps.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Trình chặn nội dung chỉ hoạt động trong trang web mở bằng APLite. iOS không cho app quét hay dọn app khác."
+          }
+        }
+      }
+    },
+    "Level": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mức độ"
+          }
+        }
+      }
+    },
+    "All": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tất cả"
+          }
+        }
+      }
+    },
+    "Debug": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Debug"
+          }
+        }
+      }
+    },
+    "Info": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Info"
+          }
+        }
+      }
+    },
+    "Error": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lỗi"
+          }
+        }
+      }
+    },
+    "Fault": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lỗi nghiêm trọng"
+          }
+        }
+      }
+    },
+    "No log entries": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chưa có bản ghi"
+          }
+        }
+      }
+    },
+    "Events such as slow startup, permission errors and failed installs appear here.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Các sự kiện như khởi động chậm, lỗi quyền và lỗi cài đặt xuất hiện tại đây."
+          }
+        }
+      }
+    },
+    "APLite keeps a bounded copy of its own log. Unified Log entries remain in the system and cannot be deleted by an app.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "APLite giữ một bản sao có giới hạn của nhật ký. Bản ghi Unified Log vẫn nằm trong hệ thống và app không thể xoá."
+          }
+        }
+      }
+    },
+    "Clear log": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Xoá nhật ký"
+          }
+        }
+      }
+    },
+    "Clear APLite's log copy?": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Xoá bản sao nhật ký của APLite?"
+          }
+        }
+      }
+    },
+    "Scan APLite's files": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quét tệp của APLite"
+          }
+        }
+      }
+    },
+    "Junk found": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tệp rác tìm thấy"
+          }
+        }
+      }
+    },
+    "Found": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đã tìm thấy"
+          }
+        }
+      }
+    },
+    "Quick actions": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thao tác nhanh"
+          }
+        }
+      }
+    },
+    "Scans caches, temporary install files, rotated logs, old reports and unused web app icons — only inside APLite's own sandbox.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quét cache, tệp cài đặt tạm, nhật ký cũ, báo cáo cũ và biểu tượng web app không dùng — chỉ trong sandbox của APLite."
+          }
+        }
+      }
+    },
+    "Nothing to clean. APLite's files are in order.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Không có gì để dọn. Tệp của APLite ổn."
+          }
+        }
+      }
+    },
+    "Delete %lld junk item(s)": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Xoá %lld tệp rác"
+          }
+        }
+      }
+    },
+    "Delete APLite-owned junk?": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Xoá tệp rác thuộc APLite?"
+          }
+        }
+      }
+    },
+    "Only APLite's caches, stale temporary files and old reports are removed. User files and installed apps stay.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chỉ xoá cache của APLite, tệp tạm cũ và báo cáo cũ. Tệp người dùng và ứng dụng đã cài giữ nguyên."
+          }
+        }
+      }
+    },
+    "Release caches?": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Giải phóng cache?"
+          }
+        }
+      }
+    },
+    "Release": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Giải phóng"
+          }
+        }
+      }
+    },
+    "Caches released.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đã giải phóng cache."
+          }
+        }
+      }
+    },
+    "Freed %@ of APLite-owned files.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đã giải phóng %@ tệp của APLite."
+          }
+        }
+      }
+    },
+    "Guest app caches": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cache của app khách"
+          }
+        }
+      }
+    },
+    "Temporary files": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tệp tạm"
+          }
+        }
+      }
+    },
+    "Rotated system logs": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nhật ký hệ thống cũ"
+          }
+        }
+      }
+    },
+    "Old diagnostics reports": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Báo cáo chẩn đoán cũ"
+          }
+        }
+      }
+    },
+    "Build Center archives": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kho lưu Build Center"
+          }
+        }
+      }
+    },
+    "Unused web app icons": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Biểu tượng web app không dùng"
+          }
+        }
+      }
+    },
+    "Get": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lấy"
+          }
+        }
+      }
+    },
+    "Installed": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đã cài"
+          }
+        }
+      }
+    },
+    "Manage modules in Apps": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quản lý module trong Ứng dụng"
+          }
+        }
+      }
+    },
+    "Verify module integrity": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kiểm tra toàn vẹn module"
+          }
+        }
+      }
+    },
+    "About APStore": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Về APStore"
+          }
+        }
+      }
+    },
+    "Added %@ to the desktop.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đã thêm %@ vào màn hình nền."
+          }
+        }
+      }
+    },
+    "Verified %lld bundled module(s). Details are in the system log.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đã kiểm tra %lld module. Chi tiết trong nhật ký hệ thống."
+          }
+        }
+      }
+    },
+    "Web Apps are website shortcuts that open in APLite's browser. Native Modules are code bundled and signed together with APLite; they need an official signed build. APLite cannot install arbitrary IPA files from outside — iOS signature and sandbox rules forbid it.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Web App là lối tắt trang web mở trong trình duyệt APLite. Module Native là mã được đóng gói và ký cùng APLite, cần bản dựng chính thức. APLite không thể cài IPA tuỳ ý từ bên ngoài — quy tắc ký mã và sandbox của iOS cấm."
+          }
+        }
+      }
+    },
+    "Drag over the area with the problem": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kéo qua vùng cần báo lỗi"
+          }
+        }
+      }
+    },
+    "What went wrong?": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lỗi gì đã xảy ra?"
+          }
+        }
+      }
+    },
+    "No desktop to capture": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Không có màn hình nền để chụp"
+          }
+        }
+      }
+    },
+    "Connect a display or use preview mode, then try again.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hãy kết nối màn hình ngoài hoặc dùng chế độ xem trước, rồi thử lại."
+          }
+        }
+      }
+    },
+    "Retake": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chụp lại"
+          }
+        }
+      }
+    },
+    "Save report": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lưu báo cáo"
+          }
+        }
+      }
+    },
+    "Use this area": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dùng vùng này"
+          }
+        }
+      }
+    },
+    "No surveys yet": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chưa có khảo sát"
+          }
+        }
+      }
+    },
+    "Use the four-finger hold, or the button below, to capture an area and describe the problem.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Giữ bốn ngón tay hoặc dùng nút bên dưới để chụp một vùng và mô tả lỗi."
+          }
+        }
+      }
+    },
+    "Start a survey": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bắt đầu khảo sát"
+          }
+        }
+      }
+    },
+    "Export all surveys": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Xuất tất cả khảo sát"
+          }
+        }
+      }
+    },
+    "Delete all surveys": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Xoá tất cả khảo sát"
+          }
+        }
+      }
+    },
+    "No note": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Không có ghi chú"
+          }
+        }
+      }
+    },
+    "Exports one JSON file with screenshots, notes, timestamps and device metadata, ready to save to Files or iCloud Drive and share with the APLite team.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Xuất một tệp JSON gồm ảnh chụp, ghi chú, thời gian và thông tin thiết bị, sẵn sàng lưu vào Files/iCloud Drive để gửi cho đội APLite."
+          }
+        }
+      }
+    },
+    "Saved surveys": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Khảo sát đã lưu"
+          }
+        }
+      }
     }
   },
   "version": "1.0"

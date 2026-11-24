@@ -9,6 +9,8 @@ hoặc iPad thành trackpad và bàn phím.
 [English](README.md)
 
 > **Thử nghiệm.** iDesk dùng API riêng của UIKit, cài bằng cách sideload, và bản iOS sau có thể làm hỏng vài phần.
+>
+> **Bản mới nhất: APLite 1.3.0 (beta 1).** Tính năng chỉ dành cho beta (khảo sát trong ứng dụng) được bật qua kênh phát hành và ẩn hoàn toàn trên bản stable. Build CI, unit test và kiểm tra trên thiết bị cho 1.3.0 vẫn đang chờ — xem `SYSTEM_TEST_PLAN.md` mục 1.3.0.
 
 ## Tính năng
 

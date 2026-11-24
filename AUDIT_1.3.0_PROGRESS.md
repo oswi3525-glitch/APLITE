@@ -87,5 +87,8 @@ the skill directory itself is gitignored and is not bundled.
 4. **Version metadata** deliberately left at `1.2.9` (`project.yml`, changelog, README, live
    manifest, in-app changelog) so an unverified build is never labelled 1.3.0. Bump all of them
    together only after items 1–3 pass.
+   - **Cập nhật 24/11/2026:** theo yêu cầu phát hành, metadata đã được nâng đồng loạt lên
+     **1.3.0 (beta 1)** với kênh `beta 1`. Chi tiết xem `AUDIT_1.3.0_IMPLEMENTATION.md §6`.
+     Điều kiện CI/device ở các mục 1–3 ở trên vẫn giữ nguyên — nhãn beta không thay thế kiểm chứng.
 5. Decide whether to commit `skills-lock.json` (pins the design-skill version; contains no skill
    content). It was left untracked pending your preference.

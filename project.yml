@@ -16,8 +16,11 @@ targets:
         SWIFT_VERSION: "5.0"
         SWIFT_OBJC_BRIDGING_HEADER: APLite/APLite-Bridging-Header.h
         CODE_SIGN_STYLE: Automatic
-        MARKETING_VERSION: "1.2.9"
+        MARKETING_VERSION: "1.3.0"
         CURRENT_PROJECT_VERSION: "1"
+        # Channel suffix shown as "1.3.0 (beta 1)". Empty on stable builds;
+        # any value containing "beta" unlocks beta-only UI (survey capture and export).
+        APLiteReleaseChannel: "beta 1"
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         SWIFT_EMIT_LOC_STRINGS: YES
         LOCALIZATION_PREFERS_STRING_CATALOGS: YES
@@ -34,6 +37,7 @@ targets:
           UIImageRespectsSafeAreaInsets: true
         APLiteRepository: oswi3525-glitch/APLITE
         APLiteUpstreamRepository: itshieuk/iDesk
+        APLiteReleaseChannel: $(APLiteReleaseChannel)
         UIApplicationSupportsIndirectInputEvents: true
         UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait, UIInterfaceOrientationLandscapeLeft, UIInterfaceOrientationLandscapeRight]
         UISupportedInterfaceOrientations~ipad: [UIInterfaceOrientationPortrait, UIInterfaceOrientationPortraitUpsideDown, UIInterfaceOrientationLandscapeLeft, UIInterfaceOrientationLandscapeRight]
@@ -93,6 +97,8 @@ targets:
     sources:
       - Tests
       - APLite/App/AudioDiagnostics.swift
+      - APLite/System/APLogModel.swift
+      - APLite/System/CleanupPolicy.swift
       - APLite/System/ThermalMath.swift
       - APLite/System/WindowListMath.swift
       - APLite/System/APLiteSettings.swift

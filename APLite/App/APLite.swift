@@ -29,16 +29,22 @@ enum APLite {
     }
 
     static var version: String {
-        Bundle.aplite.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "1.1.0"
+        Bundle.aplite.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "1.3.0"
     }
 
-    /// Optional channel suffix, e.g. "1.1.0 (beta 1)". Set `APLiteReleaseChannel` in Info.plist.
+    /// Optional channel suffix, e.g. "beta 1" → "1.3.0 (beta 1)". Set `APLiteReleaseChannel` in Info.plist.
     static var channel: String {
         (Bundle.aplite.object(forInfoDictionaryKey: "APLiteReleaseChannel") as? String) ?? ""
     }
 
     static var displayVersion: String {
         channel.isEmpty ? version : "\(version) (\(channel))"
+    }
+
+    /// Beta-only features (currently the in-app survey) must be absent from stable builds.
+    /// The channel comes from Info.plist and is empty unless a build explicitly sets it.
+    static var isBeta: Bool {
+        channel.lowercased().contains("beta")
     }
 
     /// The attribution required by the project rules. Shown in Settings → About, About on the

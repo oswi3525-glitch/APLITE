@@ -43,6 +43,7 @@ enum Wallpapers {
 struct DesktopView: View {
     @ObservedObject var model: DesktopModel
     @ObservedObject private var boot = BootCoordinator.shared
+    @State private var showSurveyCapture = false
 
     var body: some View {
         Group {
@@ -58,6 +59,13 @@ struct DesktopView: View {
         .preferredColorScheme(.dark)
         .environment(\.colorScheme, .dark)
         .animation(APLiteAnimation.gentle, value: boot.desktopReady)
+        .onReceive(NotificationCenter.default.publisher(for: .apliteStartBetaSurvey)) { _ in
+            guard APLite.isBeta else { return }
+            showSurveyCapture = true
+        }
+        .fullScreenCover(isPresented: $showSurveyCapture) {
+            BetaSurveyCaptureView()
+        }
     }
 }
 

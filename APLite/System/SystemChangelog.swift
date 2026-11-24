@@ -11,6 +11,14 @@ enum SystemChangelog {
     }
 
     static let entries: [Entry] = [
+        Entry(version: "1.3.0 (beta 1)", date: "2026-11-24", items: [
+            "Boot: the startup watchdog now runs off the main thread and every boot phase is timed in the System Log. A legacy cache flag no longer blocks launch and preview mode no longer stays on the boot screen.",
+            "System Log: Settings → Privacy & Security → System Log shows timestamped events by level and can be filtered or cleared. It is APLite's own log, not the iOS system log.",
+            "Settings is now five tabs: System, Apps, Privacy & Security, Cleanup & Optimize and APStore. All previous controls live in the System tab unchanged.",
+            "APStore lists Web Apps and signed Native Modules separately and checks module integrity. iOS does not allow installing arbitrary external IPAs.",
+            "Cleanup removes only APLite-owned caches, stale temporary files and old reports. No feature scans or cleans other apps.",
+            "Beta survey: hold four fingers, drag over the problem area, add a note, then export one JSON file. A single four-finger tap still opens the app menu. This feature is hidden on stable builds.",
+        ]),
         Entry(version: "1.2.9", date: "2026-11-23", items: [
             "Desktop keyboard: drag its title bar to move it, −/× in the corner to collapse or close, and Reset keyboard position in Settings → Input.",
             "New Window button on the dock: a compact list of open windows; click to focus/restore, × to close, plus Tile and Show desktop.",

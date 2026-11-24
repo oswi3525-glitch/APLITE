@@ -116,10 +116,15 @@ final class GuestStore: ObservableObject {
         let clearCaches = UserDefaults.standard.bool(forKey: Self.clearCachesKey)
         UserDefaults.standard.removeObject(forKey: Self.clearCachesKey)
         let caches = fm.urls(for: .cachesDirectory, in: .userDomainMask)[0]
-        if clearCaches {
-            for item in (try? fm.contentsOfDirectory(at: caches, includingPropertiesForKeys: nil)) ?? [] { try? fm.removeItem(at: item) }
-        }
+        // The flag can survive an upgrade from an older version. Guest caches can be many GB;
+        // deleting them here (GuestStore init runs during boot) blocked the main thread long enough
+        // to strand the boot screen. All deletion now happens on the same background sweep below.
         DispatchQueue.global(qos: .utility).async {
+            if clearCaches {
+                for item in (try? fm.contentsOfDirectory(at: caches, includingPropertiesForKeys: nil)) ?? [] {
+                    try? fm.removeItem(at: item)
+                }
+            }
             var freed: UInt64 = 0
             let stale = ((try? fm.contentsOfDirectory(at: tmp, includingPropertiesForKeys: nil)) ?? [])
                 .filter { item in clearCaches || ["export-", "update-"].contains { item.lastPathComponent.hasPrefix($0) } }

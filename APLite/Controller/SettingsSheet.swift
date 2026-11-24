@@ -56,7 +56,7 @@ struct SettingsSheet: View {
             List {
                 Section {
                     NavigationLink {
-                        SystemSettingsView(model: model)
+                        SettingsTabContainer(model: model)
                     } label: {
                         Label("System settings", systemImage: "gearshape.2")
                     }

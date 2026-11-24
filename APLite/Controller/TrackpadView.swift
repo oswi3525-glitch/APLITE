@@ -41,6 +41,9 @@ final class TrackpadView: UIView {
     private var momentumLast: CFTimeInterval = 0
     private var multiStart: CGPoint?        // centroid when three or more fingers came down
     private var multiHandled = false        // the swipe already did its action
+    /// Beta builds only: hold four fingers still to open the survey tool. A four-finger tap keeps
+    /// opening the app menu, so no existing gesture changes.
+    private var surveyHoldTimer: Timer?
     private let tapFeedback = UIImpactFeedbackGenerator(style: .light)
     private let holdFeedback = UIImpactFeedbackGenerator(style: .medium)
 
@@ -207,6 +210,7 @@ final class TrackpadView: UIView {
     private func resetGesture() {
         stopMomentum()
         holdTimer?.invalidate()
+        surveyHoldTimer?.invalidate()
         if dragging { model.mouseUp(); dragging = false }
         if absPressed { model.physicalRelease(); absPressed = false }
         if pointerPressed { model.physicalRelease(); pointerPressed = false }
@@ -430,6 +434,15 @@ final class TrackpadView: UIView {
             lastPoint = nil
             twoFingerLast = nil
             multiStart = centroid(active)
+            if APLite.isBeta, active.count >= 4 {
+                surveyHoldTimer?.invalidate()
+                surveyHoldTimer = Timer.scheduledTimer(withTimeInterval: 0.6, repeats: false) { [weak self] _ in
+                    guard let self, self.maxTouches >= 4, !self.multiHandled else { return }
+                    self.multiHandled = true
+                    UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
+                    NotificationCenter.default.post(name: .apliteStartBetaSurvey, object: nil)
+                }
+            }
         } else if active.count >= 2 {
             holdTimer?.invalidate()
             lastPoint = nil
@@ -444,6 +457,7 @@ final class TrackpadView: UIView {
         guard let start = multiStart else { multiStart = c; return }
         let dx = c.x - start.x, dy = c.y - start.y
         guard max(abs(dx), abs(dy)) > 45 else { return }
+        surveyHoldTimer?.invalidate()
         multiHandled = true
         moved = true
         holdFeedback.impactOccurred()
@@ -510,6 +524,7 @@ final class TrackpadView: UIView {
     }
 
     private func finish(_ touches: Set<UITouch>, _ event: UIEvent?, allowClick: Bool) {
+        surveyHoldTimer?.invalidate()
         if mirrorMode { return absoluteEnded(touches, event, allowClick: allowClick) }
         if pointerTouch(touches) != nil {
             if pointerPressed { model.physicalRelease() }
