@@ -1,9 +1,9 @@
 name: Build APLite
 
-# Every push to aplite-dev or a fix/* branch (and manual runs) must produce a buildable unsigned IPA.
+# Every push to main, aplite-dev or a fix/* branch (and manual runs) must produce a buildable unsigned IPA.
 on:
   push:
-    branches: [aplite-dev, "fix/**"]
+    branches: [main, aplite-dev, "fix/**"]
   workflow_dispatch:
 
 concurrency:
