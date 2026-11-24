@@ -19,6 +19,7 @@ enum CodeSigner {
         case p12UnsupportedFormat
         case p12Damaged
         case p12WrongPassword
+        case p12Import(P12ImportErrorMapper.Reason)
         case p12MissingPrivateKey
         case p12MissingCertificate
         case p12NoTeamID
@@ -32,6 +33,7 @@ enum CodeSigner {
             case .p12UnsupportedFormat: return String(localized: "This is not a .p12 or .pfx certificate file.")
             case .p12Damaged: return String(localized: "The certificate file is damaged or truncated. Choose the original .p12 / .pfx again.")
             case .p12WrongPassword: return String(localized: "The password is wrong. Passwords from pass.txt are also tried automatically.")
+            case .p12Import(let reason): return P12ImportErrorMapper.message(for: reason)
             case .p12MissingPrivateKey: return String(localized: "The file has a certificate but no private key, so it cannot sign apps.")
             case .p12MissingCertificate: return String(localized: "The file has no usable signing certificate.")
             case .p12NoTeamID: return String(localized: "The certificate has no Team ID (Organizational Unit) and cannot sign an iOS app.")
@@ -232,7 +234,7 @@ enum CodeSigner {
         var items: CFArray?
         let status = SecPKCS12Import(p12 as CFData, [kSecImportExportPassphrase as String: password] as CFDictionary, &items)
         guard status == errSecSuccess else {
-            throw status == errSecAuthFailed ? Failure.p12WrongPassword : Failure.p12Damaged
+            throw Failure.p12Import(P12ImportErrorMapper.reason(for: status))
         }
         guard let first = (items as? [[String: Any]])?.first,
               let identityRef = first[kSecImportItemIdentity as String],

@@ -324,6 +324,8 @@ final class DeskWindow: NSObject, ObservableObject, Identifiable, WKUIDelegate, 
         handler(pageBridge, DesktopPages.messageName)
         script(DesktopSite.script(screen: DesktopModel.shared.screenSize))
         ContentBlocker.apply(to: controller)
+        // YouTube ads come from the same domain the blocker allow-lists; handle them separately.
+        script(YouTubeAds.script)
         script(DarkPages.script())
         script(FacebookEnhancements.script)
         script(WebVolume.script)
@@ -654,6 +656,13 @@ final class DeskWindow: NSObject, ObservableObject, Identifiable, WKUIDelegate, 
            !Self.sameSite(host, own) {
             decisionHandler(.cancel)
             DesktopModel.shared.openWindow(url)
+            return
+        }
+        // Zalo Web (and other sites) try to hand off to custom `zalo://` deep links. WKWebView cannot
+        // open those and treating them as a normal navigation leaves a blank tab. Web schemes only.
+        if let scheme = navigationAction.request.url?.scheme?.lowercased(),
+           !["http", "https", "idesk", "about", "data", "blob"].contains(scheme) {
+            decisionHandler(.cancel)
             return
         }
         decisionHandler(.allow)

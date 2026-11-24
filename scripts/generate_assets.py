@@ -96,7 +96,9 @@ def tile(size, stops, radius=0.23):
 
 
 def imageset(name, big, small):
-    folder = ROOT / name
+    # Xcode derives the asset type from the folder extension. A plain folder is ignored by the
+    # asset catalog, which made every branded icon invisible at runtime.
+    folder = ROOT / (name if name.endswith(".imageset") else name + ".imageset")
     folder.mkdir(parents=True, exist_ok=True)
     big.save(folder / f"{name}@3x.png", optimize=True)
     small.save(folder / f"{name}.png", optimize=True)
@@ -244,7 +246,7 @@ for name, fn in (("BrowserIcon", browser), ("FilesIcon", files),
 
 
 def colorset(name, hex_color):
-    folder = ROOT / name
+    folder = ROOT / (name if name.endswith(".colorset") else name + ".colorset")
     folder.mkdir(parents=True, exist_ok=True)
     h = hex_color.lstrip("#")
     r, g, b = (int(h[i:i + 2], 16) / 255 for i in (0, 2, 4))

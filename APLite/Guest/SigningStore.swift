@@ -66,19 +66,35 @@ final class SigningStore: ObservableObject {
 
     private func write(_ account: String, _ data: Data) {
         let key = [kSecClass: kSecClassGenericPassword, kSecAttrService: service, kSecAttrAccount: account] as CFDictionary
-        SecItemDelete(key)
         // A signing identity is only needed while the user is actively signing an export.
         // ThisDeviceOnly also keeps it out of iCloud Keychain / migrated backups.
-        SecItemAdd([kSecClass: kSecClassGenericPassword, kSecAttrService: service, kSecAttrAccount: account,
-                    kSecValueData: data,
-                    kSecAttrAccessible: kSecAttrAccessibleWhenUnlockedThisDeviceOnly] as CFDictionary, nil)
+        let attributes: [CFString: Any] = [kSecValueData: data,
+                                           kSecAttrAccessible: kSecAttrAccessibleWhenUnlockedThisDeviceOnly]
+        // Update first: delete-then-add could silently lose the certificate if Add fails.
+        let status = SecItemUpdate(key, attributes as CFDictionary)
+        if status == errSecItemNotFound {
+            var item: [CFString: Any] = [kSecClass: kSecClassGenericPassword,
+                                         kSecAttrService: service,
+                                         kSecAttrAccount: account]
+            item.merge(attributes) { _, new in new }
+            let added = SecItemAdd(item as CFDictionary, nil)
+            if added != errSecSuccess {
+                APLog.error("Keychain add failed for \(account) (code \(added))", module: "Signing")
+            }
+        } else if status != errSecSuccess {
+            APLog.error("Keychain update failed for \(account) (code \(status))", module: "Signing")
+        }
     }
 
-    /// One-time migration: items written by older builds used AfterFirstUnlock. Rewriting them with
-    /// the stricter class keeps saved certificates working and upgrades their protection in place.
+    /// Migration for items written by older builds with AfterFirstUnlock. Guarded by a flag so a
+    /// failed migration is retried next launch, but a successful one never rewrites the identity.
     private func migrateKeychainProtection() {
+        let migratedKey = "APLite.signing.protectionMigrated.v1"
+        guard !UserDefaults.standard.bool(forKey: migratedKey) else { return }
         for account in ["p12", "password", "profile"] {
+            // write() updates the accessibility class in place; it never deletes a working item.
             if let data = read(account) { write(account, data) }
         }
+        UserDefaults.standard.set(true, forKey: migratedKey)
     }
 }

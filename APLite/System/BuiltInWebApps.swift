@@ -80,8 +80,13 @@ enum BuiltInWebApps {
     /// waiting for the user to find the button in Settings. Respects a user who removed them later.
     static func installOnFirstLaunchIfNeeded() {
         guard !UserDefaults.standard.bool(forKey: installedKey) else { return }
-        UserDefaults.standard.set(true, forKey: installedKey)
-        installMissing()
+        // Only mark done once the presets really are all present; an early failure must be retried.
+        _ = installMissing()
+        let allPresent = BuiltInWebApp.allCases.allSatisfy { app in
+            guard let url = URL(string: app.url) else { return false }
+            return WebApps.shared.isInstalled(url.absoluteString)
+        }
+        if allPresent { UserDefaults.standard.set(true, forKey: installedKey) }
     }
 
     private static func icon(for app: BuiltInWebApp) -> UIImage? {

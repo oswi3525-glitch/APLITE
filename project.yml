@@ -99,6 +99,7 @@ targets:
       - APLite/App/AudioDiagnostics.swift
       - APLite/System/APLogModel.swift
       - APLite/System/BuildCenterPolicy.swift
+      - APLite/System/P12ImportErrorMapper.swift
       - APLite/System/VersionCompare.swift
       - APLite/System/CleanupPolicy.swift
       - APLite/System/ThermalMath.swift

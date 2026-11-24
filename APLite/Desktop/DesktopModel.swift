@@ -1948,13 +1948,18 @@ final class DesktopModel: ObservableObject {
         guard !entries.isEmpty else { return [] }
         let gap = CGFloat(dockSpacing)
         let n = CGFloat(entries.count)
-        let available = max(0, rightDockRect.minX - leftDockRect.maxX - Layout.dockGap * 2 - Layout.dockPadding * 2)
+        // The side pills are not the same width (the tray is wider than the control pill). Deriving
+        // the corridor from one side and the other separately made it asymmetric and pushed the
+        // centred dock to the left as soon as it filled up. Use one symmetric inset instead.
+        let inset = max(leftDockRect.maxX, screenSize.width - rightDockRect.minX)
+                    + Layout.dockGap + Layout.dockPadding
+        let minX = inset
+        let maxX = screenSize.width - inset
+        let available = max(0, maxX - minX)
         let base = min(Layout.dockItemMax, max(Layout.dockItemMin, Layout.dockIconBase * CGFloat(dockIconScale)))
         var side = (available - gap * (n - 1)) / n
         side = max(Layout.dockItemMin, min(base, side))
         let total = n * side + (n - 1) * gap
-        let minX = leftDockRect.maxX + Layout.dockGap + Layout.dockPadding
-        let maxX = rightDockRect.minX - Layout.dockGap - Layout.dockPadding
         let startX = min(max(minX, (screenSize.width - total) / 2), max(minX, maxX - total))
         var x = startX
         return entries.compactMap { entry in
@@ -2675,6 +2680,7 @@ final class DesktopModel: ObservableObject {
         let anyVisible = windows.contains { $0.isShown }
         return [
             MenuItem("New window", "plus.rectangle.on.rectangle") { [weak self] in self?.newBrowserWindow() },
+            MenuItem("Add IPA app to desktop…", "plus.app") { DesktopPages.addIPA() },
             MenuItem("New sticky note", "note.text.badge.plus") { [weak self] in self?.newSticky(at: self?.cursor.position) },
             MenuItem("Reopen closed window or tab", "arrow.uturn.backward", enabled: canReopenClosed) { [weak self] in self?.reopenClosed() },
             MenuItem("Restore last removed web app", "arrow.uturn.backward.circle",

@@ -65,8 +65,25 @@ def main():
     if not library.is_dir():
         fail("Assets/Icons is missing")
 
+    # Xcode derives an asset's type from its folder extension. A folder named "ZaloIcon" that
+    # contains an imageset Contents.json is silently ignored, so UIImage(named:) returns nil.
+    catalog = ROOT / "APLite/Assets.xcassets"
+    kinds = (".appiconset", ".imageset", ".colorset")
+    names = set()
+    for child in catalog.iterdir():
+        if not child.is_dir():
+            continue
+        if not child.name.endswith(kinds):
+            fail(f"asset folder '{child.name}' has no recognised extension; Xcode ignores it")
+        names.add(child.name.split(".", 1)[0])
+    for swift_file in (ROOT / "APLite").rglob("*.swift"):
+        for name in re.findall(r'UIImage\(named:\s*"([^"]+)"\)', swift_file.read_text(encoding="utf-8")):
+            if name not in names:
+                fail(f"{swift_file.relative_to(ROOT)} references missing asset '{name}'")
+
     print(f"asset validation OK: {len(concepts)} concepts, "
-          f"{len(manifest['families'])} licensed families, library outside app bundle")
+          f"{len(manifest['families'])} licensed families, library outside app bundle, "
+          f"{len(names)} compiled assets")
 
 
 if __name__ == "__main__":

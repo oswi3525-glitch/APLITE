@@ -14,7 +14,7 @@ from PIL import Image, ImageDraw, ImageFilter
 W, H = 1920, 1080
 random.seed(20261123)
 
-out = Path(__file__).resolve().parent.parent / "APLite/Assets.xcassets/OceanWallpaper/ocean.imageset"
+out = Path(__file__).resolve().parent.parent / "APLite/Assets.xcassets/OceanWallpaper.imageset"
 out.mkdir(parents=True, exist_ok=True)
 
 horizon = int(H * 0.46)

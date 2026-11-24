@@ -510,6 +510,12 @@ enum DesktopPages {
         UserDefaults.standard.set(min(range.upperBound, max(range.lowerBound, current + step)), forKey: key)
     }
 
+    /// Picks one or more IPAs and installs them. The guest apps appear on the desktop automatically
+    /// through DesktopModel's apps sink and open as windows when clicked — no new install logic here.
+    static func addIPA() {
+        DocumentPicker.present { urls in addPicked(urls) }
+    }
+
     private static func addPicked(_ urls: [URL]) {
         let m = DesktopModel.shared
         let files = CertificateFiles.collect(urls)

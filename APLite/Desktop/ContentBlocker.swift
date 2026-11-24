@@ -8,7 +8,10 @@ import WebKit
 enum ContentBlocker {
     static let key = "iDesk.blockAds"
     private static let builtInKey = "iDesk.blockAds.builtIn", blockedKey = "iDesk.blockAds.blocked", allowedKey = "iDesk.blockAds.allowed"
-    static let defaultAllowed = ["youtube.com", "youtube-nocookie.com", "youtu.be"]
+    /// Zalo Web loads its own UI assets from zalo.me hosts; blocking them makes the page fail to
+    /// open. Keep it on the relaxed list just like YouTube's player.
+    static let defaultAllowed = ["youtube.com", "youtube-nocookie.com", "youtu.be",
+                                 "zalo.me", "zaloapp.com"]
 
     static var isEnabled: Bool {
         get { UserDefaults.standard.object(forKey: key) as? Bool ?? true }

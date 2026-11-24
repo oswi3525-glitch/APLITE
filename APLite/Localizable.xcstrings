@@ -8760,6 +8760,46 @@
           }
         }
       }
+    },
+    "The password is wrong, or the file is damaged. Check the password and choose the original .p12 / .pfx again.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mật khẩu sai hoặc tệp bị hỏng. Hãy kiểm tra mật khẩu và chọn lại đúng tệp .p12 / .pfx gốc."
+          }
+        }
+      }
+    },
+    "iOS cannot read this PKCS#12 file. It may use modern encryption: re-export it with `openssl pkcs12 -export -legacy ...` and try again.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iOS không đọc được tệp PKCS#12 này. Tệp có thể dùng mã hoá mới: hãy xuất lại bằng `openssl pkcs12 -export -legacy ...` rồi thử lại."
+          }
+        }
+      }
+    },
+    "iOS could not import the certificate (code %lld). Re-export the .p12 with legacy encryption and try again.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iOS không nhập được chứng chỉ (mã %lld). Hãy xuất lại tệp .p12 với mã hoá tương thích rồi thử lại."
+          }
+        }
+      }
+    },
+    "Add IPA app to desktop…": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thêm app IPA lên desktop…"
+          }
+        }
+      }
     }
   },
   "version": "1.0"

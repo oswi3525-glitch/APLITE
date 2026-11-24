@@ -13,7 +13,7 @@ from PIL import Image, ImageDraw, ImageFilter
 W, H = 1920, 1080
 random.seed(20261122)
 
-out = Path(__file__).resolve().parent.parent / "APLite/Assets.xcassets/MeadowWallpaper/meadow.imageset"
+out = Path(__file__).resolve().parent.parent / "APLite/Assets.xcassets/MeadowWallpaper.imageset"
 out.mkdir(parents=True, exist_ok=True)
 
 # Sky: top teal-blue fading into warm gold at the horizon.
