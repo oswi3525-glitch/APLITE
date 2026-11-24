@@ -1,6 +1,6 @@
 {
-  "version": 9,
-  "notice": "APLite 1.3.0 (beta 2): full-repo audit fixes — redacted crash reports, working auto-lock, survey on the phone screen, safer cleanup and stable-by-default builds.",
+  "version": 10,
+  "notice": "APLite 1.3.0 (beta 3): icons and wallpapers fixed, Zalo/YouTube browser fixes, honest p12 errors, centered dock and IPA apps on the desktop.",
   "wallpapers": null,
   "accent": null
 }

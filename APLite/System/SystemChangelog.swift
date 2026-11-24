@@ -11,6 +11,12 @@ enum SystemChangelog {
     }
 
     static let entries: [Entry] = [
+        Entry(version: "1.3.0 (beta 3)", date: "2026-11-24", items: [
+            "Icon and wallpaper assets now compile correctly — the branded icons and bundled wallpapers are visible again.",
+            "Zalo Web opens properly and YouTube ads can be skipped from within APLite's browser.",
+            "Certificate import explains the real error; saved signing identities are no longer lost on upgrade.",
+            "The dock is centered, and 'Add IPA app to desktop…' puts a guest app icon on the desktop that opens as a window.",
+        ]),
         Entry(version: "1.3.0 (beta 2)", date: "2026-11-24", items: [
             "Security: crash reports are redacted before they can be shared in a public issue; saved logins, logs and survey exports use iOS Data Protection.",
             "Beta survey now opens on the iPhone screen — the external display cannot receive drag gestures. A four-finger hold no longer interrupts a swipe.",

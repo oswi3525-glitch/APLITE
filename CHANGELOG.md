@@ -3,6 +3,14 @@
 All notable changes to APLite are documented here. APLite is based on iDesk v0.6.3
 (upstream commit `2179dbd`); the original upstream history is not rewritten.
 
+## 1.3.0 (beta 3) — unsigned development release
+
+- Fixed the asset catalog: icon and wallpaper folders now use the `.imageset` / `.colorset` extensions Xcode requires, so branded icons and bundled wallpapers actually render. The CI validator now enforces this.
+- Browser fixes: Zalo Web is exempted from content blocking, unsupported custom-scheme handoffs no longer blank the tab, and a YouTube-only script hides ads and clicks skip buttons.
+- Certificate import now reports the real `SecPKCS12Import` failure and keeps stored identities during Keychain migration.
+- The desktop dock is centered with symmetric side bounds, and "Add IPA app to desktop…" places a guest app icon that opens as a window.
+- Verification: CI `45317143926` build + unit tests passed; on-device checks for Zalo/YouTube and signing remain.
+
 ## 1.3.0 (beta 2) — unsigned development release
 
 Beta 2 is the full-repo audit follow-up to beta 1. Same bundle ID, keys and attribution.

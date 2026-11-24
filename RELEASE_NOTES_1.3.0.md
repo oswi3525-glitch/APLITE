@@ -1,6 +1,20 @@
+# APLite 1.3.0 (beta 3)
+
+**Ngày:** 24/11/2026 · **Artifact bản này:** `APLite-unsigned-1.3.0-beta.3.ipa` (chưa ký — ký bằng ESign / Feather / Scarlet / SideStore trước khi cài).
+
+## Beta 3 — sửa lỗi theo báo cáo người dùng
+- **Asset/icon:** các thư mục trong `Assets.xcassets` giờ có đuôi `.imageset` / `.colorset` — trước đó Xcode bỏ qua toàn bộ (mất icon Zalo/Facebook/Telegram, biểu tượng dock và wallpaper). Generator và `validate-assets.py` đã cập nhật để CI bắt lại lỗi này.
+- **Trình duyệt:** Zalo Web được đưa vào danh sách không chặn nội dung; các liên kết `zalo://` không còn làm tab trắng. Thêm script riêng ẩn khung quảng cáo và bấm nút Skip trên YouTube (content blocker vẫn bật cho youtube.com).
+- **Chứng chỉ:** thông báo nhập `.p12` phản ánh đúng nguyên nhân (sai mật khẩu / mã hoá OpenSSL 3 cần xuất lại `-legacy` / lỗi khác) thay vì luôn bảo “tệp hỏng”. Migration Keychain dùng `SecItemUpdate` có kiểm tra trạng thái — không còn mất chứng chỉ đã lưu.
+- **Desktop:** dock được căn giữa đúng (hành lang hai bên đối xứng). Thêm “Add IPA app to desktop…” vào menu desktop: chọn IPA → icon xuất hiện trên desktop → chạm mở thành cửa sổ (tuân theo luồng ký/reinstall hiện có của GuestStore).
+- **Khác:** cờ cài web app mặc định chỉ được ghi sau khi cài thành công.
+- **Kiểm chứng:** CI `45317143926` build + unit test **success**. Vẫn cần thử trên thiết bị cho Zalo/YouTube và luồng ký IPA.
+
+---
+
 # APLite 1.3.0 (beta 2)
 
-**Ngày:** 24/11/2026 · **Artifact bản này:** `APLite-unsigned-1.3.0-beta.2.ipa` (chưa ký — ký bằng ESign / Feather / Scarlet / SideStore trước khi cài).
+**Artifact:** `APLite-unsigned-1.3.0-beta.2.ipa`.
 
 ## Beta 2 — audit toàn repo và vá bảo mật
 - **Bảo mật:** redact crash report trước khi đưa vào GitHub issue công khai; mở rộng redaction (JSON, Bearer, `api_key`, `pin`, `session`); Data Protection cho kho cookie, log và export khảo sát; Keychain ký dùng `WhenUnlockedThisDeviceOnly` + migration; chặn `CFBundleExecutable` path traversal; Unzip chặn prefix/overflow; bridge Files kiểm tra main frame; BuildCenter chỉ gửi Bearer tới host GitHub và bỏ Authorization khi redirect khác host; ghi chú khảo sát được redact.
