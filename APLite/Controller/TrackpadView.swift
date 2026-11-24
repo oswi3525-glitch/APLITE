@@ -59,6 +59,7 @@ final class TrackpadView: UIView {
             guard mirrorMode != oldValue else { return }
             resetGesture()
             updateMirror()
+            if isSuppressedByPhysicalMouse { applyMouseSuppression() }
         }
     }
     private var mirror: UIView?
@@ -69,6 +70,15 @@ final class TrackpadView: UIView {
     private var absStart: CGPoint = .zero
     private var absPressed = false      // pressed on the desktop (dragging)
     private var absHandled = false      // this touch was already handled (right button), no click
+
+    /// A real GCMouse is connected: this virtual touchpad must stop receiving events entirely so it cannot
+    /// swallow or overwrite clicks and motion from the mouse. MouseInput flips the flag back on disconnect.
+    var isSuppressedByPhysicalMouse = false {
+        didSet {
+            guard oldValue != isSuppressedByPhysicalMouse else { return }
+            applyMouseSuppression()
+        }
+    }
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -89,6 +99,31 @@ final class TrackpadView: UIView {
     }
 
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+
+    private func applyMouseSuppression() {
+        let suppressed = isSuppressedByPhysicalMouse
+        isUserInteractionEnabled = !suppressed
+        // In mouse mode the pad is also the on-phone mirror of the desktop: keep it visible as a display,
+        // but it no longer handles touch. Without a mirror there is nothing to show, so hide it.
+        isHidden = suppressed && !mirrorMode
+        guard suppressed else { return }
+        holdTimer?.invalidate()
+        surveyHoldTimer?.invalidate()
+        stopMomentum()
+        if absPressed { model.physicalRelease(); absPressed = false }
+        if dragging { model.mouseUp(); dragging = false }
+        if pointerPressed { model.physicalRelease(); pointerPressed = false }
+        hoverLast = nil
+        pointerLast = nil
+        lastPoint = nil
+        maxTouches = 0
+    }
+
+    /// Returning nil keeps the suppressed pad from swallowing touches meant for views behind it.
+    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        if isSuppressedByPhysicalMouse { return nil }
+        return super.hitTest(point, with: event)
+    }
 
     deinit {
         mirrorTimer?.invalidate()
@@ -124,7 +159,7 @@ final class TrackpadView: UIView {
     /// Moves the desktop pointer to the matching point (via moveCursor so window dragging / hover still work).
     private func jump(to p: CGPoint) {
         let d = desktopPoint(p), c = model.cursor.position
-        model.moveCursor(dx: d.x - c.x, dy: d.y - c.y)
+        model.moveCursorFromTouchpad(dx: d.x - c.x, dy: d.y - c.y)
     }
 
     private func updateMirror() {
@@ -289,6 +324,7 @@ final class TrackpadView: UIView {
     // MARK: Real pointer
 
     @objc private func onHover(_ g: UIHoverGestureRecognizer) {
+        guard !isSuppressedByPhysicalMouse else { return }
         let p = g.location(in: self)
         switch g.state {
         case .began: hoverLast = p
@@ -298,7 +334,7 @@ final class TrackpadView: UIView {
             if MouseInput.shared.recentlyActive { hoverLast = p; break }   // GameController moves the pointer
             if mirrorMode { jump(to: p); break }
             if let l = hoverLast, !MouseInput.shared.recentlyActive {
-                model.moveCursor(dx: (p.x - l.x) * 2, dy: (p.y - l.y) * 2)
+                model.moveCursorFromTouchpad(dx: (p.x - l.x) * 2, dy: (p.y - l.y) * 2)
             }
             hoverLast = p
         default: hoverLast = nil
@@ -306,11 +342,12 @@ final class TrackpadView: UIView {
     }
 
     @objc private func onWheel(_ g: UIPanGestureRecognizer) {
+        guard !isSuppressedByPhysicalMouse else { return }
         let t = g.translation(in: self)
         if g.state == .began { scrollLast = .zero; MouseInput.shared.count(.scroll) }
         if !MouseInput.shared.recentlyActive {
             let k = 2 * InputSettings.scrollDirection
-            model.scroll(dx: -(t.x - scrollLast.x) * k, dy: -(t.y - scrollLast.y) * k)
+            model.scrollFromTouchpad(dx: -(t.x - scrollLast.x) * k, dy: -(t.y - scrollLast.y) * k)
         }
         scrollLast = t
         if g.state == .ended || g.state == .cancelled { scrollLast = .zero }
@@ -349,7 +386,7 @@ final class TrackpadView: UIView {
         let now = active.first?.timestamp ?? CACurrentMediaTime()
         if let l = twoFingerLast {
             twoFingerTravel += hypot(c.x - l.x, c.y - l.y)
-            model.scroll(dx: -(c.x - l.x) * gain, dy: -(c.y - l.y) * gain)
+            model.scrollFromTouchpad(dx: -(c.x - l.x) * gain, dy: -(c.y - l.y) * gain)
             let dt = now - lastScrollTime
             if dt > 0.001 {
                 let v = CGPoint(x: (c.x - l.x) / dt, y: (c.y - l.y) / dt)
@@ -376,7 +413,7 @@ final class TrackpadView: UIView {
     @objc private func momentumTick(_ link: CADisplayLink) {
         let now = link.timestamp, dt = min(0.05, max(0, now - momentumLast))
         momentumLast = now
-        model.scroll(dx: -scrollVelocity.x * dt * scrollGain, dy: -scrollVelocity.y * dt * scrollGain)
+        model.scrollFromTouchpad(dx: -scrollVelocity.x * dt * scrollGain, dy: -scrollVelocity.y * dt * scrollGain)
         let decay = CGFloat(pow(0.94, dt * 60))
         scrollVelocity = CGPoint(x: scrollVelocity.x * decay, y: scrollVelocity.y * decay)
         if hypot(scrollVelocity.x, scrollVelocity.y) < 25 { stopMomentum() }
@@ -395,6 +432,7 @@ final class TrackpadView: UIView {
     }
 
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        guard !isSuppressedByPhysicalMouse else { return }
         if mirrorMode { return absoluteBegan(touches, event) }
         if let t = pointerTouch(touches) {
             // A real mouse button went down (AssistiveTouch pointer)
@@ -477,11 +515,12 @@ final class TrackpadView: UIView {
     }
 
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+        guard !isSuppressedByPhysicalMouse else { return }
         if mirrorMode { return absoluteMoved(event) }
         if let t = pointerTouch(touches) {
             let p = t.location(in: self)
             if let l = pointerLast, !MouseInput.shared.recentlyActive {
-                model.moveCursor(dx: (p.x - l.x) * 2, dy: (p.y - l.y) * 2)
+                model.moveCursorFromTouchpad(dx: (p.x - l.x) * 2, dy: (p.y - l.y) * 2)
             }
             pointerLast = p
             return
@@ -513,7 +552,7 @@ final class TrackpadView: UIView {
         let dx = p.x - l.x, dy = p.y - l.y
         let speed = hypot(dx, dy)
         let gain = InputSettings.pointerSpeed * (1 + min(speed, 40) / 16)   // acceleration: fast swipes go further
-        model.moveCursor(dx: dx * gain, dy: dy * gain)
+        model.moveCursorFromTouchpad(dx: dx * gain, dy: dy * gain)
         lastPoint = p
     }
 
@@ -526,6 +565,7 @@ final class TrackpadView: UIView {
     }
 
     private func finish(_ touches: Set<UITouch>, _ event: UIEvent?, allowClick: Bool) {
+        guard !isSuppressedByPhysicalMouse else { return }
         surveyHoldTimer?.invalidate()
         if mirrorMode { return absoluteEnded(touches, event, allowClick: allowClick) }
         if pointerTouch(touches) != nil {
@@ -575,9 +615,13 @@ final class TrackpadView: UIView {
 }
 
 struct TrackpadSurface: UIViewRepresentable {
+    @ObservedObject private var mouse = MouseInput.shared
     var mirrorMode = false
     func makeUIView(context: Context) -> TrackpadView { TrackpadView() }
-    func updateUIView(_ uiView: TrackpadView, context: Context) { uiView.mirrorMode = mirrorMode }
+    func updateUIView(_ uiView: TrackpadView, context: Context) {
+        uiView.mirrorMode = mirrorMode
+        uiView.isSuppressedByPhysicalMouse = mouse.suppressesVirtualTouchpad
+    }
 }
 
 /// Calls the trackpad on each display frame without the display link keeping it alive.

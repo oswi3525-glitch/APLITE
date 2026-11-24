@@ -2011,6 +2011,19 @@ final class DesktopModel: ObservableObject {
 
     // MARK: Pointer & mouse
 
+    /// Pointer motion coming from the virtual touchpad. While a real GCMouse is connected its events win: the
+    /// touchpad must not be able to overwrite the physical pointer, including through mirror mode.
+    func moveCursorFromTouchpad(dx: CGFloat, dy: CGFloat) {
+        guard !MouseInput.shared.suppressesVirtualTouchpad else { return }
+        moveCursor(dx: dx, dy: dy)
+    }
+
+    /// Scroll coming from the virtual touchpad, with the same priority rule as pointer motion.
+    func scrollFromTouchpad(dx: CGFloat, dy: CGFloat) {
+        guard !MouseInput.shared.suppressesVirtualTouchpad else { return }
+        scroll(dx: dx, dy: dy)
+    }
+
     func moveCursor(dx: CGFloat, dy: CGFloat) {
         var p = cursor.position
         p.x = min(max(0, p.x + dx), screenSize.width - 1)

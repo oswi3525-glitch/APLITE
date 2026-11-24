@@ -185,6 +185,8 @@ struct SystemSettingsView: View {
                 }
                 Text("The desktop keyboard appears when you click a field. Drag it by its title bar, collapse or close it with the corner controls. See the page above for every key.")
                     .font(.footnote).foregroundStyle(.secondary)
+                Text("Wireless mouse feels laggy? On iOS 18 or later, open Control Center while media fills the screen, then Game Overlay → Controls → Game Mode. Game Mode doubles the Bluetooth sampling rate for wireless accessories. APLite cannot enable it for a non-game app; this is a system setting for the active app.")
+                    .font(.footnote).foregroundStyle(.secondary)
             }
 
             Section(header: Label(SettingsGroup.system.title, systemImage: SettingsGroup.system.symbol)) {

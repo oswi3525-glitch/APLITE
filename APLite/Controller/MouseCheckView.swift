@@ -37,6 +37,18 @@ struct MouseCheckView: View {
                         Text("Movements here mean the mouse works without AssistiveTouch.")
                     }
                     Section {
+                        LabeledContent("Virtual touchpad", value: MouseInput.shared.suppressesVirtualTouchpad
+                                        ? String(localized: "Paused (mouse connected)") : String(localized: "Active"))
+                        LabeledContent("Move → render", value: String(format: "%.2f ms", MouseInput.shared.averageLatencyMs))
+                        Toggle("Trace move latency", isOn: Binding(
+                            get: { MouseInput.shared.motionTraceEnabled },
+                            set: { MouseInput.shared.motionTraceEnabled = $0 }))
+                    } header: {
+                        Text("Latency")
+                    } footer: {
+                        Text("With tracing on, every move's receive and render timestamps go to the unified log (subsystem com.hieuk.aplite, category MouseLatency). Keep tracing short: a mouse sends hundreds of events a second.")
+                    }
+                    Section {
                         LabeledContent("AssistiveTouch", value: assistiveTouch ? String(localized: "On") : String(localized: "Off"))
                         row("Pointer movements", c.pointerHover)
                         row("Clicks", c.pointerPresses)
