@@ -15,6 +15,7 @@ final class PhoneSceneDelegate: UIResponder, UIWindowSceneDelegate {
         window.makeKeyAndVisible()
         PhoneWindow.current = window
         window.claimKeyboard()
+        DynamicIslandOverlay.shared.install(in: windowScene, role: .phone)
         self.window = window
     }
 
@@ -99,6 +100,7 @@ final class ExternalSceneDelegate: UIResponder, UIWindowSceneDelegate {
         window.rootViewController = host
         window.isHidden = false
         Self.desktopView = host.view
+        DynamicIslandOverlay.shared.install(in: windowScene, role: .external)
         self.window = window
         // A new resolution (automatic at connection, or from Settings): the desktop takes the screen's new size.
         // The scene does not resize its window by itself when the mode changes after the window exists.
@@ -141,6 +143,7 @@ final class ExternalSceneDelegate: UIResponder, UIWindowSceneDelegate {
         AccountCookies.shared.flush()
         DesktopModel.shared.externalDisconnected()
         ExternalDisplay.disconnected()
+        DynamicIslandOverlay.shared.remove(role: .external)
         window = nil
     }
 }

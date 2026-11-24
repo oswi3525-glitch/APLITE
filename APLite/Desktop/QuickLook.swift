@@ -20,7 +20,7 @@ enum QuickLook {
 
     /// What the wheel and the trackpad scroll while a PDF or a text file is shown.
     fileprivate static weak var scrollTarget: UIScrollView?
-    fileprivate static var player: AVPlayer?
+    static private(set) var player: AVPlayer?
 
     /// Wheel / two-finger scroll over the preview (dy > 0 moves the content up, as in a web page).
     static func scroll(dx: CGFloat, dy: CGFloat) {
@@ -36,6 +36,7 @@ enum QuickLook {
     static func stop() {
         player?.pause()
         player = nil
+        NotificationCenter.default.post(name: .apliteNowPlayingQuickLookChanged, object: nil)
     }
 
     /// The audio session came back after an interruption or a route change: resume a preview that
@@ -45,6 +46,7 @@ enum QuickLook {
               let duration = player.currentItem?.duration, duration.isValid,
               player.currentTime() < duration else { return }
         player.play()
+        NotificationCenter.default.post(name: .apliteNowPlayingQuickLookChanged, object: nil)
     }
 
     /// True while a media preview is actually playing (audio session should stay active).
@@ -206,6 +208,7 @@ private struct MediaPreview: UIViewRepresentable {
         QuickLook.player = player
         view.playerLayer.player = player
         player.play()
+        NotificationCenter.default.post(name: .apliteNowPlayingQuickLookChanged, object: nil)
     }
 
     final class PlayerView: UIView {

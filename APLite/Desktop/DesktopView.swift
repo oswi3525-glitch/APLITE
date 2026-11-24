@@ -284,8 +284,11 @@ private struct DesktopSurfaceView: View {
                 }
             }
             .frame(width: geo.size.width, height: geo.size.height, alignment: .topLeading)
-            .onAppear { model.screenSize = geo.size }
-            .onChange(of: geo.size) { _, newSize in model.screenSize = newSize }
+            .onAppear { model.screenSize = geo.size; model.desktopDisplayFrame = geo.frame(in: .global) }
+            .onChange(of: geo.size) { _, newSize in
+                model.screenSize = newSize
+                model.desktopDisplayFrame = geo.frame(in: .global)
+            }
         }
         .ignoresSafeArea()
         // No allowsHitTesting(false) here: it disables interaction on a parent view, and UIKit then ignores

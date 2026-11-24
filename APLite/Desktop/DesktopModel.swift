@@ -265,6 +265,9 @@ final class DesktopModel: ObservableObject {
     @Published var screenSize: CGSize = CGSize(width: 1280, height: 720) {
         didSet { if screenSize != oldValue { fitWindowsToScreen() } }
     }
+    /// Where the desktop is drawn inside the phone's window (preview / laptop mode). Lets the Dynamic Island
+    /// translate a desktop cursor position into its own overlay coordinates without touching desktop layout.
+    var desktopDisplayFrame: CGRect?
     @Published var isExternalConnected = false
     @Published var showLauncher = false {
         didSet {
@@ -2338,11 +2341,13 @@ final class DesktopModel: ObservableObject {
 
     // Real mouse (GCMouse): press and release in place = click; press and move = drag.
     func physicalPress() {
+        if DynamicIslandOverlay.shared.pointerDown(at: cursor.position) { return }
         pressPoint = cursor.position
         mouseDown()
     }
 
     func physicalRelease() {
+        if DynamicIslandOverlay.shared.pointerUp(at: cursor.position) { pressPoint = nil; return }
         let moved = pressPoint.map { hypot($0.x - cursor.position.x, $0.y - cursor.position.y) > 4 } ?? true
         let wasGuest = isGuestDrag      // the guest app already received the whole touch (down + up)
         mouseUp()
@@ -2588,6 +2593,7 @@ final class DesktopModel: ObservableObject {
 
     func rightClick() {
         if isLocked || showScreenSaver { noteInput(); return }
+        if DynamicIslandOverlay.shared.secondaryClick(at: cursor.position) { return }
         let p = cursor.position
         flashPress()
         contextMenu = nil

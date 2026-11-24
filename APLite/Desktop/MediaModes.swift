@@ -195,7 +195,23 @@ final class WebAudioBridge: NSObject, WKScriptMessageHandler {
     static let messageName = "ideskAudioActivity"
 
     func userContentController(_ controller: WKUserContentController, didReceive message: WKScriptMessage) {
-        WebAudioActivity.shared.set(webView: message.webView, active: (message.body as? Bool) == true)
+        if let info = message.body as? [String: Any],
+           let bands = (info["bands"] as? [Any])?.compactMap({ $0 as? NSNumber }) {
+            AudioSpectrumProvider.shared.ingest(webBands: bands.map(\.floatValue))
+            return
+        }
+        // Older pages still post a bare Bool; both shapes are accepted.
+        let info: [String: Any]?
+        let active: Bool
+        if let dict = message.body as? [String: Any] {
+            info = dict
+            active = (dict["playing"] as? Bool) == true
+        } else {
+            info = nil
+            active = (message.body as? Bool) == true
+        }
+        WebAudioActivity.shared.set(webView: message.webView, active: active)
+        NowPlayingService.shared.updateWeb(playing: active, info: info, webView: message.webView)
     }
 }
 
@@ -233,11 +249,13 @@ enum WebVolume {
         let r = routes.get(el);
         pending.delete(el);   // a restored element must not stay referenced forever
         if (!r) {
-          if (v >= 1 || !routable(el)) return;
+          // Only same-origin/blob media may be routed: touching a cross-origin element's sound makes it silent.
+          if (!routable(el)) return;
           const c = context();
           if (!c || c.state !== 'running') { pending.add(el); return; }
           try {
             const gain = c.createGain(), meter = c.createAnalyser();
+            meter.fftSize = 512; meter.smoothingTimeConstant = 0.7;
             c.createMediaElementSource(el).connect(gain).connect(meter).connect(c.destination);
             r = { gain, meter };
             routes.set(el, r);
@@ -248,7 +266,7 @@ enum WebVolume {
       }
       // Sound may play now: a context created here starts, and any volume set before is applied.
       document.addEventListener('play', e => {
-        if (e.target instanceof HTMLMediaElement) { context(); if (volumes.has(e.target)) applyTo(e.target); }
+        if (e.target instanceof HTMLMediaElement) { context(); applyTo(e.target); }
       }, true);
       Object.defineProperty(proto, 'volume', {
         configurable: true, enumerable: true,
@@ -278,17 +296,59 @@ enum WebVolume {
         context();
         pending.forEach(applyTo);
       };
-      // Tell native code whether this tab is really playing: the session is released when quiet.
+      // Tell native code whether this tab is really playing and what the Dynamic Island should show.
+      function activeMedia() {
+        return Array.from(document.querySelectorAll('video, audio'))
+          .find(m => !m.paused && !m.ended && m.currentTime > 0) || null;
+      }
       function reportActivity() {
-        const busy = Array.from(document.querySelectorAll('video, audio'))
-          .some(m => !m.paused && !m.ended && m.currentTime > 0);
-        try { window.webkit.messageHandlers.ideskAudioActivity.postMessage(busy); } catch (_) {}
+        const m = activeMedia();
+        if (!m) {
+          try { window.webkit.messageHandlers.ideskAudioActivity.postMessage({ playing: false }); } catch (_) {}
+          return;
+        }
+        const meta = document.querySelector('meta[property="og:image"]');
+        const info = {
+          playing: true,
+          title: m.getAttribute('title') || document.title || '',
+          subtitle: m.getAttribute('data-artist') || '',
+          artwork: m.poster || (meta && meta.content) || '',
+          duration: isFinite(m.duration) ? m.duration : 0,
+          currentTime: m.currentTime || 0,
+          isVideo: m.tagName === 'VIDEO'
+        };
+        try { window.webkit.messageHandlers.ideskAudioActivity.postMessage(info); } catch (_) {}
       }
       document.addEventListener('play', reportActivity, true);
       document.addEventListener('pause', reportActivity, true);
       document.addEventListener('ended', reportActivity, true);
+      document.addEventListener('timeupdate', reportActivity, true);
       setInterval(reportActivity, 4000);
       reportActivity();
+      // Web Audio's AnalyserNode already does the FFT. Send 12 log-spaced bands at <= 30 Hz, only while the
+      // pill is expanded (native sets this flag); a collapsed pill uses a static wave and costs nothing.
+      let lastSpectrum = 0;
+      function spectrumFrame(t) {
+        if (window.__ideskSpectrumWanted && t - lastSpectrum >= 33) {
+          lastSpectrum = t;
+          const m = activeMedia(), r = m && routes.get(m);
+          if (r) {
+            const bins = new Uint8Array(r.meter.frequencyBinCount);
+            r.meter.getByteFrequencyData(bins);
+            const out = [], n = 12;
+            for (let b = 0; b < n; b++) {
+              const from = Math.floor(Math.pow(bins.length / 2, b / n));
+              const to = Math.max(from + 1, Math.floor(Math.pow(bins.length / 2, (b + 1) / n)));
+              let peak = 0;
+              for (let i = from; i < to && i < bins.length; i++) peak = Math.max(peak, bins[i]);
+              out.push(peak / 255);
+            }
+            try { window.webkit.messageHandlers.ideskAudioActivity.postMessage({ bands: out }); } catch (_) {}
+          }
+        }
+        requestAnimationFrame(spectrumFrame);
+      }
+      requestAnimationFrame(spectrumFrame);
     })();
     """#, injectionTime: .atDocumentStart, forMainFrameOnly: false)
 }

@@ -119,6 +119,7 @@ targets:
       - APLite/System/ProjectAnalyzer.swift
       - APLite/System/AppCreatorTemplates.swift
       - APLite/System/GoogleDomain.swift
+      - APLite/System/DynamicIsland/SpectrumAnalyzer.swift
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.hieuk.aplite.tests

@@ -30,6 +30,11 @@ enum APLiteAnimation {
         reduced ? .linear(duration: 0.001) : .spring(response: 0.3, dampingFraction: 0.78)
     }
 
+    /// The Dynamic Island's expand/collapse: a weighted spring that settles without bouncing.
+    static var island: Animation {
+        reduced ? .linear(duration: 0.001) : .spring(response: 0.38, dampingFraction: 0.78)
+    }
+
     /// Runs a state change with the standard spring unless motion is reduced.
     static func perform(_ work: @escaping () -> Void) {
         if reduced { work() } else { withAnimation(spring, work) }
