@@ -16,7 +16,7 @@ struct SystemLogView: View {
             Section {
                 Picker("Level", selection: $level) {
                     Text("All").tag(nil as APLogLevel?)
-                    ForEach(APLogLevel.allCases) { value in
+                    ForEach(APLogLevel.allCases, id: \.self) { value in
                         Text(value.title).tag(value as APLogLevel?)
                     }
                 }

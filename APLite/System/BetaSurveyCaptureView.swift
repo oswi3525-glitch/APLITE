@@ -71,7 +71,6 @@ struct BetaSurveyCaptureView: View {
                 .gesture(
                     DragGesture(minimumDistance: 0)
                         .onChanged { value in
-                            guard let source else { return }
                             let layout = imageLayout(in: geometry.size)
                             if dragStart == nil { dragStart = clamp(value.startLocation, in: layout) }
                             guard let start = dragStart else { return }
@@ -114,7 +113,7 @@ struct BetaSurveyCaptureView: View {
                     .frame(maxHeight: 320)
             }
 
-            TextEditor(text: $note)
+            SwiftUI.TextEditor(text: $note)
                 .frame(minHeight: 100)
                 .clipShape(RoundedRectangle(cornerRadius: APLiteDesign.Radius.sm, style: .continuous))
                 .overlay(

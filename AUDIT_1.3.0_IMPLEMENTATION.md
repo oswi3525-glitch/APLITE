@@ -125,3 +125,16 @@ Kết quả lint: **14 file mới = 0 FAIL**; toàn dự án vẫn **22 FAIL / 3
   phải xanh thì mới coi beta 1 là phát hành được. Không được suy từ “đã đổi số phiên bản” sang “đã kiểm chứng”.
 - Artifact dự kiến: `APLite-unsigned-1.3.0.ipa` (chưa ký; tự ký bằng ESign/Feather/Scarlet/SideStore).
 - Stable build: chỉ cần để `APLiteReleaseChannel` trống; không cần xoá code khảo sát.
+
+### 6.1 CI run đầu tiên: FAILED → đã vá
+
+- Run `45300767219` (`Build APLite`, commit `62f0e5c`, 24/11/2026) **Build failed**, 4 dòng `error:`:
+  1. `BetaSurveyCaptureView.swift:117` — `'TextEditor' cannot be constructed…`: dự án đã có `enum TextEditor`
+     trong `Desktop/TextEditor.swift` nên tên bị shadow. Sửa: gọi rõ `SwiftUI.TextEditor`.
+  2. `SurveyExportView.swift:69` — `invalid redeclaration of 'ShareSheet'`: đã có `enum ShareSheet` trong
+     `Controller/SystemSheets.swift`. Sửa: bỏ representable tự định nghĩa, dùng lại `ShareSheet.present(url)`.
+  3. `SurveyExportView.swift:57` — hệ quả của (2): `.sheet { ShareSheet(items:) }` không còn initializer. Sửa: gọi trực tiếp `ShareSheet.present` từ nút export.
+  4. `SystemLogView.swift:19` — `ForEach` yêu cầu `APLogLevel: Identifiable`. Sửa: `ForEach(APLogLevel.allCases, id: \.self)`.
+- Cảnh báo `AudioSessionManager.swift:308 switch must be exhaustive` là **có sẵn** (không thuộc thay đổi này).
+- Cảnh báo `BetaSurveyCaptureView.swift:74 'source' unused` cũng được dọn trong lần vá này.
+- Bản vá được commit riêng (`fix(build): …`) để CI có thể đối chiếu trước/sau. Chưa coi beta 1 là xanh cho đến khi run mới **success**.

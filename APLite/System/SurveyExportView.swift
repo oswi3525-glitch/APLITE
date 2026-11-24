@@ -3,7 +3,6 @@ import SwiftUI
 /// Settings → Privacy & Security → Export beta surveys. Hidden entirely on stable builds.
 struct SurveyExportView: View {
     @State private var records: [SurveyRecord] = []
-    @State private var shareURL: URL?
     @State private var showClearConfirmation = false
 
     var body: some View {
@@ -42,8 +41,10 @@ struct SurveyExportView: View {
                 Button("Start a survey") {
                     NotificationCenter.default.post(name: .apliteStartBetaSurvey, object: nil)
                 }
-                Button("Export all surveys") { shareURL = BetaSurvey.exportURL() }
-                    .disabled(records.isEmpty)
+                Button("Export all surveys") {
+                    if let url = BetaSurvey.exportURL() { ShareSheet.present(url) }
+                }
+                .disabled(records.isEmpty)
                 Button("Delete all surveys", role: .destructive) { showClearConfirmation = true }
                     .disabled(records.isEmpty)
             } footer: {
@@ -53,9 +54,6 @@ struct SurveyExportView: View {
         .listStyle(.insetGrouped)
         .navigationTitle("Export beta surveys")
         .onAppear { records = BetaSurvey.records() }
-        .sheet(isPresented: Binding(get: { shareURL != nil }, set: { if !$0 { shareURL = nil } })) {
-            if let shareURL { ShareSheet(items: [shareURL]) }
-        }
         .confirmationDialog("Delete all saved surveys?", isPresented: $showClearConfirmation) {
             Button("Delete", role: .destructive) {
                 BetaSurvey.clear()
@@ -64,14 +62,4 @@ struct SurveyExportView: View {
             Button("Cancel", role: .cancel) {}
         }
     }
-}
-
-struct ShareSheet: UIViewControllerRepresentable {
-    let items: [Any]
-
-    func makeUIViewController(context: Context) -> UIActivityViewController {
-        UIActivityViewController(activityItems: items, applicationActivities: nil)
-    }
-
-    func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
 }
