@@ -89,6 +89,8 @@ jobs:
           # Prefer the reviewed, checked-in notes. Fall back to a short honest stub for versions
           # that have no dedicated notes file. Never let --generate-notes replace curated text.
           NOTES="RELEASE_NOTES_${{ steps.version.outputs.build_version }}.md"
+          # A beta may have its own reviewed notes; otherwise fall back to the numeric 1.3.0 file.
+          if [ -f "RELEASE_NOTES_$VERSION.md" ]; then NOTES="RELEASE_NOTES_$VERSION.md"; fi
           if [ -f "$NOTES" ]; then
             cp "$NOTES" notes.md
           else
