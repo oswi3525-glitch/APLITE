@@ -80,3 +80,17 @@ _(sẽ điền từ báo cáo bảo mật, correctness, build/docs)_
 6. UI: 16 gradient FAIL + hand-glass/shadow/type-scale WARN cần capture thiết bị (sáng/tối, AX5, focus) — không đổi mù khi chưa có bằng chứng hình ảnh.
 7. Tài liệu stale: `README.vi.md` vẫn hướng dẫn tải IPA từ repo iDesk gốc (D5), `ARCHITECTURE.md`/`UI_SYSTEM_PLAN.md`/`INDEPENDENCE.md` cần cập nhật theo 1.3.0.
 
+---
+
+## 8. Đợt 2 — yêu cầu mới (24/11/2026)
+
+Giữ nguyên các phần 1–7 ở trên. Đợt này audit + sửa theo báo cáo lỗi của người dùng:
+
+1. Dock: đưa vào giữa màn hình desktop.
+2. Trình duyệt: lỗi mở Zalo, lỗi skip quảng cáo YouTube, lỗi asset/icon.
+3. Chứng chỉ: `The certificate file is damaged or truncated…` và lỗi mật khẩu `.p12`.
+4. Tính năng mới: thêm app IPA vào màn hình chính desktop; mở bằng cửa sổ.
+5. Đẩy lên `main`; dọn cache trước khi làm.
+
+Kết quả audit chuyên sâu và thứ tự sửa sẽ được ghi tiếp tại đây.
+
