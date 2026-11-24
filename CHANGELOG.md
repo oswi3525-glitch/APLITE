@@ -3,6 +3,15 @@
 All notable changes to APLite are documented here. APLite is based on iDesk v0.6.3
 (upstream commit `2179dbd`); the original upstream history is not rewritten.
 
+## 1.3.0 (beta 2) — unsigned development release
+
+Beta 2 is the full-repo audit follow-up to beta 1. Same bundle ID, keys and attribution.
+
+- Security: crash-report redaction before the public issue URL, wider `DiagnosticsPolicy.redact`, Data Protection for sensitive files, stricter Keychain class for signing identity, executable-path validation, ZIP hardening, main-frame bridge guard, BuildCenter token host restriction, and honest APStore hash reporting.
+- Fixes: beta survey now lives on the interactive phone surface, cleanup/log reads run off main, "Auto-lock after" now actually locks, `APLiteSettings.bool` no longer coerces numbers, and the four-finger hold no longer swallows swipes.
+- Release: stable-by-default channel, numeric marketing version in release builds, curated release notes, pure version comparison with tests.
+- Verification: CI build + unit tests passed (run `45307515029`); on-device checks remain in `SYSTEM_TEST_PLAN.md`.
+
 ## 1.3.0 (beta 1) — unsigned development release
 
 Beta build. Bundle ID, persistence keys (legacy `iDesk.*` included), Guest Engine, attribution and

@@ -11,6 +11,12 @@ enum SystemChangelog {
     }
 
     static let entries: [Entry] = [
+        Entry(version: "1.3.0 (beta 2)", date: "2026-11-24", items: [
+            "Security: crash reports are redacted before they can be shared in a public issue; saved logins, logs and survey exports use iOS Data Protection.",
+            "Beta survey now opens on the iPhone screen — the external display cannot receive drag gestures. A four-finger hold no longer interrupts a swipe.",
+            "Auto-lock after now actually locks the desktop when idle. Cleanup scanning and log reading no longer block the main thread.",
+            "Release builds show 1.3.0 (beta 2) correctly; a normal build from this source is stable and hides all beta-only features.",
+        ]),
         Entry(version: "1.3.0 (beta 1)", date: "2026-11-24", items: [
             "Boot: the startup watchdog now runs off the main thread and every boot phase is timed in the System Log. A legacy cache flag no longer blocks launch and preview mode no longer stays on the boot screen.",
             "System Log: Settings → Privacy & Security → System Log shows timestamped events by level and can be filtered or cleared. It is APLite's own log, not the iOS system log.",

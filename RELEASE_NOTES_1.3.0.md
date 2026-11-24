@@ -1,6 +1,16 @@
-# APLite 1.3.0 (beta 1)
+# APLite 1.3.0 (beta 2)
 
-**Ngày:** 24/11/2026 · **Artifact:** `APLite-unsigned-1.3.0.ipa` (chưa ký — ký bằng ESign / Feather / Scarlet / SideStore trước khi cài).
+**Ngày:** 24/11/2026 · **Artifact bản này:** `APLite-unsigned-1.3.0-beta.2.ipa` (chưa ký — ký bằng ESign / Feather / Scarlet / SideStore trước khi cài).
+
+## Beta 2 — audit toàn repo và vá bảo mật
+- **Bảo mật:** redact crash report trước khi đưa vào GitHub issue công khai; mở rộng redaction (JSON, Bearer, `api_key`, `pin`, `session`); Data Protection cho kho cookie, log và export khảo sát; Keychain ký dùng `WhenUnlockedThisDeviceOnly` + migration; chặn `CFBundleExecutable` path traversal; Unzip chặn prefix/overflow; bridge Files kiểm tra main frame; BuildCenter chỉ gửi Bearer tới host GitHub và bỏ Authorization khi redirect khác host; ghi chú khảo sát được redact.
+- **Sửa lỗi:** khảo sát chuyển sang phone surface (màn hình ngoài không nhận kéo thả); quét dọn rác và đọc log ra luồng nền; cài đặt **Auto-lock after có tác dụng**; `APLiteSettings.bool` không còn ép số thành `true`; không xoá icon web app khi registry lỗi; không xoá cache WebKit.
+- **Phát hành:** mặc định build HEAD là stable (kênh trống); beta chỉ bật khi release input đặt `beta 2`. Workflow dùng `MARKETING_VERSION=1.3.0` nên trong app hiển thị đúng **1.3.0 (beta 2)**. So sánh phiên bản không còn xếp beta trên stable. Thêm justification monospace cho 5 file keycap/code, token hoá LockScreen, nhãn nút xác nhận rõ hành động, 16 khoá tiếng Việt bổ sung.
+- **Kiểm chứng:** CI `45307515029` build + unit test **success**. Chi tiết: `AUDIT_FULL_REPO_1.3.0.md`.
+
+---
+
+# APLite 1.3.0 (beta 1) — bản gốc
 
 Bản beta đầu tiên của 1.3.0. Không đổi Bundle ID, khóa lưu trữ (kể cả `iDesk.*` cũ), Guest Engine hay attribution. Gói kênh phát hành `beta 1` bật tính năng chỉ dành cho beta; bản stable cùng mã nguồn để kênh trống và ẩn các tính năng này hoàn toàn.
 
