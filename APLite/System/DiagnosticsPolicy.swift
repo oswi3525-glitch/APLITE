@@ -93,8 +93,8 @@ enum DiagnosticsPolicy {
             let e = NSRegularExpression.escapedPattern(for: key)
             let patterns = [
                 "\"\(e)\"\\s*:\\s*\"[^\"]*\"",              // JSON: "key": "value"
-                "\"\(e)\"\\s*:\\s*[^\\s,;}]+",             // JSON with unquoted value
-                "\(e)\\s*[=:]\\s*\"?[^\\s,;}\"]+",         // key=value / key: value / URL query
+                "\"\(e)\"\\s*:\\s*[^\\s,;&}]+",            // JSON with unquoted value
+                "\(e)\\s*[=:]\\s*\"?[^\\s,;&}\"]+",        // key=value / key: value / URL query (stop at &)
             ]
             for pattern in patterns {
                 if let regex = try? NSRegularExpression(pattern: pattern, options: .caseInsensitive) {
