@@ -202,7 +202,7 @@ final class MouseInput: ObservableObject {
 
     /// One cursor update per display frame. All the expensive work in `DesktopModel.moveCursor` (hit testing,
     // window dragging, hover) therefore runs at most 60 times a second instead of once per hardware event.
-    @objc private func flushFrame() {
+    @objc fileprivate func flushFrame() {
         state.lock()
         let dx = pendingDX, dy = pendingDY, sx = pendingScrollX, sy = pendingScrollY
         pendingDX = 0; pendingDY = 0; pendingScrollX = 0; pendingScrollY = 0

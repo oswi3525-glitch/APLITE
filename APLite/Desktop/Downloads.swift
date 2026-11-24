@@ -165,17 +165,6 @@ final class Downloads: NSObject, ObservableObject, WKDownloadDelegate {
         resuming = id
         web.resumeDownload(fromResumeData: data) { [weak self] download in
             guard let self else { return }
-            guard let download else {
-                // No WKDownload means the resume never started: do not leave `resuming` to hijack the
-                // next unrelated download's destination, and keep the data so the user can try again.
-                self.resuming = nil
-                if let index = self.items.firstIndex(where: { $0.id == id }) {
-                    self.items[index].state = .failed
-                    self.items[index].resumeData = data
-                }
-                self.showFailure(name)
-                return
-            }
             self.track(download, as: id)
         }
     }

@@ -187,8 +187,8 @@ final class AudioSpectrumProvider: ObservableObject {
                                               totalLengthOut: &byteLength, dataPointerOut: &pointer) == noErr,
                   let pointer, byteLength > 0 else { continue }
             let count = byteLength / MemoryLayout<Float>.size
-            let samples = Array(UnsafeBufferPointer(start: pointer.bindMemory(to: Float.self, capacity: count),
-                                                    count: count))
+            let floats = UnsafeRawPointer(pointer).assumingMemoryBound(to: Float.self)
+            let samples = Array(UnsafeBufferPointer(start: floats, count: count))
             leftover.append(contentsOf: samples)
             while leftover.count >= SpectrumAnalyzer.fftSize {
                 let window = Array(leftover.prefix(SpectrumAnalyzer.fftSize))
