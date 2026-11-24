@@ -124,7 +124,7 @@ final class AudioSpectrumProvider: ObservableObject {
         levels = next
     }
 
-    @objc private func tick() {
+    fileprivate func tick() {
         let now = CACurrentMediaTime()
         guard now - lastPublish >= 1 / 30 else { return }
         lastPublish = now
@@ -149,7 +149,26 @@ final class AudioSpectrumProvider: ObservableObject {
 
     private func readPCM(output: AVAssetReaderTrackOutput, reader: AVAssetReader) {
         var leftover: [Float] = []
-        while reader.status == .reading, let buffer = output.copyNextSampleBuffer() {
+        var held: CMSampleBuffer?
+        // Read only as far as the playhead: decoding a whole track in one burst would waste CPU up front and
+        // leave the spectrum flat for most of the song once the bounded frame buffer rolled over.
+        while reader.status == .reading, let player {
+            let buffer: CMSampleBuffer
+            if let heldBuffer = held {
+                buffer = heldBuffer
+                held = nil
+            } else if let next = output.copyNextSampleBuffer() {
+                buffer = next
+            } else {
+                Thread.sleep(forTimeInterval: 0.02)
+                continue
+            }
+            let timestamp = CMTimeGetSeconds(CMSampleBufferGetPresentationTimeStamp(buffer))
+            if player.rate == 0 || timestamp > player.currentTime().seconds + 0.5 {
+                held = buffer
+                Thread.sleep(forTimeInterval: 0.02)
+                continue
+            }
             var blockBuffer: CMBlockBuffer?
             var list = AudioBufferList()
             let status = CMSampleBufferGetAudioBufferListWithRetainedBlockBuffer(
@@ -164,13 +183,13 @@ final class AudioSpectrumProvider: ObservableObject {
             guard status == noErr, let blockBuffer else { continue }
             var pointer: UnsafeMutablePointer<Int8>?
             var byteLength = 0
-            guard CMBlockBufferGetDataPointer(blockBuffer, 0, nil, &byteLength, &pointer) == noErr,
+            guard CMBlockBufferGetDataPointer(blockBuffer, atOffset: 0, lengthAtOffsetOut: nil,
+                                              totalLengthOut: &byteLength, dataPointerOut: &pointer) == noErr,
                   let pointer, byteLength > 0 else { continue }
             let count = byteLength / MemoryLayout<Float>.size
             let samples = Array(UnsafeBufferPointer(start: pointer.bindMemory(to: Float.self, capacity: count),
                                                     count: count))
             leftover.append(contentsOf: samples)
-            let timestamp = CMTimeGetSeconds(CMSampleBufferGetPresentationTimeStamp(buffer))
             while leftover.count >= SpectrumAnalyzer.fftSize {
                 let window = Array(leftover.prefix(SpectrumAnalyzer.fftSize))
                 leftover.removeFirst(SpectrumAnalyzer.fftSize)

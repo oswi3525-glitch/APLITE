@@ -4,9 +4,14 @@ import UIKit
 /// A transparent window above the scene's own window. It never participates in desktop layout, so the pill can
 /// animate without redrawing the desktop. Touches outside the pill fall through to the app beneath it.
 final class DynamicIslandWindow: UIWindow {
+    weak var hostView: UIView?
+
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         let hit = super.hitTest(point, with: event)
-        return hit === self ? nil : hit
+        // SwiftUI may return the hosting view itself for empty areas. Let those touches fall through to the
+        // desktop; only real pill controls (deeper descendants) may consume them.
+        if hit === self || hit === hostView { return nil }
+        return hit
     }
 }
 
@@ -26,6 +31,7 @@ final class DynamicIslandOverlay {
         host.view.backgroundColor = .clear
         host.view.isOpaque = false
         window.rootViewController = host
+        window.hostView = host.view
         window.isHidden = false
         switch role {
         case .phone: phoneWindow = window
@@ -46,12 +52,14 @@ final class DynamicIslandOverlay {
 
     /// Converts a cursor position in the desktop's logical coordinate space into overlay-window coordinates.
     private func convert(_ point: CGPoint) -> CGPoint? {
-        guard let window = activeWindow else { return nil }
+        guard activeWindow != nil else { return nil }
         if DesktopModel.shared.isExternalConnected { return point }
         guard let frame = DesktopModel.shared.desktopDisplayFrame,
               frame.width > 0, frame.height > 0 else { return nil }
-        return CGPoint(x: (point.x - frame.minX) / frame.width * window.bounds.width,
-                       y: (point.y - frame.minY) / frame.height * window.bounds.height)
+        let screen = DesktopModel.shared.screenSize
+        guard screen.width > 0, screen.height > 0 else { return nil }
+        return CGPoint(x: frame.minX + point.x / screen.width * frame.width,
+                       y: frame.minY + point.y / screen.height * frame.height)
     }
 
     func pointerDown(at desktopPoint: CGPoint) -> Bool {

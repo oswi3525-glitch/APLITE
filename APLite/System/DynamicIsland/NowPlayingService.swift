@@ -44,16 +44,20 @@ final class NowPlayingService: ObservableObject {
     }
 
     private weak var webView: WKWebView?
+    private weak var observedPlayer: AVPlayer?
     private var quickLookObserver: Any?
+    private var endObserver: NSObjectProtocol?
     private var clearWork: DispatchWorkItem?
     private var pointerDownControl: Control?
+    private var pointerDownPoint: CGPoint?
     private var longPressWork: DispatchWorkItem?
 
     private static let toggleScript = """
     (() => {
       const ms = Array.from(document.querySelectorAll('video, audio'));
       const m = ms.find(x => !x.paused) || ms[0];
-      if (m) { if (m.paused) m.play().catch(() => {}); else m.pause(); }
+      if (m) { if (m.paused) m.play().catch(() => {}); else m.pause(); return 'ok'; }
+      return 'none';
     })()
     """
     private static let pauseScript = "document.querySelectorAll('video,audio').forEach(m => m.pause())"
@@ -78,8 +82,9 @@ final class NowPlayingService: ObservableObject {
             if item?.sourceID == sourceID { finish(sourceID: sourceID) }
             return
         }
-        // With several tabs playing, the focused one wins; a tab in the background cannot steal the pill.
-        if let current = item, current.sourceID != sourceID, isPlaying,
+        // With several web tabs playing, the focused one wins. A background tab can still become the pill when
+        // nothing else is showing (e.g. the launcher is open and there is no focused window).
+        if let current = item, current.sourceID.hasPrefix("web:"), current.sourceID != sourceID, isPlaying,
            DesktopModel.shared.focused?.webView !== webView { return }
 
         clearWork?.cancel(); clearWork = nil
@@ -99,15 +104,22 @@ final class NowPlayingService: ObservableObject {
         if duration != newDuration { duration = newDuration }
         if changed || abs(elapsed - currentTime) > 0.5 { elapsed = currentTime }
         if !isPlaying { isPlaying = true }
+        // A navigation replaces the page and drops the flag; re-apply it while the pill is expanded.
+        if changed || isExpanded {
+            webView.evaluateJavaScript("window.__ideskSpectrumWanted = \(isExpanded ? "true" : "false");",
+                                       completionHandler: nil)
+        }
         if changed {
             stopQuickLookObservation()
             AudioSpectrumProvider.shared.stopFileAnalysis()
-            loadArtwork(artworkURL, for: sourceID)
+            loadArtwork(artworkURL, for: sourceID, base: webView.url)
         }
     }
 
-    private func loadArtwork(_ urlString: String?, for sourceID: String) {
-        guard let urlString, let url = URL(string: urlString), url.scheme?.hasPrefix("http") == true else { return }
+    private func loadArtwork(_ urlString: String?, for sourceID: String, base: URL?) {
+        guard let urlString,
+              let url = URL(string: urlString, relativeTo: base)?.absoluteURL ?? URL(string: urlString),
+              ["http", "https"].contains(url.scheme?.lowercased() ?? "") else { return }
         URLSession.shared.dataTask(with: url) { [weak self] data, _, _ in
             guard let data, let image = UIImage(data: data) else { return }
             DispatchQueue.main.async {
@@ -146,6 +158,7 @@ final class NowPlayingService: ObservableObject {
             if let url = (asset as? AVURLAsset)?.url {
                 AudioSpectrumProvider.shared.startFileAnalysis(url: url, player: player)
             }
+            observedPlayer = player
             quickLookObserver = player.addPeriodicTimeObserver(forInterval: CMTime(value: 1, timescale: 2),
                                                                queue: .main) { [weak self] time in
                 guard let self, self.item?.sourceID == sourceID else { return }
@@ -153,14 +166,21 @@ final class NowPlayingService: ObservableObject {
                 let playing = player.rate > 0
                 if self.isPlaying != playing { self.isPlaying = playing }
             }
+            endObserver = NotificationCenter.default.addObserver(
+                forName: .AVPlayerItemDidPlayToEndTime, object: player.currentItem, queue: .main) { [weak self] _ in
+                self?.finish(sourceID: sourceID)
+            }
         }
     }
 
     private func stopQuickLookObservation() {
-        if let observer = quickLookObserver, let player = QuickLook.player {
+        if let observer = quickLookObserver, let player = observedPlayer {
             player.removeTimeObserver(observer)
         }
+        if let endObserver { NotificationCenter.default.removeObserver(endObserver) }
         quickLookObserver = nil
+        endObserver = nil
+        observedPlayer = nil
     }
 
     private func finish(sourceID: String) {
@@ -171,6 +191,7 @@ final class NowPlayingService: ObservableObject {
             self.item = nil
             self.elapsed = 0
             self.duration = 0
+            self.stopQuickLookObservation()
             AudioSpectrumProvider.shared.stopFileAnalysis()
         }
         clearWork?.cancel(); clearWork = work
@@ -196,7 +217,9 @@ final class NowPlayingService: ObservableObject {
             return
         }
         if let webView {
-            webView.evaluateJavaScript(Self.toggleScript) { [weak self] _, _ in self?.isPlaying.toggle() }
+            webView.evaluateJavaScript(Self.toggleScript) { [weak self] result, _ in
+                if (result as? String) == "ok" { self?.isPlaying.toggle() }
+            }
         } else {
             MediaControl.shared.playPause()
         }
@@ -248,6 +271,7 @@ final class NowPlayingService: ObservableObject {
     func pointerDown(at point: CGPoint) -> Bool {
         guard item != nil, let control = control(at: point) else { return false }
         pointerDownControl = control
+        pointerDownPoint = point
         if control == .pill {
             let work = DispatchWorkItem { [weak self] in
                 self?.setExpanded(true)
@@ -263,6 +287,8 @@ final class NowPlayingService: ObservableObject {
     func pointerUp(at point: CGPoint) -> Bool {
         guard let down = pointerDownControl else { return false }
         pointerDownControl = nil
+        let start = pointerDownPoint
+        pointerDownPoint = nil
         longPressWork?.cancel(); longPressWork = nil
         guard control(at: point) == down else { return true }
         switch down {
@@ -271,13 +297,16 @@ final class NowPlayingService: ObservableObject {
         case .backward: skip(by: -10)
         case .forward: skip(by: 10)
         case .close: dismiss()
-        case .progress: break
+        case .progress:
+            if let rect = controlFrames[.progress], rect.width > 0, let start {
+                seek(progress: (start.x - rect.minX) / rect.width)
+            }
         }
         return true
     }
 
     func secondaryClick(at point: CGPoint) -> Bool {
-        guard item != nil, control(at: point) != nil else { return false }
+        guard item != nil, let control = control(at: point), control == .pill else { return false }
         toggleExpanded()
         return true
     }

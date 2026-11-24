@@ -20,7 +20,7 @@ enum QuickLook {
 
     /// What the wheel and the trackpad scroll while a PDF or a text file is shown.
     fileprivate static weak var scrollTarget: UIScrollView?
-    static private(set) var player: AVPlayer?
+    static fileprivate(set) var player: AVPlayer?
 
     /// Wheel / two-finger scroll over the preview (dy > 0 moves the content up, as in a web page).
     static func scroll(dx: CGFloat, dy: CGFloat) {

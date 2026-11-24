@@ -10,8 +10,11 @@ struct DynamicIslandView: View {
     @ObservedObject private var spectrum = AudioSpectrumProvider.shared
     @ObservedObject private var desktop = DesktopModel.shared
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @ScaledMetric(relativeTo: .footnote) private var pillHeight: CGFloat = 38
     @Namespace private var island
     let role: IslandDisplayRole
+
+    private var noMotion: Bool { reduceMotion || APLiteAnimation.reduced }
 
     private var visible: Bool {
         guard now.item != nil else { return false }
@@ -20,20 +23,18 @@ struct DynamicIslandView: View {
 
     var body: some View {
         GeometryReader { geo in
-            Color.clear
-                .allowsHitTesting(false)
-                .overlay(alignment: .top) {
-                    if visible {
-                        VStack(spacing: 0) {
-                            islandContent(width: min(340, max(220, geo.size.width - 32)))
-                        }
-                        .frame(maxWidth: .infinity, alignment: .center)
-                        .padding(.top, geo.safeAreaInsets.top + 8)
-                        .transition(.opacity)
-                        .animation(reduceMotion ? .linear(duration: 0.001) : APLiteAnimation.island,
-                                   value: visible)
+            ZStack(alignment: .top) {
+                Color.clear.allowsHitTesting(false)
+                if visible {
+                    VStack(spacing: 0) {
+                        islandContent(width: min(340, max(220, geo.size.width - 32)))
                     }
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .padding(.top, geo.safeAreaInsets.top + 8)
+                    .transition(.opacity)
+                    .animation(noMotion ? .linear(duration: 0.001) : APLiteAnimation.island, value: visible)
                 }
+            }
         }
         .onPreferenceChange(IslandFramePreference.self) { frames in
             for (control, rect) in frames { now.setFrame(rect, for: control) }
@@ -51,8 +52,8 @@ struct DynamicIslandView: View {
                     .matchedGeometryEffect(id: "aplite.island", in: island)
             }
         }
-        .animation(reduceMotion ? .linear(duration: 0.001) : APLiteAnimation.island, value: now.isExpanded)
-        .animation(reduceMotion ? .linear(duration: 0.001) : APLiteAnimation.island, value: now.item?.id)
+        .animation(noMotion ? .linear(duration: 0.001) : APLiteAnimation.island, value: now.isExpanded)
+        .animation(noMotion ? .linear(duration: 0.001) : APLiteAnimation.island, value: now.item?.id)
     }
 
     private var collapsedPill: some View {
@@ -71,7 +72,7 @@ struct DynamicIslandView: View {
                     .foregroundStyle(.secondary)
             }
             .padding(.horizontal, APLiteDesign.Space.md)
-            .frame(height: 38)
+            .frame(height: pillHeight)
             .background(.ultraThinMaterial, in: Capsule()) // taste:allow hand-glass system material required by spec
         }
         .buttonStyle(.plain)
@@ -82,7 +83,7 @@ struct DynamicIslandView: View {
             UIImpactFeedbackGenerator(style: .soft).impactOccurred()
         }
         .accessibilityLabel(accessibilityLabel)
-        .accessibilityHint(Text("Press and hold to show playback controls"))
+        .accessibilityHint(Text("Tap to show playback controls; press and hold to expand"))
         .accessibilityAction(named: Text("Play or pause")) { now.togglePlayPause() }
     }
 
@@ -118,6 +119,7 @@ struct DynamicIslandView: View {
                 Slider(value: Binding(get: { now.progress }, set: { now.seek(progress: $0) }))
                     .reportIslandFrame(.progress)
                     .accessibilityLabel(Text("Playback position"))
+                    .accessibilityValue(Text("\(islandTime(now.elapsed)) of \(islandTime(now.duration))"))
                 HStack {
                     Text(islandTime(now.elapsed)).font(.caption2).monospacedDigit()
                     Spacer()
