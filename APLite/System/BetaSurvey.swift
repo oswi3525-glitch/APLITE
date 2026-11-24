@@ -76,7 +76,8 @@ enum BetaSurvey {
         guard let data = try? encoder.encode(payload) else { return nil }
         let url = FileManager.default.temporaryDirectory
             .appendingPathComponent("aplite-surveys-\(stamp()).json")
-        guard (try? data.write(to: url, options: [.atomic, .completeFileProtectionAfterFirstOpen])) != nil else { return nil }
+        guard (try? data.write(to: url, options: .atomic)) != nil else { return nil }
+        APLiteFileManager.protectAfterFirstOpen(url)
         APLog.info("Exported \(payload.records.count) beta survey(s)", module: "Survey")
         return url
     }

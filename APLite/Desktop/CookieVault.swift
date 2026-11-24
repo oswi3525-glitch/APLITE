@@ -99,7 +99,8 @@ enum CookieVault {
         guard let data = try? JSONEncoder().encode(items) else { return }
         // Login cookies are secrets. iOS does not encrypt a file just because it is in the sandbox:
         // ask for Data Protection so the vault is unavailable while the device is locked.
-        try? data.write(to: file, options: [.atomic, .completeFileProtectionAfterFirstOpen])
+        try? data.write(to: file, options: .atomic)
+        APLiteFileManager.protectAfterFirstOpen(file)
         cachedDomains = nil
         cachedModification = nil
     }
@@ -162,7 +163,8 @@ enum CookieVault {
         let url = FileManager.default.temporaryDirectory
             .appendingPathComponent("APLite-cookies-\(Int(Date().timeIntervalSince1970)).json")
         do {
-            try data.write(to: url, options: [.atomic, .completeFileProtectionAfterFirstOpen])
+            try data.write(to: url, options: .atomic)
+            APLiteFileManager.protectAfterFirstOpen(url)
             return url
         } catch { return nil }
     }

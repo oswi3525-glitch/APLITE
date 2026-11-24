@@ -120,7 +120,8 @@ enum APLog {
         var data = (try? Data(contentsOf: current)) ?? Data()
         guard let addition = (line + "\n").data(using: .utf8) else { return }
         data.append(addition)
-        try? data.write(to: current, options: [.atomic, .completeFileProtectionAfterFirstOpen])
+        try? data.write(to: current, options: .atomic)
+        APLiteFileManager.protectAfterFirstOpen(current)
     }
 
     private static func loadEntries() -> [APLogEntry] {

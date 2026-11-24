@@ -32,6 +32,15 @@ enum APLiteFileManager {
         ByteCountFormatter.string(fromByteCount: bytes, countStyle: .file)
     }
 
+    /// iOS does not encrypt a sandbox file by default. Mark APLite-owned sensitive files so they
+    /// are readable after the first unlock (boot-time restore still works) but protected while locked.
+    static func protectAfterFirstOpen(_ url: URL) {
+        try? FileManager.default.setAttributes(
+            [.protectionKey: FileProtectionType.completeFileProtectionAfterFirstOpen],
+            ofItemAtPath: url.path
+        )
+    }
+
     /// Metadata without following symlinks out of the sandbox (iOS app containers have none,
     /// but the guard keeps the API safe if that changes).
     static func metadata(of url: URL) -> Metadata {
