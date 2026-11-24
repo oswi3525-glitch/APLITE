@@ -34,4 +34,19 @@ final class DiagnosticsPolicyTests: XCTestCase {
         XCTAssertEqual(DiagnosticsPolicy.truncate(String(repeating: "x", count: 10), limit: 4).count, 5)
         XCTAssertEqual(DiagnosticsPolicy.truncate("abc", limit: 4), "abc")
     }
+
+    func testRedactionCoversJSONBearerAndMoreKeys() {
+        let text = """
+        {"api_key": "sk-live-123", "private_key": "pem-secret", "client_secret": "cs-9"}
+        Authorization: Bearer abc.def.ghi
+        ?token=abc123&next=home
+        pin: 1234 passcode=9999 session=sess-xyz
+        """
+        let redacted = DiagnosticsPolicy.redact(text)
+        for secret in ["sk-live-123", "pem-secret", "cs-9", "abc.def.ghi", "abc123", "1234", "9999", "sess-xyz"] {
+            XCTAssertFalse(redacted.contains(secret), "leaked \(secret) in \(redacted)")
+        }
+        XCTAssertTrue(redacted.contains("next=home"))
+        XCTAssertTrue(redacted.contains("[redacted]"))
+    }
 }

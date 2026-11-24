@@ -27,6 +27,7 @@ struct SystemSettingsView: View {
     @State private var resolution = ""
     @State private var pendingAction: (() -> Void)?
     @State private var confirmMessage = ""
+    @State private var confirmLabel = "Confirm"
 
     private var apliteUsage: (files: Int, bytes: UInt64) { APLiteFileManager.systemUsage() }
     private var brightnessText: String { "\(Int((model.externalBrightness * 100).rounded()))%" }
@@ -88,6 +89,7 @@ struct SystemSettingsView: View {
                 .disabled(power.state != .sleeping)
                 Button("Shut down APLite", role: .destructive) {
                     confirmMessage = "All open pages and guest apps will close. This is a soft shutdown of APLite only."
+                    confirmLabel = "Shut down APLite"
                     pendingAction = { power.shutdown() }
                 }
                 Button("Restart APLite") { power.boot() }
@@ -109,6 +111,7 @@ struct SystemSettingsView: View {
                 Text(memory.report()).font(.footnote).foregroundStyle(.secondary)
                 Button("Release caches now") {
                     confirmMessage = "Web and image caches are cleared; pages may reload once."
+                    confirmLabel = "Release caches now"
                     pendingAction = { memory.releaseCaches(reason: "user request") }
                 }
             }
@@ -203,7 +206,7 @@ struct SystemSettingsView: View {
         .alert("Confirm action", isPresented: Binding(get: { pendingAction != nil },
                                                      set: { if !$0 { pendingAction = nil } })) {
             Button("Cancel", role: .cancel) { pendingAction = nil }
-            Button("Continue", role: .destructive) { pendingAction?(); pendingAction = nil }
+            Button(confirmLabel, role: .destructive) { pendingAction?(); pendingAction = nil }
         } message: {
             Text(confirmMessage)
         }

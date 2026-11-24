@@ -78,11 +78,29 @@ enum DiagnosticsPolicy {
     /// Diagnostics must never copy tokens, cookies or passwords into a report the user shares.
     static func redact(_ text: String) -> String {
         var out = text
-        for key in ["password", "token", "cookie", "authorization", "secret"] {
-            let pattern = "(?i)\(key)\\s*[=:]\\s*[^\\s,;]+"
+        // Auth schemes first: otherwise a key rule consumes "Authorization: Bearer" and leaves the token.
+        for scheme in ["Bearer", "Basic"] {
+            let pattern = "(?i)\(scheme)\\s+[A-Za-z0-9._~+/=-]+"
             if let regex = try? NSRegularExpression(pattern: pattern) {
                 let range = NSRange(out.startIndex..., in: out)
-                out = regex.stringByReplacingMatches(in: out, range: range, withTemplate: "\(key)=[redacted]")
+                out = regex.stringByReplacingMatches(in: out, range: range, withTemplate: "\(scheme) [redacted]")
+            }
+        }
+        let keys = ["password", "passwd", "passcode", "pin", "token", "cookie", "authorization",
+                    "secret", "client_secret", "clientsecret", "api_key", "apikey", "api-key",
+                    "credential", "credentials", "private_key", "privatekey", "session"]
+        for key in keys {
+            let e = NSRegularExpression.escapedPattern(for: key)
+            let patterns = [
+                "\"\(e)\"\\s*:\\s*\"[^\"]*\"",              // JSON: "key": "value"
+                "\"\(e)\"\\s*:\\s*[^\\s,;}]+",             // JSON with unquoted value
+                "\(e)\\s*[=:]\\s*\"?[^\\s,;}\"]+",         // key=value / key: value / URL query
+            ]
+            for pattern in patterns {
+                if let regex = try? NSRegularExpression(pattern: pattern, options: .caseInsensitive) {
+                    let range = NSRange(out.startIndex..., in: out)
+                    out = regex.stringByReplacingMatches(in: out, range: range, withTemplate: "\(key)=[redacted]")
+                }
             }
         }
         return out

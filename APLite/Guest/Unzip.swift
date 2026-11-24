@@ -61,7 +61,8 @@ enum Unzip {
                 let parts = name.split(separator: "/", omittingEmptySubsequences: true)
                 if name.hasPrefix("/") || parts.contains("..") || parts.isEmpty { continue }
                 let target = destination.appendingPathComponent(parts.joined(separator: "/"))
-                guard target.standardizedFileURL.path.hasPrefix(root) else { continue }
+                // The separator matters: root "/x/App" must not match sibling "/x/AppEvil".
+                guard target.standardizedFileURL.path.hasPrefix(root + "/") else { continue }
 
                 if name.hasSuffix("/") {
                     try fm.createDirectory(at: target, withIntermediateDirectories: true)
@@ -72,7 +73,10 @@ enum Unzip {
                 let lo = Int(localOffset)
                 guard zip.u32(lo) == 0x0403_4b50 else { throw Failure.corrupt(name) }
                 let start = lo + 30 + Int(zip.u16(lo + 26)) + Int(zip.u16(lo + 28))
-                guard start + Int(compressedSize) <= raw.count else { throw Failure.corrupt(name) }
+                // Compare in UInt64 first: casting a huge size to Int can wrap negative and pass a
+                // signed bounds check, then crash when slicing the raw buffer.
+                guard start >= 0, start <= raw.count,
+                      compressedSize <= UInt64(raw.count - start) else { throw Failure.corrupt(name) }
                 let body = UnsafeRawBufferPointer(rebasing: raw[start..<(start + Int(compressedSize))])
 
                 if mode & 0xF000 == 0xA000 {

@@ -23,7 +23,7 @@ struct ProjectPreviewView: View {
 
                 ScrollView {
                     Text(files[selected] ?? "")
-                        .font(.system(size: 12, design: .monospaced))
+                        .font(.system(size: 12, design: .monospaced)) // taste:allow monospace — source-code preview
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding()
                         .textSelection(.enabled)

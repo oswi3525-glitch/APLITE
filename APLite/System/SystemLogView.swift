@@ -73,6 +73,6 @@ struct SystemLogView: View {
     }
 
     private func reload() {
-        entries = APLog.entries()
+        APLog.entries { loaded in entries = loaded }
     }
 }

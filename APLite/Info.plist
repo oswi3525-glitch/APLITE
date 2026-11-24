@@ -38,7 +38,7 @@
 	<key>APLiteUpstreamRepository</key>
 	<string>itshieuk/iDesk</string>
 	<key>APLiteReleaseChannel</key>
-	<string>beta 1</string>
+	<string>$(APLiteReleaseChannel)</string>
 	<key>LSSupportsOpeningDocumentsInPlace</key>
 	<false/>
 	<key>NFCReaderUsageDescription</key>

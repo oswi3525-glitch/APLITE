@@ -48,7 +48,7 @@ struct KeyboardSettingsView: View {
                     HStack(spacing: 4) {
                         ForEach(Array(row.enumerated()), id: \.offset) { _, key in
                             Text(verbatim: key.label)
-                                .font(.system(size: 11, weight: .semibold, design: .monospaced))
+                                .font(.system(size: 11, weight: .semibold, design: .monospaced)) // taste:allow monospace — fixed-width keycap preview
                                 .minimumScaleFactor(0.6)
                                 .lineLimit(1)
                                 .frame(width: max(26, 18 * CGFloat(key.units)), height: 26)

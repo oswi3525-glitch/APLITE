@@ -44,7 +44,9 @@ enum APLiteSettings {
     private static func key(_ group: String, _ name: String) -> String { "APLite.\(group).\(name)" }
 
     static func bool(_ group: String, _ name: String, default defaultValue: Bool = false) -> Bool {
-        guard let value = store.object(forKey: key(group, name)) as? Bool else { return store.bool(forKey: key(group, name)) || defaultValue }
+        // A stored NSNumber(1) is not a Bool. Falling back to store.bool(forKey:) would silently
+        // turn such a value into `true` — dangerous for flags like lockOnLaunch that default off.
+        guard let value = store.object(forKey: key(group, name)) as? Bool else { return defaultValue }
         return value
     }
     static func set(_ group: String, _ name: String, _ value: Bool) { store.set(value, forKey: key(group, name)) }

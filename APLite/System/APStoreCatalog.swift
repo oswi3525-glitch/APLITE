@@ -32,8 +32,9 @@ enum APStoreCatalog {
     }
 }
 
-/// Hash check for APLite-owned packages before they are trusted. The expected digest comes from
-/// APLite's own manifest, never from the untrusted file itself.
+/// Hash helpers for APLite-owned packages. There is no bundled `.aplite` package manifest yet, so
+/// APStore records hashes for comparison with an official build manifest — it does not claim to
+/// verify a signature or to authorise a module from the hash alone.
 enum APStoreIntegrity {
     static func sha256Hex(of data: Data) -> String {
         Data(SHA256.hash(data: data)).map { String(format: "%02x", Int($0)) }.joined()

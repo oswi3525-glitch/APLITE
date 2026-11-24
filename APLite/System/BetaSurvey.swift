@@ -45,7 +45,9 @@ enum BetaSurvey {
     @discardableResult
     static func save(image: UIImage, note: String) -> SurveyRecord? {
         guard let data = normalizedPNG(image) else { return nil }
-        let record = SurveyRecord(id: UUID(), timestamp: Date(), note: note, imageData: data,
+        // The export is shared outside APLite; never carry a token/password typed into the note.
+        let record = SurveyRecord(id: UUID(), timestamp: Date(),
+                                  note: DiagnosticsPolicy.redact(note), imageData: data,
                                   metadata: currentMetadata())
         var all = records()
         all.insert(record, at: 0)
@@ -74,7 +76,7 @@ enum BetaSurvey {
         guard let data = try? encoder.encode(payload) else { return nil }
         let url = FileManager.default.temporaryDirectory
             .appendingPathComponent("aplite-surveys-\(stamp()).json")
-        guard (try? data.write(to: url, options: .atomic)) != nil else { return nil }
+        guard (try? data.write(to: url, options: [.atomic, .completeFileProtectionAfterFirstOpen])) != nil else { return nil }
         APLog.info("Exported \(payload.records.count) beta survey(s)", module: "Survey")
         return url
     }

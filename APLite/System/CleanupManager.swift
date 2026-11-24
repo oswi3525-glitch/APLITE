@@ -15,6 +15,15 @@ struct CleanupTarget: Identifiable, Equatable {
 enum CleanupManager {
     private static let fm = FileManager.default
     private static let staleDays = 7
+    private static let scanQueue = DispatchQueue(label: "com.hieuk.aplite.cleanup.scan", qos: .utility)
+
+    /// UI entry point: recursive size walks over many-GB guest caches must never run on main.
+    static func scan(completion: @escaping ([CleanupTarget]) -> Void) {
+        scanQueue.async {
+            let result = scan()
+            DispatchQueue.main.async { completion(result) }
+        }
+    }
 
     static func scan() -> [CleanupTarget] {
         var grouped: [CleanupPolicy.Category: [URL]] = [:]
@@ -36,8 +45,12 @@ enum CleanupManager {
             grouped[category, default: []].append(candidate.url)
         }
 
-        let orphanIcons = orphanWebAppIcons()
-        if !orphanIcons.isEmpty { grouped[.orphanWebAppIcons] = orphanIcons }
+        // If the web-app registry failed to decode, WebApps.shared.all is empty — treating every
+        // icon as orphan would destroy the icons of apps that are actually installed.
+        if !WebApps.shared.all.isEmpty {
+            let orphanIcons = orphanWebAppIcons()
+            if !orphanIcons.isEmpty { grouped[.orphanWebAppIcons] = orphanIcons }
+        }
 
         return grouped
             .map { CleanupTarget(category: $0.key, urls: $0.value, bytes: totalSize(of: $0.value)) }

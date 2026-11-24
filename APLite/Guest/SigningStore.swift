@@ -11,6 +11,7 @@ final class SigningStore: ObservableObject {
     private let service = "iDesk.signing"
 
     private init() {
+        migrateKeychainProtection()
         if let p12 = read("p12"), let password = read("password").map({ String(decoding: $0, as: UTF8.self) }) {
             identity = try? CodeSigner.loadIdentity(p12: p12, password: password)
         }
@@ -66,7 +67,18 @@ final class SigningStore: ObservableObject {
     private func write(_ account: String, _ data: Data) {
         let key = [kSecClass: kSecClassGenericPassword, kSecAttrService: service, kSecAttrAccount: account] as CFDictionary
         SecItemDelete(key)
+        // A signing identity is only needed while the user is actively signing an export.
+        // ThisDeviceOnly also keeps it out of iCloud Keychain / migrated backups.
         SecItemAdd([kSecClass: kSecClassGenericPassword, kSecAttrService: service, kSecAttrAccount: account,
-                    kSecValueData: data, kSecAttrAccessible: kSecAttrAccessibleAfterFirstUnlock] as CFDictionary, nil)
+                    kSecValueData: data,
+                    kSecAttrAccessible: kSecAttrAccessibleWhenUnlockedThisDeviceOnly] as CFDictionary, nil)
+    }
+
+    /// One-time migration: items written by older builds used AfterFirstUnlock. Rewriting them with
+    /// the stricter class keeps saved certificates working and upgrades their protection in place.
+    private func migrateKeychainProtection() {
+        for account in ["p12", "password", "profile"] {
+            if let data = read(account) { write(account, data) }
+        }
     }
 }

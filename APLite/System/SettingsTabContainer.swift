@@ -63,6 +63,7 @@ struct SettingsTabContainer: View {
                 .tag(SettingsTab.apstore)
         }
         .tint(APLiteColors.accent)
+        .sensoryFeedback(.selection, trigger: selection)
         .navigationTitle("Settings")
         .navigationBarTitleDisplayMode(.inline)
         .preferredColorScheme(scheme)

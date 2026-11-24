@@ -322,8 +322,17 @@ final class GuestStore: ObservableObject {
         guard let info = Self.info(of: bundle),
               let id = info["CFBundleIdentifier"] as? String,
               let executable = info["CFBundleExecutable"] as? String else { throw Failure.badInfo }
+        // CFBundleExecutable comes from the IPA. A crafted value like "../../OtherApp/x" would make
+        // the patcher and signer write outside the extracted bundle. Only a plain file name is valid.
+        guard !executable.isEmpty,
+              !executable.contains("/"), !executable.contains("\\"),
+              !executable.contains(".."), !executable.hasPrefix(".") else { throw Failure.badInfo }
+        let executableURL = bundle.appendingPathComponent(executable).standardizedFileURL
+        guard executableURL.deletingLastPathComponent().standardizedFileURL == bundle.standardizedFileURL else {
+            throw Failure.badInfo
+        }
 
-        try MachOPatcher.patchExecutable(at: bundle.appendingPathComponent(executable))
+        try MachOPatcher.patchExecutable(at: executableURL)
         Self.weakenMissingImports(in: bundle, executable: executable)
         try Self.sign(bundle, executable: executable, bundleID: id)
         // App extensions (widgets, share…) cannot run inside iDesk.

@@ -92,8 +92,15 @@ extension DesktopModel {
         }
     }
 
-    /// Every few seconds: starts the screen saver after the chosen idle time (not while a video plays fullscreen).
+    /// Every few seconds: auto-lock after the chosen idle time, then start the screen saver.
+    /// These are two different settings — "Auto-lock after" used to be exposed but never read.
     func checkIdle() {
+        let idle = Date().timeIntervalSince(lastInput)
+        let lockMinutes = APLiteSettings.Security.autoLockMinutes
+        if lockMinutes > 0, isExternalConnected, !isLocked, presentation == nil,
+           !ScreenRecorder.shared.isRecording, idle > Double(lockMinutes * 60) {
+            lockDesktop()
+        }
         let minutes = LockSettings.saverMinutes
         guard minutes > 0, isExternalConnected, !showScreenSaver, !hasFullscreen, presentation == nil,
               !ScreenRecorder.shared.isRecording,
@@ -287,7 +294,7 @@ struct LockedRemote: View {
             } else {
                 Button { model.unlockDesktop() } label: {
                     Label(String(localized: "Unlock with \(LockSettings.biometryName)"), systemImage: "faceid")
-                        .font(.headline).frame(maxWidth: 360, minHeight: 54)
+                        .font(.headline).frame(maxWidth: APLiteDesign.bootStatusMaxWidth, minHeight: 54)
                 }
                 .buttonStyle(.borderedProminent)
             }

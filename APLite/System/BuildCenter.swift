@@ -82,7 +82,7 @@ final class BuildCenter: ObservableObject {
 
     func requestBuild(workflow: String = "build.yml", ref: String = "main") async throws {
         guard isConfigured else { throw BuildCenterError.notConfigured }
-        let path = "/repos/\(owner)/\(repo)/actions/workflows/\(workflow)/dispatches"
+        let path = "/repos/\(BuildCenterPolicy.encodedSegment(owner))/\(BuildCenterPolicy.encodedSegment(repo))/actions/workflows/\(BuildCenterPolicy.encodedSegment(workflow))/dispatches"
         var request = makeRequest(path, method: "POST")
         request.httpBody = try JSONSerialization.data(withJSONObject: ["ref": ref])
         let (_, response) = try await URLSession.shared.data(for: request)
@@ -94,7 +94,7 @@ final class BuildCenter: ObservableObject {
 
     func refreshBuilds() async throws {
         guard isConfigured else { throw BuildCenterError.notConfigured }
-        let (data, response) = try await URLSession.shared.data(for: makeRequest("/repos/\(owner)/\(repo)/actions/runs?per_page=10"))
+        let (data, response) = try await URLSession.shared.data(for: makeRequest("/repos/\(BuildCenterPolicy.encodedSegment(owner))/\(BuildCenterPolicy.encodedSegment(repo))/actions/runs?per_page=10"))
         try check(response)
         guard let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
               let runs = json["workflow_runs"] as? [[String: Any]] else { throw BuildCenterError.badResponse }
@@ -112,16 +112,18 @@ final class BuildCenter: ObservableObject {
         guard isConfigured else { throw BuildCenterError.notConfigured }
         guard build.conclusion == "success" else { throw BuildCenterError.noIPA }
         let (data, response) = try await URLSession.shared.data(
-            for: makeRequest("/repos/\(owner)/\(repo)/actions/runs/\(build.id)/artifacts"))
+            for: makeRequest("/repos/\(BuildCenterPolicy.encodedSegment(owner))/\(BuildCenterPolicy.encodedSegment(repo))/actions/runs/\(build.id)/artifacts"))
         try check(response)
         guard let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
               let artifacts = json["artifacts"] as? [[String: Any]],
               let ipa = artifacts.first(where: { (($0["name"] as? String) ?? "").lowercased().contains("ipa") }),
               let urlString = ipa["archive_download_url"] as? String,
-              let url = URL(string: urlString) else { throw BuildCenterError.noIPA }
+              let url = URL(string: urlString),
+              BuildCenterPolicy.allowsToken(for: url) else { throw BuildCenterError.noIPA }
         var request = URLRequest(url: url)
         request.setValue("Bearer \(try readToken())", forHTTPHeaderField: "Authorization")
-        let (archive, downloadResponse) = try await URLSession.shared.data(for: request)
+        let session = URLSession(configuration: .default, delegate: RedirectGuard.shared, delegateQueue: nil)
+        let (archive, downloadResponse) = try await session.data(for: request)
         try check(downloadResponse)
         let target = APLiteFileManager.systemRoot
             .appendingPathComponent("APLite-\(build.id).zip")
@@ -172,5 +174,22 @@ final class BuildCenter: ObservableObject {
         item[kSecAttrAccessible as String] = kSecAttrAccessibleWhenUnlockedThisDeviceOnly
         let status = SecItemAdd(item as CFDictionary, nil)
         guard status == errSecSuccess else { throw BuildCenterError.notConfigured }
+    }
+}
+
+/// URLSession does not strip custom Authorization headers on redirects by itself. A GitHub artifact
+/// URL can redirect to a CDN; never forward the Bearer token to a different host.
+private final class RedirectGuard: NSObject, URLSessionDelegate {
+    static let shared = RedirectGuard()
+
+    func urlSession(_ session: URLSession, task: URLSessionTask,
+                    willPerformHTTPRedirection response: HTTPURLResponse,
+                    newRequest request: URLRequest,
+                    completionHandler: @escaping (URLRequest?) -> Void) {
+        var next = request
+        if task.originalRequest?.url?.host?.lowercased() != request.url?.host?.lowercased() {
+            next.setValue(nil, forHTTPHeaderField: "Authorization")
+        }
+        completionHandler(next)
     }
 }

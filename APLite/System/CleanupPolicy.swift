@@ -34,7 +34,12 @@ enum CleanupPolicy {
         let lowerName = name.lowercased()
         let inAPLiteArea = lower.contains("/aplite/")
 
-        if lower.contains("/caches/") { return .caches }
+        if lower.contains("/caches/") {
+            // WebKit / system caches are shared with live WebViews and cookie state. Deleting the
+            // whole directory would drop signed-in sessions; those are trimmed by CacheManager.
+            if lowerName.hasPrefix("com.apple") || lowerName.contains("webkit") { return nil }
+            return .caches
+        }
         if lower.contains("/tmp/") {
             let temporaryPrefixes = ["export-", "update-", "cert-", "aplite-app-"]
             return temporaryPrefixes.contains { lowerName.hasPrefix($0) } ? .temporaryFiles : nil

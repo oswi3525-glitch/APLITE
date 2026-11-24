@@ -90,6 +90,7 @@ struct BetaSurveyCaptureView: View {
                 Spacer()
                 Button("Use this area") { makeCrop() }
                     .buttonStyle(APLiteGlassButtonStyle())
+                    .frame(minHeight: APLiteDesign.touchTarget)
                     .disabled(selection == nil)
             }
         }
@@ -131,6 +132,7 @@ struct BetaSurveyCaptureView: View {
                 Spacer()
                 Button("Save report") { save() }
                     .buttonStyle(APLiteGlassButtonStyle())
+                    .frame(minHeight: APLiteDesign.touchTarget)
                     .disabled(cropped == nil)
             }
         }

@@ -194,7 +194,7 @@ static void WriteMemory(int fd) {
 static int OpenReport(void) {
     if (gReported) return -1;   // record only the first one, so cascading faults do not overwrite it
     gReported = 1;
-    return open(gReportPath, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+    return open(gReportPath, O_WRONLY | O_CREAT | O_TRUNC, 0600);
 }
 
 // MARK: - 1. Signals
@@ -429,7 +429,7 @@ static void WriteMainThreadStack(int fd) {
 
 static void WriteHeartbeat(void) {
     if (!gGuestName[0]) return;                 // no guest app running yet: nothing to record
-    int fd = open(gHeartbeatPath, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+    int fd = open(gHeartbeatPath, O_WRONLY | O_CREAT | O_TRUNC, 0600);
     if (fd < 0) return;
     char line[600];
     snprintf(line, sizeof line, "guest app: %s\nstate: %s\nbuild: %s\n", gGuestName,

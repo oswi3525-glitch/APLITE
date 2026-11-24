@@ -456,8 +456,10 @@ final class TrackpadView: UIView {
         let c = centroid(active)
         guard let start = multiStart else { multiStart = c; return }
         let dx = c.x - start.x, dy = c.y - start.y
+        // Any real movement cancels the survey hold — otherwise a pause mid-swipe would open the
+        // survey and swallow a legitimate workspace/recents gesture.
+        if hypot(dx, dy) > 8 { surveyHoldTimer?.invalidate() }
         guard max(abs(dx), abs(dy)) > 45 else { return }
-        surveyHoldTimer?.invalidate()
         multiHandled = true
         moved = true
         holdFeedback.impactOccurred()

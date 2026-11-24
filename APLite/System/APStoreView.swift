@@ -52,7 +52,7 @@ struct APStoreView: View {
                     }
                 }
                 Button("Manage modules in Apps") { model.openPage(.apps) }
-                Button("Verify module integrity") { verifyIntegrity() }
+                Button("Show module hashes") { verifyIntegrity() }
             }
 
             Section("About APStore") {
@@ -85,6 +85,6 @@ struct APStoreView: View {
                 APLog.error("Cannot read integrity hash for \(app.name)", module: "APStore")
             }
         }
-        model.showToast(String(localized: "Verified \(checked) bundled module(s). Details are in the system log."))
+        model.showToast(String(localized: "Recorded \(checked) module hash(es) in the system log. Compare with the official build manifest."))
     }
 }

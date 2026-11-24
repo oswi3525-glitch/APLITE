@@ -117,12 +117,7 @@ final class UpdateChecker: ObservableObject {
 
     /// "0.6.10" is newer than "0.6.9".
     static func isNewer(_ a: String, than b: String) -> Bool {
-        let x = a.split(separator: ".").map { Int($0) ?? 0 }, y = b.split(separator: ".").map { Int($0) ?? 0 }
-        for i in 0..<max(x.count, y.count) {
-            let p = i < x.count ? x[i] : 0, q = i < y.count ? y[i] : 0
-            if p != q { return p > q }
-        }
-        return false
+        VersionCompare.isNewer(a, than: b)
     }
 
     /// What the update is doing: downloading (0…1), then packaging with the apps (0…1).

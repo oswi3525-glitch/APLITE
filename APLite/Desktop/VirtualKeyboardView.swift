@@ -47,7 +47,7 @@ struct VirtualKeyboardView: View {
                     : [Color.white.opacity(0.13), Color.white.opacity(0.07)],
             startPoint: .top, endPoint: .bottom)
         return Text(verbatim: label(for: item.key))
-            .font(.system(size: fontSize(panel: panel), weight: .semibold, design: .monospaced))
+            .font(.system(size: fontSize(panel: panel), weight: .semibold, design: .monospaced)) // taste:allow monospace — keycap labels
             .minimumScaleFactor(0.55)
             .lineLimit(1)
             .frame(width: item.rect.width, height: item.rect.height)

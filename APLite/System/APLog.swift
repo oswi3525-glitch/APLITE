@@ -44,9 +44,17 @@ enum APLog {
         write(.fault, module: module, message: message)
     }
 
-    /// Snapshot for the in-app log viewer. Newest first.
+    /// Snapshot for the in-app log viewer. Newest first. Synchronous only for structured export.
     static func entries() -> [APLogEntry] {
         queue.sync { loadEntries() }
+    }
+
+    /// UI entry point: decodes up to ~1.5 MB of rotated JSONL off main, then delivers on main.
+    static func entries(completion: @escaping ([APLogEntry]) -> Void) {
+        queue.async {
+            let all = loadEntries()
+            DispatchQueue.main.async { completion(all) }
+        }
     }
 
     /// Pure in-memory filter so the viewer can switch levels without touching disk.
@@ -112,7 +120,7 @@ enum APLog {
         var data = (try? Data(contentsOf: current)) ?? Data()
         guard let addition = (line + "\n").data(using: .utf8) else { return }
         data.append(addition)
-        try? data.write(to: current, options: .atomic)
+        try? data.write(to: current, options: [.atomic, .completeFileProtectionAfterFirstOpen])
     }
 
     private static func loadEntries() -> [APLogEntry] {

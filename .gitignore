@@ -19,3 +19,5 @@ APLite.xcodeproj/
 # Installed locally for design work; never bundle any skill with the app or commit it.
 /.agents/skills/
 /.taste-skill/
+# Local skill-manager lockfile: development environment data, never shipped or committed.
+/skills-lock.json

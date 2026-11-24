@@ -48,7 +48,7 @@ struct SurveyExportView: View {
                 Button("Delete all surveys", role: .destructive) { showClearConfirmation = true }
                     .disabled(records.isEmpty)
             } footer: {
-                Text("Exports one JSON file with screenshots, notes, timestamps and device metadata, ready to save to Files or iCloud Drive and share with the APLite team.")
+                Text("Exports one JSON file with screenshots, notes, timestamps and device metadata, ready to save to Files or iCloud Drive and share with the APLite team. Check the captured area first: avoid passwords, cookies and private data. Note text is redacted automatically.")
             }
         }
         .listStyle(.insetGrouped)

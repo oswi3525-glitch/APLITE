@@ -18,9 +18,9 @@ targets:
         CODE_SIGN_STYLE: Automatic
         MARKETING_VERSION: "1.3.0"
         CURRENT_PROJECT_VERSION: "1"
-        # Channel suffix shown as "1.3.0 (beta 1)". Empty on stable builds;
-        # any value containing "beta" unlocks beta-only UI (survey capture and export).
-        APLiteReleaseChannel: "beta 1"
+        # Empty by default so a normal build from HEAD is STABLE and hides beta-only UI.
+        # Beta releases set APLiteReleaseChannel="beta 1" explicitly in release.yml.
+        APLiteReleaseChannel: ""
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         SWIFT_EMIT_LOC_STRINGS: YES
         LOCALIZATION_PREFERS_STRING_CATALOGS: YES
@@ -98,6 +98,8 @@ targets:
       - Tests
       - APLite/App/AudioDiagnostics.swift
       - APLite/System/APLogModel.swift
+      - APLite/System/BuildCenterPolicy.swift
+      - APLite/System/VersionCompare.swift
       - APLite/System/CleanupPolicy.swift
       - APLite/System/ThermalMath.swift
       - APLite/System/WindowListMath.swift

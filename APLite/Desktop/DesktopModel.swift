@@ -507,16 +507,20 @@ final class DesktopModel: ObservableObject {
         guard let report = crashReport else { return nil }
         var model = utsname(); uname(&model)
         let machine = withUnsafeBytes(of: &model.machine) { String(decoding: $0.prefix { $0 != 0 }, as: UTF8.self) }
-        let short = report.count > 3000 ? String(report.prefix(3000)) + "\n…" : report
+        // A crash report can contain a guest app's last stderr lines, including a token or a
+        // password typed into a form. This body is handed to a browser and posted to a PUBLIC
+        // GitHub issue, so redact and bound it first. Never publish raw guest output.
+        let safeReport = DiagnosticsPolicy.truncate(DiagnosticsPolicy.redact(report), limit: 3000)
+        let safeApp = DiagnosticsPolicy.redact(problemApp ?? "-")
         let body = """
         **APLite:** \(UpdateChecker.current)
         **iPhone / iPad:** \(machine), iOS \(UIDevice.current.systemVersion)
-        **App đang mở / App in use:** \(problemApp ?? "-")
+        **App đang mở / App in use:** \(safeApp)
         **Lúc đó đang làm gì? / What were you doing?**
 
 
         ```
-        \(short)
+        \(safeReport)
         ```
         """
         var c = URLComponents(string: "https://github.com/\(APLite.repository)/issues/new")!

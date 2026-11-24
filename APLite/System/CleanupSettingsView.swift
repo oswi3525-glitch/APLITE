@@ -7,6 +7,7 @@ struct CleanupSettingsView: View {
     @ObservedObject private var memory = MemoryManager.shared
     @State private var targets: [CleanupTarget] = []
     @State private var hasScanned = false
+    @State private var isScanning = false
     @State private var confirmRemoval = false
     @State private var confirmCacheRelease = false
 
@@ -18,6 +19,7 @@ struct CleanupSettingsView: View {
                 Button { scan() } label: {
                     Label("Scan APLite's files", systemImage: "magnifyingglass")
                 }
+                .disabled(isScanning)
                 if hasScanned {
                     LabeledContent("Junk found", value: APLiteFileManager.sizeText(Int64(totalBytes)))
                 }
@@ -67,13 +69,18 @@ struct CleanupSettingsView: View {
             }
             Button("Cancel", role: .cancel) {}
         }
-        .onAppear { if targets.isEmpty { targets = CleanupManager.scan(); hasScanned = true } }
+        .onAppear { if targets.isEmpty, !isScanning { scan() } }
     }
 
     private func scan() {
-        targets = CleanupManager.scan()
-        hasScanned = true
-        APLog.info("Cleanup scan found \(targets.count) categories", module: "Cleanup")
+        guard !isScanning else { return }
+        isScanning = true
+        CleanupManager.scan { found in
+            targets = found
+            hasScanned = true
+            isScanning = false
+            APLog.info("Cleanup scan found \(found.count) categories", module: "Cleanup")
+        }
     }
 
     private func performCleanup() {

@@ -477,7 +477,8 @@ final class FilesBridge: NSObject, WKScriptMessageHandler {
     weak var window: DeskWindow?
 
     func userContentController(_ controller: WKUserContentController, didReceive message: WKScriptMessage) {
-        guard let url = message.webView?.url, url.isFileURL, FileStore.isFilesPage(url), let window,
+        guard message.frameInfo.isMainFrame,
+              let url = message.webView?.url, url.isFileURL, FileStore.isFilesPage(url), let window,
               let body = message.body as? [String: Any], let action = body["action"] as? String else { return }
         let model = DesktopModel.shared
         let paths = (body["paths"] as? [String]) ?? []

@@ -52,7 +52,7 @@ struct TechnicalDiagnosticsView: View {
 
             Section("Report") {
                 Text(DiagnosticsPolicy.truncate(report, limit: 1800))
-                    .font(.footnote.monospaced()).textSelection(.enabled)
+                    .font(.footnote.monospaced()).textSelection(.enabled) // taste:allow monospace — diagnostics report
                 Button("Copy report") { UIPasteboard.general.string = report }
                 Button("Save a full report") {
                     if APLiteFileManager.writeDiagnostics() != nil {

@@ -72,9 +72,15 @@
           }
         },
         "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld cửa sổ"
+          "variations": {
+            "plural": {
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld cửa sổ"
+                }
+              }
+            }
           }
         }
       }
@@ -8591,6 +8597,166 @@
           "stringUnit": {
             "state": "translated",
             "value": "Khảo sát đã lưu"
+          }
+        }
+      }
+    },
+    "Show module hashes": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hiện hash module"
+          }
+        }
+      }
+    },
+    "Recorded %lld module hash(es) in the system log. Compare with the official build manifest.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đã ghi %lld hash module vào nhật ký hệ thống. Hãy so sánh với manifest của bản phát hành chính thức."
+          }
+        }
+      }
+    },
+    "Confirm": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Xác nhận"
+          }
+        }
+      }
+    },
+    "Web Apps": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Web App"
+          }
+        }
+      }
+    },
+    "Native Modules": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Module native"
+          }
+        }
+      }
+    },
+    "This build has no bundled native modules.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bản dựng này không kèm module native nào."
+          }
+        }
+      }
+    },
+    "What's new": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Có gì mới"
+          }
+        }
+      }
+    },
+    "Add Zalo, Facebook, Telegram, Chrome, YouTube, Gmail": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thêm Zalo, Facebook, Telegram, Chrome, YouTube, Gmail"
+          }
+        }
+      }
+    },
+    "Lock on sleep": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Khoá khi ngủ"
+          }
+        }
+      }
+    },
+    "Authenticate on wake": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Xác thực khi thức"
+          }
+        }
+      }
+    },
+    "Memory target": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Giới hạn bộ nhớ"
+          }
+        }
+      }
+    },
+    "Release caches now": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Giải phóng cache ngay"
+          }
+        }
+      }
+    },
+    "Remove passcode": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Xoá mã passcode"
+          }
+        }
+      }
+    },
+    "License": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Giấy phép"
+          }
+        }
+      }
+    },
+    "MIT License. The original copyright notice is kept in the LICENSE file.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Giấy phép MIT. Thông báo bản quyền gốc được giữ trong tệp LICENSE."
+          }
+        }
+      }
+    },
+    "Exports one JSON file with screenshots, notes, timestamps and device metadata, ready to save to Files or iCloud Drive and share with the APLite team. Check the captured area first: avoid passwords, cookies and private data. Note text is redacted automatically.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Xuất một tệp JSON gồm ảnh chụp, ghi chú, thời gian và thông tin thiết bị, sẵn sàng lưu vào Files/iCloud Drive để gửi cho đội APLite. Hãy kiểm tra vùng chụp: tránh mật khẩu, cookie và dữ liệu riêng. Nội dung ghi chú được tự động che."
           }
         }
       }

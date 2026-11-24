@@ -33,6 +33,13 @@ jobs:
           VERSION="${VERSION#v}"
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           echo "tag=v$VERSION" >> "$GITHUB_OUTPUT"
+          # Marketing version stays numeric: "1.3.0-beta.1" must not become the in-app version
+          # "1.3.0-beta.1 (beta 1)". The prerelease part only sets the channel and artifact name.
+          echo "build_version=${VERSION%% -*}" >> "$GITHUB_OUTPUT"
+          case "$VERSION" in
+            *-beta*) echo "channel=beta ${VERSION##*-}" >> "$GITHUB_OUTPUT" ;;
+            *) echo "channel=" >> "$GITHUB_OUTPUT" ;;
+          esac
 
       - name: Select Xcode
         run: sudo xcode-select -s /Applications/Xcode.app/Contents/Developer && xcodebuild -version
@@ -44,7 +51,7 @@ jobs:
         run: python3 scripts/validate-assets.py
 
       - name: Build unsigned IPA
-        run: VERSION=${{ steps.version.outputs.version }} BUILD_NUMBER=${{ github.run_number }} scripts/build-ipa.sh
+        run: VERSION=${{ steps.version.outputs.build_version }} BUILD_NUMBER=${{ github.run_number }} RELEASE_CHANNEL="${{ steps.version.outputs.channel }}" scripts/build-ipa.sh
 
       - name: Unit tests (all APLite modules)
         run: |
@@ -64,7 +71,13 @@ jobs:
           TAG: ${{ steps.version.outputs.tag }}
           VERSION: ${{ steps.version.outputs.version }}
         run: |
-          cat > notes.md <<EOF
+          # Prefer the reviewed, checked-in notes. Fall back to a short honest stub for versions
+          # that have no dedicated notes file. Never let --generate-notes replace curated text.
+          NOTES="RELEASE_NOTES_${{ steps.version.outputs.build_version }}.md"
+          if [ -f "$NOTES" ]; then
+            cp "$NOTES" notes.md
+          else
+            cat > notes.md <<EOF
           APLite $VERSION — unsigned IPA. Sign it with your own certificate (ESign, Feather, Scarlet, ...) before installing.
 
           APLite is an independently developed project based on the original iDesk project by itshieuk:
@@ -76,6 +89,7 @@ jobs:
           but on-device verification (audio, lock screen, power, certificates, files) is still
           pending — see SYSTEM_TEST_PLAN.md and AUDIO_DIAGNOSTICS.md in the repository.
           EOF
+          fi
           if gh release view "$TAG" >/dev/null 2>&1; then
             gh release upload "$TAG" "build/APLite-unsigned-$VERSION.ipa" --clobber
           else

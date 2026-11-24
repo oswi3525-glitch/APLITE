@@ -1,4 +1,5 @@
 import SwiftUI
+import Combine
 
 @MainActor
 final class BootCoordinator: ObservableObject {
@@ -276,6 +277,7 @@ struct APLiteBootScreen: View {
 struct PhoneRootView: View {
     @ObservedObject private var boot = BootCoordinator.shared
     let model: DesktopModel
+    @State private var showSurveyCapture = false
 
     var body: some View {
         Group {
@@ -288,5 +290,15 @@ struct PhoneRootView: View {
             }
         }
         .animation(APLiteAnimation.gentle, value: boot.servicesReady)
+        // The external display is a non-interactive scene: a SwiftUI DragGesture there can never
+        // receive the iPhone's touches. Present the survey on the interactive phone surface; the
+        // capture helper still snapshots the external desktop through ExternalSceneDelegate.
+        .onReceive(NotificationCenter.default.publisher(for: .apliteStartBetaSurvey)) { _ in
+            guard APLite.isBeta else { return }
+            showSurveyCapture = true
+        }
+        .fullScreenCover(isPresented: $showSurveyCapture) {
+            BetaSurveyCaptureView()
+        }
     }
 }

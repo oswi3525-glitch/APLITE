@@ -60,7 +60,9 @@ struct DesktopView: View {
         .environment(\.colorScheme, .dark)
         .animation(APLiteAnimation.gentle, value: boot.desktopReady)
         .onReceive(NotificationCenter.default.publisher(for: .apliteStartBetaSurvey)) { _ in
-            guard APLite.isBeta else { return }
+            // Normal launches present the survey on PhoneRootView (interactive). Only preview mode
+            // hosts DesktopView on the phone and needs this observer.
+            guard APLite.isBeta, PreviewController.isRequested else { return }
             showSurveyCapture = true
         }
         .fullScreenCover(isPresented: $showSurveyCapture) {
@@ -1825,7 +1827,7 @@ private struct ShortcutsView: View {
             ForEach(items.indices, id: \.self) { i in
                 HStack(spacing: 12) {
                     Text(verbatim: items[i].0)
-                        .font(.system(size: 12, weight: .semibold).monospaced())
+                        .font(.system(size: 12, weight: .semibold).monospaced()) // taste:allow monospace — shortcut keycaps
                         .padding(.horizontal, 6).padding(.vertical, 2)
                         .background(RoundedRectangle(cornerRadius: 5).fill(Color.white.opacity(0.12)))
                         .frame(width: 215, alignment: .leading)

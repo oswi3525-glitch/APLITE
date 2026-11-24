@@ -22,6 +22,8 @@ rm -rf "$APP"   # so a failed build can never ship an older app
 SETTINGS=(CODE_SIGNING_ALLOWED=NO)
 [ -n "${VERSION:-}" ] && SETTINGS+=("MARKETING_VERSION=$VERSION")
 [ -n "${BUILD_NUMBER:-}" ] && SETTINGS+=("CURRENT_PROJECT_VERSION=$BUILD_NUMBER")
+# Empty on stable builds; release.yml sets "beta 1" for a *-beta* tag only.
+[ -n "${RELEASE_CHANNEL:-}" ] && SETTINGS+=("APLiteReleaseChannel=$RELEASE_CHANNEL")
 
 set +e
 xcodebuild -project APLite.xcodeproj -scheme APLite -configuration Release -destination 'generic/platform=iOS' \
