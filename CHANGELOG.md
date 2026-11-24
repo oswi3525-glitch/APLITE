@@ -418,4 +418,4 @@ unsigned IPA produced and all `APLiteTests` groups passed. The sections below de
 
 ## Upstream
 
-Upstream release notes live at https://github.com/itshieuk/APLite/releases.
+Upstream release notes live at https://github.com/itshieuk/iDesk/releases.

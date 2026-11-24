@@ -123,6 +123,7 @@ final class Downloads: NSObject, ObservableObject, WKDownloadDelegate {
     }
 
     func download(_ download: WKDownload, didFailWithError error: Error, resumeData: Data?) {
+        if let i = index(of: download), resuming == items[i].id { resuming = nil }
         // A pause cancels the download too: that one keeps its resume data and stays paused.
         if let i = index(of: download), items[i].state == .paused {
             tasks[items[i].id] = nil
@@ -154,15 +155,28 @@ final class Downloads: NSObject, ObservableObject, WKDownloadDelegate {
     func resume(_ id: UUID) {
         guard let i = items.firstIndex(where: { $0.id == id }) else { return }
         // Never resume in an unrelated tab: the focused window may belong to a different origin.
+        let name = items[i].name
         guard let data = items[i].resumeData, let web = items[i].webView else {
-            showFailure(items[i].name)
+            showFailure(name)
             return
         }
         items[i].state = .running
         items[i].resumeData = nil
         resuming = id
         web.resumeDownload(fromResumeData: data) { [weak self] download in
-            self?.track(download, as: id)
+            guard let self else { return }
+            guard let download else {
+                // No WKDownload means the resume never started: do not leave `resuming` to hijack the
+                // next unrelated download's destination, and keep the data so the user can try again.
+                self.resuming = nil
+                if let index = self.items.firstIndex(where: { $0.id == id }) {
+                    self.items[index].state = .failed
+                    self.items[index].resumeData = data
+                }
+                self.showFailure(name)
+                return
+            }
+            self.track(download, as: id)
         }
     }
 

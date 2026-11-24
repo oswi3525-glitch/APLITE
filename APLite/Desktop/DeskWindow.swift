@@ -106,11 +106,13 @@ final class DeskWindow: NSObject, ObservableObject, Identifiable, WKUIDelegate, 
         }
     }
 
+    private static let clearFindScript = "if (window.CSS && CSS.highlights) { CSS.highlights.delete('idesk-find'); CSS.highlights.delete('idesk-find-now'); } window.__ideskFind = null;"
+
     private func clearFind() {
         findCount = 0
         findIndex = 0
-        webView?.callAsyncJavaScript("if (window.CSS && CSS.highlights) { CSS.highlights.delete('idesk-find'); CSS.highlights.delete('idesk-find-now'); } window.__ideskFind = null;",
-                                     arguments: [:], in: nil, in: .page, completionHandler: nil)
+        webView?.callAsyncJavaScript(Self.clearFindScript, arguments: [:], in: nil, in: .page,
+                                     completionHandler: nil)
     }
 
     private static let findScript = """
@@ -298,12 +300,11 @@ final class DeskWindow: NSObject, ObservableObject, Identifiable, WKUIDelegate, 
     // MARK: Tabs
 
     /// The single place that defines APLite's browser policy. Used for ordinary tabs AND for
-    /// WebKit-provided popup configurations (sign-in popups). Popups may already carry a copy of the
-    /// opener's user scripts/handlers; adding a handler twice raises, so treat "our scripts are
-    /// already present" as "the bridges are already there too".
+    /// WebKit-provided popup configurations (sign-in popups). Popups may carry a copy of the opener's
+    /// user scripts, but each configuration needs its own message handlers: a single inherited script
+    /// says nothing about which bridges survived. Removing a name that is not registered is a no-op.
     private func applyBrowserPolicy(to config: WKWebViewConfiguration) {
-        config.applicationNameForUserAgent = BrowserUserAgent.applicationName(
-            systemVersion: UIDevice.current.systemVersion)
+        config.applicationNameForUserAgent = BrowserUserAgent.applicationNameFromProcessInfo()
         config.processPool = Self.processPool
         config.allowsInlineMediaPlayback = true
         // Synthetic clicks are not trusted gestures: let pages start media and use Web Audio for volume.
@@ -311,12 +312,12 @@ final class DeskWindow: NSObject, ObservableObject, Identifiable, WKUIDelegate, 
         config.defaultWebpagePreferences.preferredContentMode = .desktop
 
         let controller = config.userContentController
-        let inherited = controller.userScripts.contains { $0.source == WebFullscreen.script.source }
         func script(_ s: WKUserScript) {
             if !controller.userScripts.contains(where: { $0.source == s.source }) { controller.addUserScript(s) }
         }
         func handler(_ h: WKScriptMessageHandler, _ name: String) {
-            if !inherited { controller.add(h, name: name) }
+            controller.removeScriptMessageHandler(forName: name)
+            controller.add(h, name: name)
         }
         script(WebFullscreen.script)
         handler(fullscreenBridge, WebFullscreen.messageName)
@@ -396,6 +397,12 @@ final class DeskWindow: NSObject, ObservableObject, Identifiable, WKUIDelegate, 
     func selectTab(_ i: Int) {
         guard tabs.indices.contains(i) else { return }
         if isFullscreen, i != activeTab { exitFullscreen() }
+        // Clear highlights on the outgoing tab: `findQuery`'s didSet runs after `activeTab` changes and would
+        // otherwise clean the new tab, leaving stale orange marks on the one we just left.
+        if findQuery != nil {
+            webView?.callAsyncJavaScript(Self.clearFindScript, arguments: [:], in: nil, in: .page,
+                                         completionHandler: nil)
+        }
         activeTab = i
         addressDraft = nil
         findQuery = nil                 // match counts belong to the page we just left
@@ -668,10 +675,11 @@ final class DeskWindow: NSObject, ObservableObject, Identifiable, WKUIDelegate, 
         decisionHandler(.allow)
     }
 
-    /// "mail.google.com" and "accounts.google.com" belong to the same site.
+    /// "mail.google.com" and "accounts.google.com" belong to the same site, but two unrelated tenants of a
+    /// shared host (`foo.github.io` / `evil.github.io`) do not. Comparing the last two labels would merge them.
     private static func sameSite(_ a: String, _ b: String) -> Bool {
-        func base(_ h: String) -> String { h.split(separator: ".").suffix(2).joined(separator: ".") }
-        return base(a) == base(b)
+        let x = a.lowercased(), y = b.lowercased()
+        return x == y || x.hasSuffix("." + y) || y.hasSuffix("." + x)
     }
 
     /// Files the page cannot show (or that the site marks as attachments) are downloaded to Files.
@@ -693,8 +701,15 @@ final class DeskWindow: NSObject, ObservableObject, Identifiable, WKUIDelegate, 
     }
 
     private static func mediaPage(_ url: URL, video: Bool) -> String {
-        let src = url.absoluteString.replacingOccurrences(of: "&", with: "&amp;").replacingOccurrences(of: "\"", with: "&quot;")
-        let name = url.lastPathComponent.replacingOccurrences(of: "<", with: "&lt;")
+        func escape(_ text: String) -> String {
+            text.replacingOccurrences(of: "&", with: "&amp;")
+                .replacingOccurrences(of: "<", with: "&lt;")
+                .replacingOccurrences(of: ">", with: "&gt;")
+                .replacingOccurrences(of: "\"", with: "&quot;")
+                .replacingOccurrences(of: "'", with: "&#39;")
+        }
+        let src = escape(url.absoluteString)
+        let name = escape(url.lastPathComponent)
         let tag = video ? "<video src=\"\(src)\" controls autoplay playsinline></video>"
                         : "<audio src=\"\(src)\" controls autoplay></audio>"
         return """

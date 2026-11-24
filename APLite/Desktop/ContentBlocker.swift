@@ -65,14 +65,21 @@ enum ContentBlocker {
     /// The page's site is in the allow list (nothing blocked there).
     static func isAllowed(_ url: URL?) -> Bool {
         guard let h = url?.host?.lowercased() else { return false }
-        return allowed.contains { host(h, isOn: $0) }
+        let page = h + (url?.path ?? "")
+        return allowed.contains { entry in
+            if entry.contains("/") { return entry == page || page.hasPrefix(entry + "/") }
+            return host(h, isOn: entry)
+        }
     }
 
     /// The menu of a web window: stop or start blocking on this page's site.
     static func toggleAllowed(_ url: URL?) {
         guard let h = url?.host?.lowercased() else { return }
         if isAllowed(url) {
-            save(blocked: blocked, allowed: allowed.filter { !host(h, isOn: $0) })
+            let page = h + (url?.path ?? "")
+            save(blocked: blocked, allowed: allowed.filter { entry in
+                entry.contains("/") ? entry != page : !host(h, isOn: entry)
+            })
         } else {
             add(h, block: false)
         }
@@ -185,13 +192,13 @@ enum ContentBlocker {
             }
             rules.append([
                 "trigger": ["url-filter": ".*"],
-                "action": ["type": "css-display-none", "selector": hiddenSelectors.joined(separator: ", ")],
+                "action": ["type": "hide-elements", "hide": hiddenSelectors],
             ])
         }
         // The user's block list: the site itself too.
         rules += blocked.map { ["trigger": ["url-filter": pattern($0)], "action": ["type": "block"]] }
         // The allow list last: on those sites' pages nothing above applies. (WebKit's patterns have no "|": one per site.)
-        let tops = allowed.map { pattern(String($0.split(separator: "/").first ?? Substring($0))) }
+        let tops = allowed.map { pattern($0) }
         if !tops.isEmpty, !rules.isEmpty {
             rules.append(["trigger": ["url-filter": ".*", "if-top-url": tops], "action": ["type": "ignore-previous-rules"]])
         }

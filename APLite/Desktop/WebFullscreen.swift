@@ -118,9 +118,9 @@ enum WebFullscreen {
 
       var E = Element.prototype, D = Document.prototype;
       E.requestFullscreen = function () { return enter(this); };
-      E.webkitRequestFullscreen = E.webkitRequestFullScreen = function () { enter(this); };
+      E.webkitRequestFullscreen = E.webkitRequestFullScreen = function () { return enter(this); };
       D.exitFullscreen = function () { return exit(); };
-      D.webkitExitFullscreen = D.webkitCancelFullScreen = function () { exit(); };
+      D.webkitExitFullscreen = D.webkitCancelFullScreen = function () { return exit(); };
       if (window.HTMLVideoElement) {
         // On iPhone, video.webkitEnterFullscreen() opens the native player on the phone screen: block it.
         var V = HTMLVideoElement.prototype;

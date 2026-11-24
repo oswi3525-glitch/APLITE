@@ -54,6 +54,7 @@ enum FacebookEnhancements {
       function apply() {
         const html = document.documentElement;
         html.classList.toggle('aplite-fb', enabled);
+        scanned = 0;   // a new page or a toggle starts a fresh pass over the feed
         let style = document.getElementById(ID);
         if (enabled && !style) {
           style = document.createElement('style');
@@ -66,17 +67,17 @@ enum FacebookEnhancements {
       const head = document.head || document.documentElement;
       if (window.MutationObserver) {
         new MutationObserver(() => {
-          if (enabled && !document.getElementById(ID)) apply();
+          if (enabled) apply();
           markAds();
         }).observe(head, { childList: true, subtree: false });
       }
       let scanned = 0;
       function markAds() {
-        if (!enabled || scanned > 400) return;
+        if (!enabled) return;
         const cards = document.querySelectorAll('[data-pagelet="FeedUnit"]');
-        scanned = Math.min(400, scanned + cards.length);
         cards.forEach(c => {
           if (c.dataset.apliteSeen) return;
+          if (++scanned > 400) return;   // per pass, not for the whole session
           c.dataset.apliteSeen = '1';
           const text = (c.innerText || '').slice(0, 600).toLowerCase();
           if (/sponsored|được tài trợ|publicidad|sponsorisé/.test(text)) c.classList.add('aplite-fb-ad');
