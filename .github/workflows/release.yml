@@ -35,12 +35,13 @@ jobs:
           echo "tag=v$VERSION" >> "$GITHUB_OUTPUT"
           # Marketing version stays numeric: "1.3.0-beta.1" must not become the in-app version
           # "1.3.0-beta.1 (beta 1)". The prerelease part only sets the channel and artifact name.
-          echo "build_version=${VERSION%% -*}" >> "$GITHUB_OUTPUT"
+          echo "build_version=${VERSION%%-*}" >> "$GITHUB_OUTPUT"
           case "$VERSION" in
             *-beta*)
-              N="${VERSION##*-}"
+              N="${VERSION##*-}"          # "beta.2"
+              N="${N#beta.}"              # "2"
               echo "channel=beta $N" >> "$GITHUB_OUTPUT"
-              echo "display=${VERSION%% -*} (beta $N)" >> "$GITHUB_OUTPUT"
+              echo "display=${VERSION%%-*} (beta $N)" >> "$GITHUB_OUTPUT"
               ;;
             *)
               echo "channel=" >> "$GITHUB_OUTPUT"
